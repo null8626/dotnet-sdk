@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using DiscordBotsList.Api.Objects;
 using System;
-using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
@@ -21,11 +20,6 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         public DiscordNetDblApi(IDiscordClient client, string dblToken) : base(client.CurrentUser.Id, dblToken)
         {
             this.client = client;
-        }
-
-        public async Task<IDblBot> GetBotAsync(IUser user)
-        {
-            return await GetBotAsync(user.Id);
         }
 
         /// <summary>

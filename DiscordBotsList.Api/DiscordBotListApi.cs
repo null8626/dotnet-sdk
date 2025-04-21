@@ -55,16 +55,6 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Get specific user by Discord id
-        /// </summary>
-        /// <param name="id">Discord id</param>
-        /// <returns>User Object</returns>
-        public async Task<IDblUser> GetUserAsync(ulong id)
-        {
-            return (IDblUser)await GetAsync<User>($"users/{id}");
-        }
-
-        /// <summary>
         ///     Template
         ///     of GetBotAsync for internal usage.
         /// </summary>

@@ -11,6 +11,8 @@ namespace DiscordBotsList.Api.Internal
     {
         internal DiscordBotListApi api;
 
+        [JsonPropertyName("clientid")] public ulong clientId { get; set; }
+
         [JsonPropertyName("prefix")] public string prefix { get; set; }
 
         [JsonPropertyName("shortdesc")] public string shortDescription { get; set; }
@@ -21,13 +23,13 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("website")] public string websiteUrl { get; set; }
 
-        [JsonPropertyName("support")] public string SupportInviteCode { get; set; }
+        [JsonPropertyName("support")] public string supportUrl { get; set; }
 
         [JsonPropertyName("github")] public string githubUrl { get; set; }
 
         [JsonPropertyName("owners")] public List<ulong> owners { get; set; }
 
-        [JsonPropertyName("invite")] public string customInvite { get; set; }
+        [JsonPropertyName("invite")] public string inviteUrl { get; set; }
 
         [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
 
@@ -40,11 +42,13 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("review")]
         public string VanityTag => vanity;
 
+        public ulong ClientId => clientId;
+
         public DateTime SubmittedAt => submittedAt;
 
         public string GithubUrl => githubUrl;
 
-        public string InviteUrl => customInvite ?? $"https://discord.com/oauth2/authorize?&client_id={Id}&scope=bot";
+        public string InviteUrl => inviteUrl ?? $"https://discord.com/oauth2/authorize?&client_id={Id}&scope=bot";
 
         public string LongDescription => longDescription;
 
@@ -60,7 +64,7 @@ namespace DiscordBotsList.Api.Internal
 
         public List<string> Tags => tags.ToList();
 
-        public string SupportUrl => "https://discord.gg/" + SupportInviteCode;
+        public string SupportUrl => supportUrl;
 
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
