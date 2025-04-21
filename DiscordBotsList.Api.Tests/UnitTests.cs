@@ -34,7 +34,6 @@ namespace DiscordBotsList.Api.Tests
         public void GetUserTest()
         {
             Assert.NotNull(_api.GetMeAsync());
-            Assert.NotNull(_api.GetUserAsync(_cred.BotId));
         }
 
         [Fact]
@@ -54,13 +53,7 @@ namespace DiscordBotsList.Api.Tests
         {
             Assert.NotNull(await _api.GetVotersAsync());
         }
-
-        [Fact]
-        public async Task GetUserTestAsync()
-        {
-            Assert.NotNull(await _api.GetUserAsync(181514288278536193));
-        }
-
+        
         [Fact]
         public async Task GetBotTestAsync()
         {

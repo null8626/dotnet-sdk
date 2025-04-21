@@ -28,11 +28,6 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             return await GetBotAsync(user.Id);
         }
 
-        public async Task<IDblUser> GetUserAsync(IUser user)
-        {
-            return await GetUserAsync(user.Id);
-        }
-
         /// <summary>
         ///     Creates an IAdapter that updates your servercount on RunAsync().
         /// </summary>

@@ -34,7 +34,7 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets all voters that have voted on your bot
+        ///     Gets unique voters that have voted on your bot
         ///     Max 1000, If you have more, you MUST use WEBHOOKS instead.
         /// </summary>
         /// <returns>A list of voters</returns>
@@ -64,8 +64,7 @@ namespace DiscordBotsList.Api
 
         protected async Task<List<T>> GetVotersAsync<T>()
         {
-            var query = $"bots/{_selfId}/votes";
-            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery(query));
+            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery("bots/votes"));
         }
 
         protected async Task UpdateStatsAsync(object statsObject)
@@ -73,7 +72,7 @@ namespace DiscordBotsList.Api
             var json = JsonSerializer.Serialize(statsObject);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             await _httpClient
-                .PostAsync($"{baseEndpoint}/bots/{_selfId}/stats", httpContent);
+                .PostAsync($"{baseEndpoint}/bots/stats", httpContent);
         }
 
         protected async Task<T> GetAuthorizedAsync<T>(string url)

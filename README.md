@@ -14,12 +14,6 @@ DiscordBotListApi DblApi = new DiscordBotListApi();
 IBot bot = DblApi.GetBotAsync(160105994217586689);
 ```
 
-#### Getting users
-```cs
-//                              discord id
-IUser bot = DblApi.GetUserAsync(121919449996460033);
-```
-
 ### Authorized api usage
 #### Setting up
 ```cs

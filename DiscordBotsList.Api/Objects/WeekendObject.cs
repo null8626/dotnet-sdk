@@ -1,7 +1,9 @@
-﻿namespace DiscordBotsList.Api.Objects
+﻿using System.Text.Json.Serialization;
+
+namespace DiscordBotsList.Api.Objects
 {
-    public struct WeekendObject
+    public class WeekendObject
     {
-        public bool Weekend;
+        [JsonPropertyName("is_weekend")] public bool Weekend { get; set; }
     }
 }
