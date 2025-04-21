@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Internal
 {
-    public class Bot : Entity, IDblBot
+    public class Bot : Entity
     {
         internal DiscordBotListApi api;
 
@@ -36,9 +36,10 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("vanity")] public string vanity { get; set; }
 
         [JsonPropertyName("points")] public int points { get; set; }
-        
+
         [JsonPropertyName("monthlyPoints")] public int monthlyPoints { get; set; }
 
+        [JsonPropertyName("review")]
         public string VanityTag => vanity;
 
         public DateTime ApprovedAt => approvedAt;
@@ -56,7 +57,7 @@ namespace DiscordBotsList.Api.Internal
         public List<ulong> OwnerIds => owners.ToList();
 
         public int Points => points;
-        
+
         public int MonthlyPoints => monthlyPoints;
 
         public string ShortDescription => shortDescription;
@@ -64,7 +65,7 @@ namespace DiscordBotsList.Api.Internal
         public List<string> Tags => tags.ToList();
 
         public string SupportUrl => "https://discord.gg/" + SupportInviteCode;
-        
+
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
         public string WebsiteUrl => websiteUrl;

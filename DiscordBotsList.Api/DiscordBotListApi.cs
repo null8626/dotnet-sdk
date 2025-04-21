@@ -41,7 +41,7 @@ namespace DiscordBotsList.Api
         /// <returns>Bot Object</returns>
         public async Task<IDblBot> GetBotAsync(ulong id)
         {
-            return await GetBotAsync<Bot>(id);
+            return (IDblBot)await GetBotAsync<Bot>(id);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace DiscordBotsList.Api
         /// <returns>User Object</returns>
         public async Task<IDblUser> GetUserAsync(ulong id)
         {
-            return await GetAsync<User>($"users/{id}");
+            return (IDblUser)await GetAsync<User>($"users/{id}");
         }
 
         /// <summary>

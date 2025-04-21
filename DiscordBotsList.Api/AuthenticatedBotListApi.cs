@@ -30,7 +30,7 @@ namespace DiscordBotsList.Api
         {
             var bot = await GetBotAsync<SelfBot>(_selfId);
             bot.api = this;
-            return bot;
+            return (IDblSelfBot)bot;
         }
 
         /// <summary>

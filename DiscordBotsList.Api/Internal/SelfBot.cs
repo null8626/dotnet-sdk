@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Internal
 {
-    internal class SelfBot : Bot, IDblSelfBot
+    internal class SelfBot : Bot
     {
         public async Task<List<IDblEntity>> GetVotersAsync()
         {

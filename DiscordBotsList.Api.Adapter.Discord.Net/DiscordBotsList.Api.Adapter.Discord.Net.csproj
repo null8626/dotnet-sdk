@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Authors>Velddev, Faith Viola</Authors>
+        <Authors>Velddev, Faith</Authors>
         <Company>Top.gg</Company>
         <Product>DiscordBotsList.Api.Adapter.Discord.Net</Product>
         <Description>Adapter for Discord.Net</Description>

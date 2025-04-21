@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace DiscordBotsList.Api.Internal
 {
-    public class User : Entity, IDblUser
+    public class User : Entity
     {
         [JsonPropertyName("social")] public SocialConnections Social { get; set; }
-        
+
         [JsonPropertyName("bio")] public string Biography { get; set; }
 
         [JsonPropertyName("banner")] public string BannerUrl { get; set; }
