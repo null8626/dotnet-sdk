@@ -9,13 +9,9 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("bio")] public string Biography { get; set; }
 
-        [JsonPropertyName("banner")] public string BannerUrl { get; set; }
-
         [JsonPropertyName("color")] public string Color { get; set; }
 
         [JsonPropertyName("supporter")] public bool IsSupporter { get; set; }
-
-        [JsonPropertyName("certifiedDev")] public bool IsCertified { get; set; }
 
         [JsonPropertyName("mod")] public bool IsModerator { get; set; }
 

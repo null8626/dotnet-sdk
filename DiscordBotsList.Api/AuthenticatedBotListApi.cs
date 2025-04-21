@@ -44,42 +44,12 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Update your stats unsharded
+        ///     Update your stats
         /// </summary>
         /// <param name="guildCount">count of guilds</param>
         public async Task UpdateStats(int guildCount)
         {
             await UpdateStatsAsync(new GuildCountObject(guildCount));
-        }
-
-        /// <summary>
-        ///     Update your stats sharded
-        /// </summary>
-        /// <param name="shardId">Begin shard id</param>
-        /// <param name="shardCount">Total shards</param>
-        /// <param name="shards">Guild count per shards</param>
-        public async Task UpdateStats(int shardId, int shardCount, params int[] shards)
-        {
-            await UpdateStatsAsync(new ShardedGuildCountObject
-            {
-                ShardId = shardId,
-                ShardCount = shardCount,
-                Shards = shards
-            });
-        }
-
-        /// <summary>
-        ///     Update your stats sharded
-        /// </summary>
-        /// <param name="guildCount">count of guilds</param>
-        /// <param name="shardCount">Total shards</param>
-        public async Task UpdateStats(int guildCount, int shardCount)
-        {
-            await UpdateStatsAsync(new ShardedGuildCountObject
-            {
-                ShardCount = shardCount,
-                GuildCount = guildCount
-            });
         }
 
         /// <summary>

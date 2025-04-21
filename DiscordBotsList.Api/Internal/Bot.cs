@@ -29,9 +29,7 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("invite")] public string customInvite { get; set; }
 
-        [JsonPropertyName("date")] public DateTime approvedAt { get; set; }
-
-        [JsonPropertyName("certifiedBot")] public bool certified { get; set; }
+        [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
 
         [JsonPropertyName("vanity")] public string vanity { get; set; }
 
@@ -42,13 +40,11 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("review")]
         public string VanityTag => vanity;
 
-        public DateTime ApprovedAt => approvedAt;
+        public DateTime SubmittedAt => submittedAt;
 
         public string GithubUrl => githubUrl;
 
         public string InviteUrl => customInvite ?? $"https://discord.com/oauth2/authorize?&client_id={Id}&scope=bot";
-
-        public bool IsCertified => certified;
 
         public string LongDescription => longDescription;
 

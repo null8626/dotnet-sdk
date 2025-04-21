@@ -9,7 +9,5 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("id")] public ulong Id { get; set; }
 
         [JsonPropertyName("username")] public string Username { get; set; }
-
-        [JsonPropertyName("discriminator")] public string Discriminator { get; set; }
     }
 }

@@ -24,9 +24,7 @@ namespace DiscordBotsList.Api.Objects
 
         string InviteUrl { get; }
 
-        DateTime ApprovedAt { get; }
-
-        bool IsCertified { get; }
+        DateTime SubmittedAt { get; }
 
         string VanityUrl { get; }
 
@@ -46,9 +44,5 @@ namespace DiscordBotsList.Api.Objects
         Task<bool> IsWeekendAsync();
 
         Task UpdateStatsAsync(int guildCount);
-
-        Task UpdateStatsAsync(int[] shards);
-
-        Task UpdateStatsAsync(int shardCount, int totalShards, params int[] shards);
     }
 }

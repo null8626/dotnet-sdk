@@ -4,15 +4,11 @@
     {
         string Biography { get; }
 
-        string BannerUrl { get; }
-
         SocialConnections Connections { get; }
 
         string Color { get; }
 
         bool IsSupporter { get; }
-
-        bool IsCertified { get; }
 
         bool IsModerator { get; }
 

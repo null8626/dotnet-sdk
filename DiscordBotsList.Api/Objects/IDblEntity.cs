@@ -13,11 +13,6 @@
         string Username { get; }
 
         /// <summary>
-        ///     Discriminator, the XXXX#1234 part
-        /// </summary>
-        string Discriminator { get; }
-
-        /// <summary>
         ///     Discord avatar url, or default avatar if none found.
         /// </summary>
         string AvatarUrl { get; }
