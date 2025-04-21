@@ -35,7 +35,7 @@ namespace DiscordBotsList.Api.Objects
 
     public interface IDblSelfBot : IDblBot
     {
-        Task<List<IDblEntity>> GetVotersAsync();
+        Task<List<IDblEntity>> GetVotersAsync(int page);
 
         Task<bool> HasVotedAsync(ulong userId);
 

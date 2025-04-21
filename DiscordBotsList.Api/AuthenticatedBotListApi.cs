@@ -1,5 +1,6 @@
 ﻿using DiscordBotsList.Api.Internal;
 using DiscordBotsList.Api.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -37,10 +38,11 @@ namespace DiscordBotsList.Api
         ///     Gets unique voters that have voted on your bot
         ///     Max 1000, If you have more, you MUST use WEBHOOKS instead.
         /// </summary>
+        /// <param name="page">The page number, defaults to 1</param>
         /// <returns>A list of voters</returns>
-        public async Task<List<IDblEntity>> GetVotersAsync()
+        public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return (await GetVotersAsync<Entity>()).Cast<IDblEntity>().ToList();
+            return (await GetVotersAsync<Entity>(page)).Cast<IDblEntity>().ToList();
         }
 
         /// <summary>
@@ -49,6 +51,11 @@ namespace DiscordBotsList.Api
         /// <param name="guildCount">count of guilds</param>
         public async Task UpdateStats(int guildCount)
         {
+            if (guildCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(guildCount), "guildCount cannot be less than 1.");
+            }
+
             await UpdateStatsAsync(new GuildCountObject(guildCount));
         }
 
@@ -62,9 +69,14 @@ namespace DiscordBotsList.Api
             return await HasVotedAsync(userId);
         }
 
-        protected async Task<List<T>> GetVotersAsync<T>()
+        protected async Task<List<T>> GetVotersAsync<T>(int page)
         {
-            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery("bots/votes"));
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery($"bots/votes?page={page}"));
         }
 
         protected async Task UpdateStatsAsync(object statsObject)
@@ -82,7 +94,7 @@ namespace DiscordBotsList.Api
 
         protected async Task<bool> HasVotedAsync(ulong userId)
         {
-            var url = $"bots/{_selfId}/check?userId={userId}";
+            var url = $"bots/check?userId={userId}";
             return (await GetAsync<HasVotedObject>(url)).HasVoted.GetValueOrDefault(0) == 1;
         }
     }

@@ -1,9 +1,7 @@
-﻿using DiscordBotsList.Api.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Internal
 {
@@ -33,18 +31,21 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
 
+        [JsonPropertyName("server_count")] public int? guildCount { get; set; }
+
         [JsonPropertyName("vanity")] public string vanity { get; set; }
 
         [JsonPropertyName("points")] public int points { get; set; }
 
         [JsonPropertyName("monthlyPoints")] public int monthlyPoints { get; set; }
 
-        [JsonPropertyName("review")]
         public string VanityTag => vanity;
 
         public ulong ClientId => clientId;
 
         public DateTime SubmittedAt => submittedAt;
+
+        public int? GuildCount => guildCount;
 
         public string GithubUrl => githubUrl;
 
