@@ -69,10 +69,5 @@ namespace DiscordBotsList.Api.Internal
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
         public string WebsiteUrl => websiteUrl;
-
-        public async Task<IDblBotStats> GetStatsAsync()
-        {
-            return await api.GetBotStatsAsync(Id);
-        }
     }
 }

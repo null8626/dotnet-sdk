@@ -47,11 +47,10 @@ namespace DiscordBotsList.Api
         /// <summary>
         ///     Get bot stats
         /// </summary>
-        /// <param name="id">Discord id</param>
         /// <returns>IBotStats object related to the bot</returns>
-        public async Task<IDblBotStats> GetBotStatsAsync(ulong id)
+        public async Task<IDblBotStats> GetStatsAsync()
         {
-            return await GetAsync<BotStatsObject>($"bots/{id}/stats");
+            return await GetAsync<BotStatsObject>("bots/stats");
         }
 
         /// <summary>

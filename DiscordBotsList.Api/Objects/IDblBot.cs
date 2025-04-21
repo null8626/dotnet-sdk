@@ -31,8 +31,6 @@ namespace DiscordBotsList.Api.Objects
         int Points { get; }
 
         int MonthlyPoints { get; }
-
-        Task<IDblBotStats> GetStatsAsync();
     }
 
     public interface IDblSelfBot : IDblBot
