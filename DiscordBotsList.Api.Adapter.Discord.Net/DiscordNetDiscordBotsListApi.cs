@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using DiscordBotsList.Api.Objects;
 using System;
 
 namespace DiscordBotsList.Api.Adapter.Discord.Net

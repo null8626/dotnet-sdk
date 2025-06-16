@@ -15,7 +15,7 @@ namespace DiscordBotsList.Api
 {
     public class DiscordBotListApi
     {
-        private const string baseEndpoint = "https://top.gg/api/";
+        internal const string baseEndpoint = "https://top.gg/api/v1";
         private readonly JsonSerializerOptions _serializerOptions;
         private readonly ulong _selfId;
         private readonly HttpClient _httpClient;
@@ -55,7 +55,7 @@ namespace DiscordBotsList.Api
                 throw new ArgumentOutOfRangeException(nameof(offset), "offset must not be negative.");
             }
 
-            var result = await GetAsync<BotListQuery>($"bots?sort={sort}&limit=${count}&offset=${offset}");
+            var result = await GetAsync<BotListQuery>($"/bots?sort={sort}&limit=${count}&offset=${offset}");
             foreach (var bot in result.Items) (bot as Bot).api = this;
             return result;
         }
@@ -76,7 +76,7 @@ namespace DiscordBotsList.Api
         /// <returns>IBotStats object related to the bot</returns>
         public async Task<IDblBotStats> GetStatsAsync()
         {
-            return await GetAsync<BotStatsObject>("bots/stats");
+            return await GetAsync<BotStatsObject>("/bots/stats");
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace DiscordBotsList.Api
         /// <returns>Bot object of type T</returns>
         internal async Task<T> GetBotAsync<T>(ulong id) where T : Bot
         {
-            var t = await GetAsync<T>($"bots/{id}");
+            var t = await GetAsync<T>($"/bots/{id}");
             if (t == null) return null;
             t.api = this;
             return t;
@@ -115,7 +115,7 @@ namespace DiscordBotsList.Api
         /// <returns>True or False</returns>
         public async Task<bool> IsWeekendAsync()
         {
-            return (await GetAsync<WeekendObject>("weekend")).Weekend;
+            return (await GetAsync<WeekendObject>("/weekend")).Weekend;
         }
 
         
@@ -138,7 +138,7 @@ namespace DiscordBotsList.Api
         /// <returns>A list of voters</returns>
         public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return (await GetAsync<List<Entity>>(Utils.CreateQuery($"bots/{_selfId}/votes?page={Math.Max(page, 1)}"))).Cast<IDblEntity>().ToList();
+            return (await GetAsync<List<Entity>>($"/bots/{_selfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
         }
 
         /// <summary>
@@ -165,8 +165,7 @@ namespace DiscordBotsList.Api
         /// <returns>True or False</returns>
         public async Task<bool> HasVoted(ulong userId)
         {
-            var url = $"bots/check?userId={userId}";
-            return (await GetAsync<HasVotedObject>(url)).HasVoted.GetValueOrDefault(0) == 1;
+            return (await GetAsync<HasVotedObject>($"/bots/check?userId={userId}")).HasVoted.GetValueOrDefault(0) == 1;
         }
     }
 }

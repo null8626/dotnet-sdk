@@ -23,13 +23,10 @@ await me.UpdateStatsAsync(2133);
 
 #### Widgets
 ```cs
-string widgetUrl = new SmallWidgetOptions()
-	.SetType(WidgetType.OWNER)
-	.SetLeftColor(255, 255, 255);
-	.Build(160105994217586689);
+string widgetUrl = Widget.Large(1026525568344264724);
 ```
 
-Generates ![](https://top.gg/api/widget/status/160105994217586689.svg?leftcolor=FFFFFF)
+Generates ![](https://top.gg/api/v1/widgets/large/1026525568344264724)
 
 ### Download
 #### Nuget
