@@ -12,10 +12,11 @@ namespace DiscordBotsList.Api.Tests
 
         public static Credentials LoadFromEnv()
         {
-            var cred = new Credentials();
-            cred.BotId = ulong.Parse(Environment.GetEnvironmentVariable("BOT_ID"));
-            cred.Token = Environment.GetEnvironmentVariable("API_KEY");
-            return cred;
+            return new Credentials()
+            {
+                BotId = ulong.Parse(Environment.GetEnvironmentVariable("BOT_ID")),
+                Token = Environment.GetEnvironmentVariable("API_KEY"),
+            };
         }
     }
 
@@ -28,12 +29,6 @@ namespace DiscordBotsList.Api.Tests
         {
             _cred = Credentials.LoadFromEnv();
             _api = new AuthDiscordBotListApi(_cred.BotId, _cred.Token);
-        }
-
-        [Fact]
-        public void GetUserTest()
-        {
-            Assert.NotNull(_api.GetMeAsync());
         }
 
         [Fact]
@@ -53,11 +48,11 @@ namespace DiscordBotsList.Api.Tests
         {
             Assert.NotNull(await _api.GetVotersAsync());
         }
-        
+
         [Fact]
         public async Task GetBotTestAsync()
         {
-            var botId = 423593006436712458U;
+            var botId = 264811613708746752U;
             var bot = await _api.GetBotAsync(botId);
             Assert.NotNull(bot);
             Assert.Equal(botId, bot.Id);
@@ -70,7 +65,7 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task GetUsersGetStatsTest()
+        public async Task GetBotsTestAsync()
         {
             var bots = await _api.GetBotsAsync();
 
@@ -79,9 +74,19 @@ namespace DiscordBotsList.Api.Tests
 
             var firstBot = bots.Items.First();
 
-            var stats = await firstBot.GetStatsAsync();
+            Assert.NotNull(firstBot);
+        }
 
-            Assert.NotNull(stats);
+        [Fact]
+        public async Task GetStatsTestAsync()
+        {
+            Assert.NotNull(await _api.GetStatsAsync());
+        }
+        
+        [Fact]
+        public async Task UpdateStatsTestAsync()
+        {
+            await _api.UpdateStatsAsync(2);
         }
     }
 }

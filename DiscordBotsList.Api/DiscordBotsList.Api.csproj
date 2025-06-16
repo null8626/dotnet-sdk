@@ -6,8 +6,8 @@
         <Company>Top.gg</Company>
         <Description>top.gg api wrapper</Description>
         <Copyright>Mike Veldsink</Copyright>
-        <PackageProjectUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>discord bots list org wrapper api</PackageTags>
         <PackageReleaseNotes>update to net 8</PackageReleaseNotes>

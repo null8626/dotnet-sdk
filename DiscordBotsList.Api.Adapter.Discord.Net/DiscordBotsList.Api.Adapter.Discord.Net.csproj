@@ -11,8 +11,8 @@
         <Copyright>Mike Veldsink</Copyright>
         <PackageTags>discord bots list org wrapper api discord.net</PackageTags>
         <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</RepositoryUrl>
-        <PackageProjectUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>
         <Version>1.5.0</Version>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>

@@ -1,6 +1,7 @@
 ﻿using DiscordBotsList.Api.Internal;
 using DiscordBotsList.Api.Internal.Queries;
 using DiscordBotsList.Api.Objects;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -24,12 +25,28 @@ namespace DiscordBotsList.Api
         /// <summary>
         ///     Gets bots from botlist
         /// </summary>
-        /// <param name="count">amount of bots to appear per page (max: 500)</param>
-        /// <param name="page">current page to query</param>
+        /// <param name="sort">sorts results based on their monthly vote count ("montlyPoints"), id ("id"), or their submission date ("date")</param>
+        /// <param name="count">amount of bots to retrieve (max: 500)</param>
+        /// <param name="offset">amount of bots to skip</param>
         /// <returns>List of Bot Objects</returns>
-        public async Task<ISearchResult<IDblBot>> GetBotsAsync(int count = 50, int page = 0)
+        public async Task<ISearchResult<IDblBot>> GetBotsAsync(string sort = "monthlyPoints", int count = 50, int offset = 0)
         {
-            var result = await GetAsync<BotListQuery>("bots");
+            if (sort != "monthlyPoints" && sort != "id" && sort != "date")
+            {
+                throw new ArgumentException("sort must be 'monthlyPoints', 'id', or 'date'.");
+            }
+            
+            if (count < 0 || count > 500)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), "count mustn't be negative or exceed 500.");
+            }
+
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset), "offset must not be negative.");
+            }
+
+            var result = await GetAsync<BotListQuery>($"bots?sort={sort}&limit=${count}&offset=${offset}");
             foreach (var bot in result.Items) (bot as Bot).api = this;
             return result;
         }
@@ -77,11 +94,9 @@ namespace DiscordBotsList.Api
         protected async Task<T> GetAsync<T>(string url)
         {
             var t = await _httpClient.GetAsync(baseEndpoint + url);
-            var payload = await t.Content.ReadAsStringAsync();
-            var o = JsonSerializer.Deserialize<T>(payload, _serializerOptions);
             var result = t.IsSuccessStatusCode
-                ? ApiResult<T>.FromSuccess(await t.Content.ReadFromJsonAsync<T>(_serializerOptions))
-                : ApiResult<T>.FromHttpError(t.StatusCode);
+            ? ApiResult<T>.FromSuccess(await t.Content.ReadFromJsonAsync<T>(_serializerOptions))
+            : ApiResult<T>.FromHttpError(t.StatusCode);
             return result.Value;
         }
 

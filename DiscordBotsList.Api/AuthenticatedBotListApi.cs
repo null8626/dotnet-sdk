@@ -14,12 +14,10 @@ namespace DiscordBotsList.Api
     public class AuthDiscordBotListApi : DiscordBotListApi
     {
         private readonly ulong _selfId;
-        private readonly string _token;
 
         public AuthDiscordBotListApi(ulong selfId, string token)
         {
             _selfId = selfId;
-            _token = token;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
@@ -31,7 +29,7 @@ namespace DiscordBotsList.Api
         {
             var bot = await GetBotAsync<SelfBot>(_selfId);
             bot.api = this;
-            return (IDblSelfBot)bot;
+            return bot;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace DiscordBotsList.Api
         ///     Update your stats
         /// </summary>
         /// <param name="guildCount">count of guilds</param>
-        public async Task UpdateStats(int guildCount)
+        public async Task UpdateStatsAsync(int guildCount)
         {
             if (guildCount <= 0)
             {
@@ -71,12 +69,7 @@ namespace DiscordBotsList.Api
 
         protected async Task<List<T>> GetVotersAsync<T>(int page)
         {
-            if (page < 1)
-            {
-                page = 1;
-            }
-
-            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery($"bots/votes?page={page}"));
+            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery($"bots/{_selfId}/votes?page={Math.Max(page, 1)}"));
         }
 
         protected async Task UpdateStatsAsync(object statsObject)

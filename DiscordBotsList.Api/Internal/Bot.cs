@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using DiscordBotsList.Api.Objects;
 
 namespace DiscordBotsList.Api.Internal
 {
-    public class Bot : Entity
+    public class Bot : Entity, IDblBot
     {
         internal DiscordBotListApi api;
 
@@ -39,6 +40,8 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("monthlyPoints")] public int monthlyPoints { get; set; }
 
+        [JsonPropertyName("reviews")] public BotReviews reviews { get; set; }
+
         public string VanityTag => vanity;
 
         public ulong ClientId => clientId;
@@ -70,5 +73,7 @@ namespace DiscordBotsList.Api.Internal
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
         public string WebsiteUrl => websiteUrl;
+
+        public BotReviews Reviews => reviews;
     }
 }

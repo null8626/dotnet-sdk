@@ -31,6 +31,8 @@ namespace DiscordBotsList.Api.Objects
         int Points { get; }
 
         int MonthlyPoints { get; }
+
+        BotReviews Reviews { get; }
     }
 
     public interface IDblSelfBot : IDblBot

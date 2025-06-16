@@ -1,10 +1,11 @@
 ﻿using System.Text.Json.Serialization;
+using DiscordBotsList.Api.Objects;
 
 namespace DiscordBotsList.Api.Internal
 {
-    public class Entity
+    public class Entity: IDblEntity
     {
-        [JsonPropertyName("avatar")] public string Avatar { get; set; }
+        [JsonPropertyName("avatar")] public string AvatarUrl { get; set; }
 
         [JsonPropertyName("id")] public ulong Id { get; set; }
 
