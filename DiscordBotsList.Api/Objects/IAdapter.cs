@@ -9,6 +9,8 @@ namespace DiscordBotsList.Api.Objects
 
         Task RunAsync();
 
+        bool IsRunning();
+
         void Start();
 
         void Stop();

@@ -29,9 +29,14 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             throw new NotImplementedException();
         }
 
+        public bool IsRunning()
+        {
+            return cancellationTokenSource != null;
+        }
+
         public void Start()
         {
-            if (cancellationTokenSource != null)
+            if (IsRunning())
             {
                 return;
             }
@@ -42,10 +47,19 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             {
                 while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    await RunAsync();
+                    try
+                    {
+                        await RunAsync();
+                    }
+                    catch
+                    {
+                        cancellationTokenSource.Cancel();
+                        cancellationTokenSource = null;
+                        break;
+                    }
 
                     SendLog("Submitted stats to Top.gg!");
-                    
+
                     await Task.Delay(updateTime, cancellationTokenSource.Token);
                 }
             }, cancellationTokenSource.Token);
@@ -53,7 +67,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 
         public void Stop()
         {
-            if (cancellationTokenSource != null)
+            if (IsRunning())
             {
                 cancellationTokenSource.Cancel();
                 cancellationTokenSource = null;
