@@ -22,13 +22,13 @@ namespace DiscordBotsList.Api.Tests
 
     public class UnitTests
     {
-        private readonly AuthDiscordBotListApi _api;
+        private readonly DiscordBotListApi _api;
         private readonly Credentials _cred;
 
         public UnitTests()
         {
             _cred = Credentials.LoadFromEnv();
-            _api = new AuthDiscordBotListApi(_cred.BotId, _cred.Token);
+            _api = new DiscordBotListApi(_cred.BotId, _cred.Token);
         }
 
         [Fact]

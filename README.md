@@ -2,22 +2,15 @@
 top.gg botlist wrapper
 
 ## Usage
-### Unauthorized api usage
 #### Setting up
 ```cs
-DiscordBotListApi DblApi = new DiscordBotListApi();
+DiscordBotListApi DblApi = new DiscordBotListApi(BOT_DISCORD_ID, YOUR_TOKEN);
 ```
 
 #### Getting bots
 ```cs
 //                            discord id
 IBot bot = DblApi.GetBotAsync(160105994217586689);
-```
-
-### Authorized api usage
-#### Setting up
-```cs
-AuthDiscordBotListApi DblApi = new AuthDiscordBotListApi(BOT_DISCORD_ID, YOUR_TOKEN);
 ```
 
 #### Updating stats

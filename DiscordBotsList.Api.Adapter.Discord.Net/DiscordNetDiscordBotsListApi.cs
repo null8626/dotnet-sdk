@@ -13,7 +13,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         }
     }
 
-    public class DiscordNetDblApi : AuthDiscordBotListApi
+    public class DiscordNetDblApi : DiscordBotListApi
     {
         protected IDiscordClient client;
 

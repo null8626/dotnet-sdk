@@ -8,22 +8,22 @@ namespace DiscordBotsList.Api.Internal
     {
         public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return await ((AuthDiscordBotListApi)api).GetVotersAsync(page);
+            return await api.GetVotersAsync(page);
         }
 
         public async Task<bool> HasVotedAsync(ulong userId)
         {
-            return await ((AuthDiscordBotListApi)api).HasVoted(userId);
+            return await api.HasVoted(userId);
         }
 
         public async Task<bool> IsWeekendAsync()
         {
-            return await ((AuthDiscordBotListApi)api).IsWeekendAsync();
+            return await api.IsWeekendAsync();
         }
 
         public async Task UpdateStatsAsync(int guildCount)
         {
-            await ((AuthDiscordBotListApi)api).UpdateStatsAsync(guildCount);
+            await api.UpdateStatsAsync(guildCount);
         }
     }
 }

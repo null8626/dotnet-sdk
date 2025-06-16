@@ -8,10 +8,10 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
     public class SubmissionAdapter : Adapter
     {
-        private readonly AuthDiscordBotListApi api;
+        private readonly DiscordBotListApi api;
         private readonly IDiscordClient client;
 
-        public SubmissionAdapter(AuthDiscordBotListApi api, IDiscordClient client, TimeSpan updateTime) : base(updateTime)
+        public SubmissionAdapter(DiscordBotListApi api, IDiscordClient client, TimeSpan updateTime) : base(updateTime)
         {
             this.api = api;
             this.client = client;
