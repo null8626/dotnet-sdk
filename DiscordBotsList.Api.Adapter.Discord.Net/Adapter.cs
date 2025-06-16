@@ -54,10 +54,10 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
                     }
                     catch (Exception err)
                     {
-                        Posted?.Invoke(err);
-
                         cancellationTokenSource.Cancel();
                         cancellationTokenSource = null;
+
+                        Posted?.Invoke(err);
                         break;
                     }
 
