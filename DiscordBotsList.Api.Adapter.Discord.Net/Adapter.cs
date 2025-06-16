@@ -1,3 +1,5 @@
+#nullable enable
+
 using DiscordBotsList.Api.Objects;
 using System;
 using System.Threading;
@@ -7,11 +9,10 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
     public class Adapter : IAdapter
     {
-        public event Action<string> Log;
-
+        public event Action<Exception?> Posted = _ => { };
         private readonly TimeSpan updateTime;
 
-        private CancellationTokenSource cancellationTokenSource;
+        private CancellationTokenSource? cancellationTokenSource;
 
         public Adapter(TimeSpan updateTime)
         {
@@ -24,7 +25,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             cancellationTokenSource = null;
         }
 
-        public virtual async Task RunAsync()
+        public virtual Task RunAsync()
         {
             throw new NotImplementedException();
         }
@@ -51,14 +52,16 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
                     {
                         await RunAsync();
                     }
-                    catch
+                    catch (Exception err)
                     {
+                        Posted?.Invoke(err);
+
                         cancellationTokenSource.Cancel();
                         cancellationTokenSource = null;
                         break;
                     }
 
-                    SendLog("Submitted stats to Top.gg!");
+                    Posted?.Invoke(null);
 
                     await Task.Delay(updateTime, cancellationTokenSource.Token);
                 }
@@ -69,7 +72,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             if (IsRunning())
             {
-                cancellationTokenSource.Cancel();
+                cancellationTokenSource!.Cancel();
                 cancellationTokenSource = null;
             }
         }
@@ -78,14 +81,9 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             if (IsRunning())
             {
-                await cancellationTokenSource.CancelAsync();
+                await cancellationTokenSource!.CancelAsync();
                 cancellationTokenSource = null;
             }
-        }
-
-        private void SendLog(string msg)
-        {
-            Log?.Invoke(msg);
         }
     }
 }
