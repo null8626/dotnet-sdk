@@ -32,7 +32,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         /// <seealso cref="ListenAsync()" />
         public SubmissionAdapter CreateListener(TimeSpan? updateTime = null)
         {
-            return new SubmissionAdapter(this, client, updateTime ?? TimeSpan.Zero);
+            return new SubmissionAdapter(this, client, updateTime ?? TimeSpan.FromMinutes(15));
         }
     }
 }

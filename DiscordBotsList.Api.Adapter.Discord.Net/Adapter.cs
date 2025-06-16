@@ -17,7 +17,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             if (updateTime < TimeSpan.FromMinutes(15))
             {
-                throw new ArgumentException("updateTime must be at least 15 minutes.", nameof(updateTime));
+                updateTime = TimeSpan.FromMinutes(15);
             }
 
             this.updateTime = updateTime;
@@ -70,6 +70,15 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             if (IsRunning())
             {
                 cancellationTokenSource.Cancel();
+                cancellationTokenSource = null;
+            }
+        }
+
+        public async Task StopAsync()
+        {
+            if (IsRunning())
+            {
+                await cancellationTokenSource.CancelAsync();
                 cancellationTokenSource = null;
             }
         }

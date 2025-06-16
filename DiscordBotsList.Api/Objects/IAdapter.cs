@@ -14,5 +14,7 @@ namespace DiscordBotsList.Api.Objects
         void Start();
 
         void Stop();
+
+        Task StopAsync();
     }
 }
