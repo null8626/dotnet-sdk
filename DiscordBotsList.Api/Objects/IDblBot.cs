@@ -43,6 +43,6 @@ namespace DiscordBotsList.Api.Objects
 
         Task<bool> IsWeekendAsync();
 
-        Task UpdateStatsAsync(int guildCount);
+        Task UpdateServerCountAsync(int serverCount);
     }
 }

@@ -1,41 +1,144 @@
-# Top.gg for .NET
+# Top.gg .NET SDK
 
 The community-maintained .NET library for Top.gg.
 
+## Installation
+
+If you're using Nuget, you can use install it with the ID `DiscordBotsList.Api` like so:
+
+```powershell
+> Install-Package DiscordBotsList.Api
+```
+
+## Setting up
+
+### Library agnostic
+
+```cs
+var client = new DiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
+```
+
+### Discord.NET-based
+
+If you're using Nuget, you can use install it with the ID `DiscordBotsList.Api.Adapter.Discord.Net` like so:
+
+```powershell
+> Install-Package DiscordBotsList.Api.Adapter.Discord.Net
+```
+
+Then use it in your code:
+
+```cs
+var discordNetClient = ...;
+var client = new DiscordNetDblApi(discordNetClient, "TOPGG_TOKEN");
+```
+
 ## Usage
 
-#### Setting up
+### Getting a bot
+
 ```cs
-DiscordBotListApi DblApi = new DiscordBotListApi(BOT_DISCORD_ID, YOUR_TOKEN);
+//                                 Discord ID
+var bot = await client.GetBotAsync(264811613708746752U);
 ```
 
-#### Getting bots
+### Getting several bots
+
+#### With defaults
+
 ```cs
-//                                  discord id
-IBot bot = await DblApi.GetBotAsync(160105994217586689);
+var bots = await client.GetBotsAsync();
+var firstBot = bots.Items.First();
 ```
 
-#### Updating stats
+#### With explicit arguments
+
 ```cs
-IDblSelfBot me = await DblApi.GetMeAsync();
-
-// Update stats           guildCount
-await me.UpdateStatsAsync(2133);
+//                                   Sort by                   Limit  Offset
+var bots = await client.GetBotsAsync(SortBotsBy.MonthlyPoints, 100,   1);
+var firstBot = bots.Items.First();
 ```
 
-#### Widgets
+### Getting your bot's voters
+
+#### First page
+
 ```cs
-string widgetUrl = Widget.Large(WidgetType.DISCORD_BOT, 1026525568344264724);
+var voters = await client.GetVotersAsync();
 ```
 
-Generates ![](https://top.gg/api/v1/widgets/large/discord/bot/1026525568344264724)
+#### Subsequent pages
 
-### Download
-
-#### Nuget
-
-If you're using Nuget, you can use find it with the ID `DiscordBotsList.Api` or use
-
+```cs
+var voters = await client.GetVotersAsync(2);
 ```
-Install-Package DiscordBotsList.Api
+
+### Check if a user has voted for your bot
+
+```cs
+//                                Discord ID
+var voted = await client.HasVoted(661200758510977084U);
+```
+
+### Getting your bot's server count
+
+```cs
+var serverCount = await client.GetServerCountAsync();
+```
+
+### Posting your bot's server count
+
+```cs
+//                                  Server count
+await client.UpdateServerCountAsync(bot.GetServerCount());
+```
+
+### Automatically posting your bot's server count every few minutes
+
+With Discord.NET:
+
+```cs
+var submissionAdapter = client.CreateListener();
+
+submissionAdapter.Start();
+
+// ...
+
+submissionAdapter.Stop(); // Optional
+```
+
+### Checking if the weekend vote multiplier is active
+
+```cs
+var isWeekend = await client.IsWeekendAsync();
+```
+
+### Generating widget URLs
+
+#### Large
+
+```cs
+//                           Widget type             Discord ID
+var widgetUrl = Widget.Large(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+#### Votes
+
+```cs
+//                           Widget type             Discord ID
+var widgetUrl = Widget.Votes(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+#### Owner
+
+```cs
+//                           Widget type             Discord ID
+var widgetUrl = Widget.Owner(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+#### Social
+
+```cs
+//                            Widget type             Discord ID
+var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
 ```

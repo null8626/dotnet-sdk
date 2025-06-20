@@ -13,6 +13,13 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api
 {
+    public enum SortBotsBy
+    {
+        MonthlyPoints,
+        Id,
+        Date,
+    }
+
     public class DiscordBotListApi
     {
         internal const string baseEndpoint = "https://top.gg/api/v1";
@@ -34,34 +41,32 @@ namespace DiscordBotsList.Api
         /// <summary>
         ///     Gets bots from botlist
         /// </summary>
-        /// <param name="sort">sorts results based on their monthly vote count ("montlyPoints"), id ("id"), or their submission date ("date")</param>
+        /// <param name="sortBy">sorts results based on their monthly vote count, id, or their submission date</param>
         /// <param name="count">amount of bots to retrieve (max: 500)</param>
         /// <param name="offset">amount of bots to skip</param>
         /// <returns>List of Bot Objects</returns>
-        public async Task<ISearchResult<IDblBot>> GetBotsAsync(string sort = "monthlyPoints", int count = 50, int offset = 0)
+        public async Task<ISearchResult<IDblBot>> GetBotsAsync(SortBotsBy sortBy = SortBotsBy.MonthlyPoints, int count = 50, int offset = 0)
         {
-            if (sort != "monthlyPoints" && sort != "id" && sort != "date")
-            {
-                throw new ArgumentException("sort must be 'monthlyPoints', 'id', or 'date'.");
-            }
-
             if (count < 0 || count > 500)
             {
-                throw new ArgumentOutOfRangeException(nameof(count), "count mustn't be negative or exceed 500.");
+                count = 50;
             }
 
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(offset), "offset must not be negative.");
+                offset = 0;
             }
 
-            var result = await GetAsync<BotListQuery>($"/bots?sort={sort}&limit=${count}&offset=${offset}");
+            var sortByString = sortBy.ToString();
+            var result = await GetAsync<BotListQuery>($"/bots?sort={char.ToLowerInvariant(sortByString[0]) + sortByString.Substring(1)}&limit=${count}&offset=${offset}");
+
             foreach (var bot in result.Items) (bot as Bot).api = this;
+
             return result;
         }
 
         /// <summary>
-        ///     Get specific bot by Discord id
+        ///     Gets specific bot by Discord id
         /// </summary>
         /// <param name="id">Discord id</param>
         /// <returns>Bot Object</returns>
@@ -71,12 +76,14 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Get bot stats
+        ///     Gets your bot's server count
         /// </summary>
-        /// <returns>IBotStats object related to the bot</returns>
-        public async Task<IDblBotStats> GetStatsAsync()
+        /// <returns>Your bot's server count if available</returns>
+        public async Task<int> GetServerCountAsync()
         {
-            return await GetAsync<BotStatsObject>("/bots/stats");
+            var result = await GetAsync<BotStatsObject>("/bots/stats");
+
+            return result.ServerCount;
         }
 
         /// <summary>
@@ -118,18 +125,6 @@ namespace DiscordBotsList.Api
             return (await GetAsync<WeekendObject>("/weekend")).Weekend;
         }
 
-        
-        /// <summary>
-        ///     Gets your own bot with as an ISelfBot
-        /// </summary>
-        /// <returns>your own bot with as an ISelfBot</returns>
-        public async Task<IDblSelfBot> GetMeAsync()
-        {
-            var bot = await GetBotAsync<SelfBot>(_selfId);
-            bot.api = this;
-            return bot;
-        }
-
         /// <summary>
         ///     Gets unique voters that have voted on your bot
         ///     Max 1000, If you have more, you MUST use WEBHOOKS instead.
@@ -142,17 +137,17 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Update your stats
+        ///     Updates your bot's server count
         /// </summary>
-        /// <param name="guildCount">count of guilds</param>
-        public async Task UpdateStatsAsync(int guildCount)
+        /// <param name="serverCount">Your bot's server count</param>
+        public async Task UpdateServerCountAsync(int serverCount)
         {
-            if (guildCount <= 0)
+            if (serverCount <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(guildCount), "guildCount cannot be less than 1.");
+                throw new ArgumentOutOfRangeException(nameof(serverCount), "serverCount cannot be less than 1.");
             }
 
-            var json = JsonSerializer.Serialize(new GuildCountObject(guildCount));
+            var json = JsonSerializer.Serialize(new ServerCountObject(serverCount));
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             await _httpClient.PostAsync($"{baseEndpoint}/bots/stats", httpContent);

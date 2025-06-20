@@ -57,13 +57,7 @@ namespace DiscordBotsList.Api.Tests
             Assert.NotNull(bot);
             Assert.Equal(botId, bot.Id);
         }
-
-        [Fact]
-        public async Task GetMeTestAsync()
-        {
-            Assert.NotNull(await _api.GetMeAsync());
-        }
-
+        
         [Fact]
         public async Task GetBotsTestAsync()
         {
@@ -78,15 +72,15 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task GetStatsTestAsync()
+        public async Task GetServerCountTestAsync()
         {
-            Assert.NotNull(await _api.GetStatsAsync());
+            await _api.GetServerCountAsync();
         }
         
         [Fact]
-        public async Task UpdateStatsTestAsync()
+        public async Task UpdateServerCountTestAsync()
         {
-            await _api.UpdateStatsAsync(2);
+            await _api.UpdateServerCountAsync(2);
         }
     }
 }

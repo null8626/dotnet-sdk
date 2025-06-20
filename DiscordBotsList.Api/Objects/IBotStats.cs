@@ -4,6 +4,6 @@ namespace DiscordBotsList.Api.Objects
 {
     public interface IDblBotStats
     {
-        int GuildCount { get; }
+        int ServerCount { get; }
     }
 }

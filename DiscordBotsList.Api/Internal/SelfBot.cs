@@ -21,9 +21,9 @@ namespace DiscordBotsList.Api.Internal
             return await api.IsWeekendAsync();
         }
 
-        public async Task UpdateStatsAsync(int guildCount)
+        public async Task UpdateServerCountAsync(int serverCount)
         {
-            await api.UpdateStatsAsync(guildCount);
+            await api.UpdateServerCountAsync(serverCount);
         }
     }
 }

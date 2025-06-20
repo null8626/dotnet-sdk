@@ -1,13 +1,17 @@
-﻿namespace DiscordBotsList.Api.Objects
+﻿using System.Text.RegularExpressions;
+
+namespace DiscordBotsList.Api.Objects
 {
     public enum WidgetType
     {
-        DISCORD_BOT,
-        DISCORD_SERVER,
+        DiscordBot,
+        DiscordServer,
     }
 
     public static class Widget
     {
+        private static readonly Regex typeConversionRegex = new Regex("(?<!^)([A-Z])", RegexOptions.Compiled);
+
         /// <summary>
         ///     Generates a large widget URL.
         /// </summary>
@@ -16,7 +20,7 @@
         /// <returns>The widget URL.</returns>
         public static string Large(WidgetType type, ulong entityId)
         {
-            return $"{DiscordBotListApi.baseEndpoint}/widgets/large/{type.ToString().ToLower().Replace('_', '/')}/{entityId}";
+            return $"{DiscordBotListApi.baseEndpoint}/widgets/large/{typeConversionRegex.Replace(type.ToString(), "/$1").ToLower()}/{entityId}";
         }
 
         /// <summary>
@@ -27,7 +31,7 @@
         /// <returns>The widget URL.</returns>
         public static string Votes(WidgetType type, ulong entityId)
         {
-            return $"{DiscordBotListApi.baseEndpoint}/widgets/small/votes/{type.ToString().ToLower().Replace('_', '/')}/{entityId}";
+            return $"{DiscordBotListApi.baseEndpoint}/widgets/small/votes/{typeConversionRegex.Replace(type.ToString(), "/$1").ToLower()}/{entityId}";
         }
 
         /// <summary>
@@ -38,7 +42,7 @@
         /// <returns>The widget URL.</returns>
         public static string Owner(WidgetType type, ulong entityId)
         {
-            return $"{DiscordBotListApi.baseEndpoint}/widgets/small/owner/{type.ToString().ToLower().Replace('_', '/')}/{entityId}";
+            return $"{DiscordBotListApi.baseEndpoint}/widgets/small/owner/{typeConversionRegex.Replace(type.ToString(), "/$1").ToLower()}/{entityId}";
         }
 
         /// <summary>
@@ -49,7 +53,7 @@
         /// <returns>The widget URL.</returns>
         public static string Social(WidgetType type, ulong entityId)
         {
-            return $"{DiscordBotListApi.baseEndpoint}/widgets/small/social/{type.ToString().ToLower().Replace('_', '/')}/{entityId}";
+            return $"{DiscordBotListApi.baseEndpoint}/widgets/small/social/{typeConversionRegex.Replace(type.ToString(), "/$1").ToLower()}/{entityId}";
         }
     }
 }
