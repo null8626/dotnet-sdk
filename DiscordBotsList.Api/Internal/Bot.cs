@@ -32,7 +32,7 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
 
-        [JsonPropertyName("server_count")] public int? guildCount { get; set; }
+        [JsonPropertyName("server_count")] public int? serverCount { get; set; }
 
         [JsonPropertyName("vanity")] public string vanity { get; set; }
 
@@ -48,7 +48,7 @@ namespace DiscordBotsList.Api.Internal
 
         public DateTime SubmittedAt => submittedAt;
 
-        public int? GuildCount => guildCount;
+        public int? ServerCount => serverCount;
 
         public string GithubUrl => githubUrl;
 

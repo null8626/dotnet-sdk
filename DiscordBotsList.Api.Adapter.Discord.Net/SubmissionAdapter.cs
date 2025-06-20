@@ -19,7 +19,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 
         public override async Task RunAsync()
         {
-            await api.UpdateStatsAsync((await client.GetGuildsAsync()).Count);
+            await api.UpdateServerCountAsync((await client.GetGuildsAsync()).Count);
         }
     }
 }

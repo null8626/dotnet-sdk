@@ -3,19 +3,19 @@ using System.Text.Json.Serialization;
 
 namespace DiscordBotsList.Api.Internal
 {
-    internal class GuildCountObject
+    internal class ServerCountObject
     {
-        [JsonPropertyName("server_count")] internal int guildCount;
+        [JsonPropertyName("server_count")] internal int serverCount;
 
-        public GuildCountObject(int count)
+        public ServerCountObject(int count)
         {
-            guildCount = count;
+            serverCount = count;
         }
     }
 
     internal class BotStatsObject : IDblBotStats
     {
-        [JsonPropertyName("server_count")] internal int guildCount { get; set; }
-        public int GuildCount => guildCount;
+        [JsonPropertyName("server_count")] internal int serverCount { get; set; }
+        public int ServerCount => serverCount;
     }
 }
