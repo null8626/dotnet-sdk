@@ -1,26 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Authors>Velddev, Faith</Authors>
+        <Authors>Velddev, Faith, null8626</Authors>
         <Company>Top.gg</Company>
-        <Description>The community-maintained .NET library for Top.gg</Description>
+        <Description>Top.gg API webhooks wrapper for ASP.NET</Description>
         <Copyright>Mike Veldsink</Copyright>
         <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>discord bots topgg api</PackageTags>
-        <PackageReleaseNotes>update to net 8</PackageReleaseNotes>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyName>DiscordBotsList.Api</AssemblyName>
-        <RootNamespace>DiscordBotsList.Api</RootNamespace>
-        <Product>DiscordBotsList.Api</Product>
+        <PackageTags>discord bots topgg api webhooks asp.net</PackageTags>
         <Version>2.0.0</Version>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
         <PackageReference Include="System.Text.Json" Version="9.0.6" />
     </ItemGroup>
 

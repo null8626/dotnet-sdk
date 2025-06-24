@@ -5,11 +5,11 @@
         <Authors>Velddev, Faith</Authors>
         <Company>Top.gg</Company>
         <Product>DiscordBotsList.Api.Adapter.Discord.Net</Product>
-        <Description>Adapter for Discord.Net</Description>
+        <Description>Top.gg API adapter for Discord.Net</Description>
         <PackageReleaseNotes>Initial release</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Copyright>Mike Veldsink</Copyright>
-        <PackageTags>discord bots list org wrapper api discord.net</PackageTags>
+        <PackageTags>discord bots topgg api discord.net</PackageTags>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
         <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>

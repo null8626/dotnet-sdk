@@ -4,10 +4,26 @@ The community-maintained .NET library for Top.gg.
 
 ## Installation
 
-If you're using Nuget, you can use install it with the ID `DiscordBotsList.Api` like so:
+### Main API wrapper
+
+#### Library agnostic
 
 ```powershell
 > Install-Package DiscordBotsList.Api
+```
+
+#### Discord.NET-based
+
+```powershell
+> Install-Package DiscordBotsList.Api.Adapter.Discord.Net
+```
+
+### Webhooks only
+
+If you're using ASP.NET Core:
+
+```powershell
+> Install-Package DiscordBotsList.Api.Webhooks.ASPNETCore
 ```
 
 ## Setting up
@@ -19,14 +35,6 @@ var client = new DiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
 ```
 
 ### Discord.NET-based
-
-If you're using Nuget, you can use install it with the ID `DiscordBotsList.Api.Adapter.Discord.Net` like so:
-
-```powershell
-> Install-Package DiscordBotsList.Api.Adapter.Discord.Net
-```
-
-Then use it in your code:
 
 ```cs
 var discordNetClient = ...;
@@ -141,4 +149,45 @@ var widgetUrl = Widget.Owner(WidgetType.DISCORD_BOT, 1026525568344264724U);
 ```cs
 //                            Widget type             Discord ID
 var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+### Webhooks
+
+#### Being notified whenever someone voted for your bot
+
+With ASP.NET Core:
+
+```cs
+using DiscordBotsList.Api.Webhooks.ASPNETCore;
+
+namespace MyServer
+{
+    internal class MyVoteListener : IReceiver<Vote>
+    {
+        public Task Callback(Vote vote)
+        {
+            Console.WriteLine($"A user with the ID of {vote.VoterId} has voted us on Top.gg!");
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+            var app = builder.Build();
+
+            app.UseMiddleware<VoteMiddleware<MyVoteListener>>("/votes", Environment.GetEnvironmentVariable("MY_TOPGG_WEBHOOK_SECRET"), new MyVoteListener());
+
+            app.Map("/", async context =>
+            {
+                await context.Response.WriteAsync("Hello, World!");
+            });
+
+            app.Run("http://localhost:8080");
+        }
+    }
+}
 ```

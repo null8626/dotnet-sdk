@@ -39,7 +39,7 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets bots from botlist
+        ///     Fetches bots from Top.gg
         /// </summary>
         /// <param name="sortBy">sorts results based on their monthly vote count, id, or their submission date</param>
         /// <param name="count">amount of bots to retrieve (max: 500)</param>
@@ -66,7 +66,7 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets specific bot by Discord id
+        ///     Fetches specific bot by Discord ID
         /// </summary>
         /// <param name="id">Discord id</param>
         /// <returns>Bot Object</returns>
@@ -76,7 +76,7 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets your bot's server count
+        ///     Fetches your bot's server count
         /// </summary>
         /// <returns>Your bot's server count if available</returns>
         public async Task<int> GetServerCountAsync()
@@ -102,7 +102,7 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets and parses objects
+        ///     Fetches and parses objects
         /// </summary>
         /// <typeparam name="T">Type to parse to</typeparam>
         /// <param name="url">Url to get from</param>
@@ -126,7 +126,7 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets unique voters that have voted on your bot
+        ///     Fetches unique voters that have voted on your bot
         ///     Max 1000, If you have more, you MUST use WEBHOOKS instead.
         /// </summary>
         /// <param name="page">The page number, defaults to 1</param>
