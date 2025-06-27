@@ -20,10 +20,8 @@ The community-maintained .NET library for Top.gg.
 
 ### Webhooks only
 
-If you're using ASP.NET Core:
-
 ```powershell
-> Install-Package DiscordBotsList.Api.Webhooks.ASPNETCore
+> Install-Package DiscordBotsList.Api.Webhooks
 ```
 
 ## Setting up
@@ -46,7 +44,6 @@ var client = new DiscordNetDblApi(discordNetClient, "TOPGG_TOKEN");
 ### Getting a bot
 
 ```cs
-//                                 Discord ID
 var bot = await client.GetBotAsync(264811613708746752U);
 ```
 
@@ -84,7 +81,6 @@ var voters = await client.GetVotersAsync(2);
 ### Check if a user has voted for your bot
 
 ```cs
-//                                Discord ID
 var voted = await client.HasVoted(661200758510977084U);
 ```
 
@@ -97,7 +93,6 @@ var serverCount = await client.GetServerCountAsync();
 ### Posting your bot's server count
 
 ```cs
-//                                  Server count
 await client.UpdateServerCountAsync(bot.GetServerCount());
 ```
 
@@ -126,28 +121,24 @@ var isWeekend = await client.IsWeekendAsync();
 #### Large
 
 ```cs
-//                           Widget type             Discord ID
 var widgetUrl = Widget.Large(WidgetType.DISCORD_BOT, 1026525568344264724U);
 ```
 
 #### Votes
 
 ```cs
-//                           Widget type             Discord ID
 var widgetUrl = Widget.Votes(WidgetType.DISCORD_BOT, 1026525568344264724U);
 ```
 
 #### Owner
 
 ```cs
-//                           Widget type             Discord ID
 var widgetUrl = Widget.Owner(WidgetType.DISCORD_BOT, 1026525568344264724U);
 ```
 
 #### Social
 
 ```cs
-//                            Widget type             Discord ID
 var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
 ```
 
@@ -155,10 +146,10 @@ var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
 
 #### Being notified whenever someone voted for your bot
 
-With ASP.NET Core:
+With ASP.NET Core or Blazor:
 
 ```cs
-using DiscordBotsList.Api.Webhooks.ASPNETCore;
+using DiscordBotsList.Api.Webhooks;
 
 namespace MyServer
 {

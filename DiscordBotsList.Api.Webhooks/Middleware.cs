@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace DiscordBotsList.Api.Webhooks.ASPNETCore
+namespace DiscordBotsList.Api.Webhooks
 {
     public class Middleware<Receiver, Event> where Receiver : IReceiver<Event>
     {
@@ -47,11 +47,9 @@ namespace DiscordBotsList.Api.Webhooks.ASPNETCore
                     if (!context.Response.HasStarted)
                     {
                         context.Response.StatusCode = 204;
-                        await context.Response.WriteAsync("");
                     }
                 }
-
-                if (!context.Response.HasStarted)
+                else if (!context.Response.HasStarted)
                 {
                     context.Response.StatusCode = 400;
                     await context.Response.WriteAsync("Bad request");

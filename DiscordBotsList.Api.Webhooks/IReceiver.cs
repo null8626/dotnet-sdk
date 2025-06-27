@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DiscordBotsList.Api.Webhooks.ASPNETCore
+namespace DiscordBotsList.Api.Webhooks
 {
     public interface IReceiver<T>
     {

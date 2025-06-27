@@ -3,21 +3,30 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Web;
 
-namespace DiscordBotsList.Api.Webhooks.ASPNETCore
+namespace DiscordBotsList.Api.Webhooks
 {
     public class Vote
     {
-        [JsonPropertyName("bot")] internal ulong botId { get; init; }
+        [JsonPropertyName("bot")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong botId { get; init; }
 
-        [JsonPropertyName("guild")] internal ulong serverId { get; init; }
+        [JsonPropertyName("guild")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong serverId { get; init; }
 
-        [JsonPropertyName("user")] internal ulong voterId { get; init; }
+        [JsonPropertyName("user")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong voterId { get; init; }
 
-        [JsonPropertyName("isWeekend")] internal bool isWeekend { get; init; }
+        [JsonPropertyName("isWeekend")]
+        public bool isWeekend { get; init; }
 
-        [JsonPropertyName("type")] internal string type { get; init; }
+        [JsonPropertyName("type")]
+        public string type { get; init; }
 
-        [JsonPropertyName("query")] internal string query { get; init; }
+        [JsonPropertyName("query")]
+        public string query { get; init; }
 
         public ulong ReceiverId => botId == 0 ? serverId : botId;
         public ulong VoterId => voterId;

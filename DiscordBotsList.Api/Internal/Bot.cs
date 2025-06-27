@@ -10,37 +10,54 @@ namespace DiscordBotsList.Api.Internal
     {
         internal DiscordBotListApi api;
 
-        [JsonPropertyName("clientid")] public ulong clientId { get; set; }
+        [JsonPropertyName("clientid")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong clientId { get; set; }
 
-        [JsonPropertyName("prefix")] public string prefix { get; set; }
+        [JsonPropertyName("prefix")]
+        public string prefix { get; set; }
 
-        [JsonPropertyName("shortdesc")] public string shortDescription { get; set; }
+        [JsonPropertyName("shortdesc")]
+        public string shortDescription { get; set; }
 
-        [JsonPropertyName("longdesc")] public string longDescription { get; set; }
+        [JsonPropertyName("longdesc")]
+        public string longDescription { get; set; }
 
-        [JsonPropertyName("tags")] public List<string> tags { get; set; }
+        [JsonPropertyName("tags")]
+        public List<string> tags { get; set; }
 
-        [JsonPropertyName("website")] public string websiteUrl { get; set; }
+        [JsonPropertyName("website")]
+        public string websiteUrl { get; set; }
 
-        [JsonPropertyName("support")] public string supportUrl { get; set; }
+        [JsonPropertyName("support")]
+        public string supportUrl { get; set; }
 
-        [JsonPropertyName("github")] public string githubUrl { get; set; }
+        [JsonPropertyName("github")]
+        public string githubUrl { get; set; }
 
-        [JsonPropertyName("owners")] public List<ulong> owners { get; set; }
+        [JsonPropertyName("owners")]
+        public List<ulong> owners { get; set; }
 
-        [JsonPropertyName("invite")] public string inviteUrl { get; set; }
+        [JsonPropertyName("invite")]
+        public string inviteUrl { get; set; }
 
-        [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
+        [JsonPropertyName("date")]
+        public DateTime submittedAt { get; set; }
 
-        [JsonPropertyName("server_count")] public int? serverCount { get; set; }
+        [JsonPropertyName("server_count")]
+        public int? serverCount { get; set; }
 
-        [JsonPropertyName("vanity")] public string vanity { get; set; }
+        [JsonPropertyName("vanity")]
+        public string vanity { get; set; }
 
-        [JsonPropertyName("points")] public int points { get; set; }
+        [JsonPropertyName("points")]
+        public int points { get; set; }
 
-        [JsonPropertyName("monthlyPoints")] public int monthlyPoints { get; set; }
+        [JsonPropertyName("monthlyPoints")]
+        public int monthlyPoints { get; set; }
 
-        [JsonPropertyName("reviews")] public BotReviews reviews { get; set; }
+        [JsonPropertyName("reviews")]
+        public BotReviews reviews { get; set; }
 
         public string VanityTag => vanity;
 
