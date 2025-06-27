@@ -20,10 +20,8 @@ The community-maintained .NET library for Top.gg.
 
 ### Webhooks only
 
-If you're using ASP.NET Core:
-
 ```powershell
-> Install-Package DiscordBotsList.Api.Webhooks.ASPNETCore
+> Install-Package DiscordBotsList.Api.Webhooks
 ```
 
 ## Setting up
@@ -155,10 +153,10 @@ var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
 
 #### Being notified whenever someone voted for your bot
 
-With ASP.NET Core:
+With ASP.NET Core or Blazor:
 
 ```cs
-using DiscordBotsList.Api.Webhooks.ASPNETCore;
+using DiscordBotsList.Api.Webhooks;
 
 namespace MyServer
 {

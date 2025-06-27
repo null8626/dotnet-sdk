@@ -8,15 +8,20 @@ namespace DiscordBotsList.Api.Internal.Queries
 {
     internal class BotListQuery : ISearchResult<IDblBot>
     {
-        [JsonPropertyName("results")] public List<Bot> results { get; set; }
+        [JsonPropertyName("results")]
+        public List<Bot> results { get; set; }
 
-        [JsonPropertyName("limit")] public int limit { get; set; }
+        [JsonPropertyName("limit")]
+        public int limit { get; set; }
 
-        [JsonPropertyName("offset")] public int? offset { get; set; }
+        [JsonPropertyName("offset")]
+        public int? offset { get; set; }
 
-        [JsonPropertyName("count")] public int count { get; set; }
+        [JsonPropertyName("count")]
+        public int count { get; set; }
 
-        [JsonPropertyName("total")] public int total { get; set; }
+        [JsonPropertyName("total")]
+        public int total { get; set; }
 
         public List<IDblBot> Items => results
             .Cast<IDblBot>()

@@ -4,6 +4,7 @@ namespace DiscordBotsList.Api.Internal
 {
     internal class HasVotedObject
     {
-        [JsonPropertyName("voted")] public int? HasVoted { get; set; }
+        [JsonPropertyName("voted")]
+        public int? HasVoted { get; init; }
     }
 }

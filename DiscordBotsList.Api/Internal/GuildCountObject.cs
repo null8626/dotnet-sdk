@@ -5,7 +5,8 @@ namespace DiscordBotsList.Api.Internal
 {
     internal class ServerCountObject
     {
-        [JsonPropertyName("server_count")] internal int serverCount;
+        [JsonPropertyName("server_count")]
+        internal int serverCount;
 
         public ServerCountObject(int count)
         {
@@ -15,7 +16,8 @@ namespace DiscordBotsList.Api.Internal
 
     internal class BotStatsObject : IDblBotStats
     {
-        [JsonPropertyName("server_count")] internal int serverCount { get; set; }
+        [JsonPropertyName("server_count")]
+        internal int serverCount { get; set; }
         public int ServerCount => serverCount;
     }
 }

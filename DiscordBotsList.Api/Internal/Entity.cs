@@ -5,10 +5,14 @@ namespace DiscordBotsList.Api.Internal
 {
     public class Entity: IDblEntity
     {
-        [JsonPropertyName("avatar")] public string AvatarUrl { get; set; }
+        [JsonPropertyName("avatar")]
+        public string AvatarUrl { get; set; }
 
-        [JsonPropertyName("id")] public ulong Id { get; set; }
+        [JsonPropertyName("id")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong Id { get; set; }
 
-        [JsonPropertyName("username")] public string Username { get; set; }
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
     }
 }
