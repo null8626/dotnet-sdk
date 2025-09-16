@@ -14,16 +14,5 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net.Utils
         {
             return new DiscordNetDblApi(client, dblToken);
         }
-
-        /// <summary>
-        ///     Creates a DiscordBotsList Api
-        /// </summary>
-        /// <param name="client">your client</param>
-        /// <param name="dblToken">Your DiscordBotsList token</param>
-        /// <returns>A new instance of a DblApi</returns>
-        public static ShardedDiscordNetDblApi CreateDblApi(this DiscordShardedClient client, string dblToken)
-        {
-            return new ShardedDiscordNetDblApi(client, dblToken);
-        }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using DiscordBotsList.Api.Objects;
 using System;
-using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
@@ -12,14 +10,9 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             return new DiscordNetDblApi(client, dblToken);
         }
-
-        public static ShardedDiscordNetDblApi CreateDblApi(this DiscordShardedClient client, string dblToken)
-        {
-            return new ShardedDiscordNetDblApi(client, dblToken);
-        }
     }
 
-    public class DiscordNetDblApi : AuthDiscordBotListApi
+    public class DiscordNetDblApi : DiscordBotListApi
     {
         protected IDiscordClient client;
 
@@ -28,51 +21,17 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             this.client = client;
         }
 
-        public async Task<IDblBot> GetBotAsync(IUser user)
-        {
-            return await GetBotAsync(user.Id);
-        }
-
-        public async Task<IDblUser> GetUserAsync(IUser user)
-        {
-            return await GetUserAsync(user.Id);
-        }
-
         /// <summary>
-        ///     Creates an IAdapter that updates your servercount on RunAsync().
+        ///     Creates a SubmissionAdapter that updates your servercount on RunAsync().
         /// </summary>
-        /// <param name="client">Your already connected client</param>
         /// <param name="updateTime">
-        ///     Timespan for when you want to submit guildcount, leave null if you want it every JoinedGuild
-        ///     event
+        ///     Timespan for when you want to submit guildcount, must be at least 15 minutes
         /// </param>
-        /// <returns>an IAdapter that updates your servercount on RunAsync(), does not automatically do it yet.</returns>
+        /// <returns>A SubmissionAdapter that updates your servercount on RunAsync().</returns>
         /// <seealso cref="ListenAsync()" />
-        public virtual IAdapter CreateListener(TimeSpan? updateTime = null)
+        public SubmissionAdapter CreateListener(TimeSpan? updateTime = null)
         {
-            return new SubmissionAdapter(this, client, updateTime ?? TimeSpan.Zero);
-        }
-    }
-
-    public class ShardedDiscordNetDblApi : DiscordNetDblApi
-    {
-        public ShardedDiscordNetDblApi(DiscordShardedClient client, string dblToken) : base(client, dblToken)
-        {
-        }
-
-        /// <summary>
-        ///     Creates an IAdapter that updates your servercount on RunAsync().
-        /// </summary>
-        /// <param name="client">Your already connected client</param>
-        /// <param name="updateTime">
-        ///     Timespan for when you want to submit guildcount, leave null if you want it every JoinedGuild
-        ///     event
-        /// </param>
-        /// <returns>an IAdapter that updates your servercount on RunAsync(), does not automatically do it yet.</returns>
-        /// <seealso cref="ListenAsync()" />
-        public override IAdapter CreateListener(TimeSpan? updateTime = null)
-        {
-            return new ShardedSubmissionAdapter(this, client as DiscordShardedClient, updateTime ?? TimeSpan.Zero);
+            return new SubmissionAdapter(this, client, updateTime ?? TimeSpan.FromMinutes(15));
         }
     }
 }
