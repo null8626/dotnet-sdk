@@ -22,7 +22,7 @@ namespace DiscordBotsList.Api
 
     public class DiscordBotListApi
     {
-        internal const string baseEndpoint = "https://top.gg/api/v1";
+        internal const string baseEndpoint = "https://top.gg/api";
         private readonly JsonSerializerOptions _serializerOptions;
         private readonly ulong _selfId;
         private readonly HttpClient _httpClient;
@@ -79,7 +79,7 @@ namespace DiscordBotsList.Api
         ///     Fetches your bot's server count
         /// </summary>
         /// <returns>Your bot's server count if available</returns>
-        public async Task<int> GetServerCountAsync()
+        public async Task<int> GetBotServerCountAsync()
         {
             var result = await GetAsync<BotStatsObject>("/bots/stats");
 
@@ -126,21 +126,20 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Fetches unique voters that have voted on your bot
-        ///     Max 1000, If you have more, you MUST use WEBHOOKS instead.
+        ///     Fetches unique voters that have voted for your project
         /// </summary>
         /// <param name="page">The page number, defaults to 1</param>
         /// <returns>A list of voters</returns>
         public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return (await GetAsync<List<Entity>>($"/bots/{_selfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
+            return (await GetAsync<List<Project>>($"/bots/{_selfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
         }
 
         /// <summary>
         ///     Updates your bot's server count
         /// </summary>
         /// <param name="serverCount">Your bot's server count</param>
-        public async Task UpdateServerCountAsync(int serverCount)
+        public async Task UpdateBotServerCountAsync(int serverCount)
         {
             if (serverCount <= 0)
             {
@@ -154,9 +153,9 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     returns true if user have voted for the past 12 hours
+        ///     returns true if user have voted for your project in the past 12 hours
         /// </summary>
-        /// <param name="userId">Amount of days to filter</param>
+        /// <param name="userId">The specified user's ID</param>
         /// <returns>True or False</returns>
         public async Task<bool> HasVoted(ulong userId)
         {

@@ -6,7 +6,7 @@ using DiscordBotsList.Api.Objects;
 
 namespace DiscordBotsList.Api.Internal
 {
-    public class Bot : Entity, IDblBot
+    public class Bot : Project, IDblBot
     {
         internal DiscordBotListApi api;
 

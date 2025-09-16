@@ -72,15 +72,15 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task GetServerCountTestAsync()
+        public async Task GetBotServerCountTestAsync()
         {
-            await _api.GetServerCountAsync();
+            await _api.GetBotServerCountAsync();
         }
         
         [Fact]
-        public async Task UpdateServerCountTestAsync()
+        public async Task UpdateBotServerCountTestAsync()
         {
-            await _api.UpdateServerCountAsync(2);
+            await _api.UpdateBotServerCountAsync(2);
         }
     }
 }

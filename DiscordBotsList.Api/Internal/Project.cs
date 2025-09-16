@@ -3,7 +3,7 @@ using DiscordBotsList.Api.Objects;
 
 namespace DiscordBotsList.Api.Internal
 {
-    public class Entity: IDblEntity
+    public class Project: IDblEntity
     {
         [JsonPropertyName("avatar")]
         public string AvatarUrl { get; set; }
