@@ -2,6 +2,7 @@
 
 using DiscordBotsList.Api.Objects;
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,8 +12,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
     {
         public event Action<Exception?> Posted = _ => { };
         private readonly TimeSpan updateTime;
-
-        private CancellationTokenSource? cancellationTokenSource;
+        private readonly BackgroundWorker backgroundWorker;
 
         public Adapter(TimeSpan updateTime)
         {
@@ -22,7 +22,13 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             }
 
             this.updateTime = updateTime;
-            cancellationTokenSource = null;
+
+            backgroundWorker = new BackgroundWorker
+            {
+                WorkerSupportsCancellation = true
+            };
+
+            backgroundWorker.DoWork += Autopost;
         }
 
         public virtual Task RunAsync()
@@ -32,57 +38,44 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 
         public bool IsRunning()
         {
-            return cancellationTokenSource != null;
+            return backgroundWorker.IsBusy;
+        }
+
+        private void Autopost(object? sender, DoWorkEventArgs e)
+        {
+            while (!backgroundWorker.CancellationPending)
+            {
+                try
+                {
+                    RunAsync().GetAwaiter().GetResult();
+                }
+                catch (Exception err)
+                {
+                    Stop();
+
+                    Posted?.Invoke(err);
+                    break;
+                }
+
+                Posted?.Invoke(null);
+
+                Thread.Sleep(updateTime);
+            }
         }
 
         public void Start()
         {
-            if (IsRunning())
+            if (!IsRunning())
             {
-                return;
+                backgroundWorker.RunWorkerAsync();
             }
-
-            cancellationTokenSource = new CancellationTokenSource();
-
-            Task.Run(async () =>
-            {
-                while (!cancellationTokenSource.Token.IsCancellationRequested)
-                {
-                    try
-                    {
-                        await RunAsync();
-                    }
-                    catch (Exception err)
-                    {
-                        cancellationTokenSource.Cancel();
-                        cancellationTokenSource = null;
-
-                        Posted?.Invoke(err);
-                        break;
-                    }
-
-                    Posted?.Invoke(null);
-
-                    await Task.Delay(updateTime, cancellationTokenSource.Token);
-                }
-            }, cancellationTokenSource.Token);
         }
 
         public void Stop()
         {
             if (IsRunning())
             {
-                cancellationTokenSource!.Cancel();
-                cancellationTokenSource = null;
-            }
-        }
-
-        public async Task StopAsync()
-        {
-            if (IsRunning())
-            {
-                await cancellationTokenSource!.CancelAsync();
-                cancellationTokenSource = null;
+                backgroundWorker.CancelAsync();
             }
         }
     }
