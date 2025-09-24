@@ -1,4 +1,5 @@
 ﻿using DiscordBotsList.Api.Internal;
+using DiscordBotsList.Api.Internal.Queries;
 using DiscordBotsList.Api.Objects;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,64 @@ namespace DiscordBotsList.Api
             _selfId = selfId;
             _token = token;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        /// <summary>
+        ///     Gets bots from botlist
+        /// </summary>
+        /// <param name="count">amount of bots to appear per page (max: 500)</param>
+        /// <param name="page">current page to query</param>
+        /// <returns>List of Bot Objects</returns>
+        public new async Task<ISearchResult<IDblBot>> GetBotsAsync(int count = 50, int page = 0)
+        {
+            var result = await GetAsync<BotListQuery>("bots");
+            foreach (var bot in result.Items) (bot as Bot).api = this;
+            return result;
+        }
+
+        /// <summary>
+        ///     Template
+        ///     of GetBotAsync for internal usage.
+        /// </summary>
+        /// <typeparam name="T">Type of Bot</typeparam>
+        /// <param name="id">Discord id</param>
+        /// <returns>Bot object of type T</returns>
+        internal async Task<T> GetBotAsync<T>(ulong id) where T : Bot
+        {
+            var t = await GetAsync<T>($"bots/{id}");
+            if (t == null) return null;
+            t.api = this;
+            return t;
+        }
+
+        /// <summary>
+        ///     Get specific bot by Discord id
+        /// </summary>
+        /// <param name="id">Discord id</param>
+        /// <returns>Bot Object</returns>
+        public new async Task<IDblBot> GetBotAsync(ulong id)
+        {
+            return await GetBotAsync<Bot>(id);
+        }
+
+        /// <summary>
+        ///     Get bot stats
+        /// </summary>
+        /// <param name="id">Discord id</param>
+        /// <returns>IBotStats object related to the bot</returns>
+        public new async Task<IDblBotStats> GetBotStatsAsync(ulong id)
+        {
+            return await GetAsync<BotStatsObject>($"bots/{id}/stats");
+        }
+
+        /// <summary>
+        ///     Get specific user by Discord id
+        /// </summary>
+        /// <param name="id">Discord id</param>
+        /// <returns>User Object</returns>
+        public new async Task<IDblUser> GetUserAsync(ulong id)
+        {
+            return await GetAsync<User>($"users/{id}");
         }
 
         /// <summary>
