@@ -10,7 +10,6 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
     public class Adapter : IAdapter
     {
         public event Action<string> Log = _ => { };
-        public event Action<Exception?> Posted = _ => { };
         private readonly TimeSpan updateTime;
         private Timer? timer;
 
@@ -38,14 +37,12 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
                 await RunAsync();
 
                 Log?.Invoke("Just automatically posted bot stats.");
-                Posted?.Invoke(null);
             }
             catch (Exception ex)
             {
                 Stop();
 
                 Log?.Invoke("Unable to automatically post bot stats: " + ex.Message);
-                Posted?.Invoke(ex);
             }
         }
 
