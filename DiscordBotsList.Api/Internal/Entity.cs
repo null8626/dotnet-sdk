@@ -9,11 +9,11 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("defAvatar")] public string DefaultAvatar { get; set; }
 
-        public string AvatarUrl => !string.IsNullOrEmpty(Avatar)
-            ? $"https://cdn.discordapp.com/{Id}/{Avatar}.png"
-            : $"https://cdn.discordapp.com/{Id}/{DefaultAvatar}.png";
+        public string AvatarUrl => Avatar;
 
-        [JsonPropertyName("id")] public ulong Id { get; set; }
+        [JsonPropertyName("id")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong Id { get; set; }
 
         [JsonPropertyName("username")] public string Username { get; set; }
 
