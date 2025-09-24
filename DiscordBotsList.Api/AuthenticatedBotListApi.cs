@@ -1,6 +1,7 @@
 ﻿using DiscordBotsList.Api.Internal;
 using DiscordBotsList.Api.Internal.Queries;
 using DiscordBotsList.Api.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -75,11 +76,11 @@ namespace DiscordBotsList.Api
         /// <summary>
         ///     Get bot stats
         /// </summary>
-        /// <param name="id">Discord id</param>
+        /// <param name="id">Discord id, no longer needed</param>
         /// <returns>IBotStats object related to the bot</returns>
-        public new async Task<IDblBotStats> GetBotStatsAsync(ulong id)
+        public new async Task<IDblBotStats> GetBotStatsAsync(ulong id = 0)
         {
-            return await GetAsync<BotStatsObject>($"bots/{id}/stats");
+            return await GetAsync<BotStatsObject>($"bots/{_selfId}/stats");
         }
 
         /// <summary>
@@ -104,13 +105,13 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets all voters that have voted on your bot
-        ///     Max 1000, If you have more, you MUST use WEBHOOKS instead.
+        ///     Fetches unique voters that have voted for your project
         /// </summary>
+        /// <param name="page">The page number, defaults to 1</param>
         /// <returns>A list of voters</returns>
-        public async Task<List<IDblEntity>> GetVotersAsync()
+        public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return (await GetVotersAsync<Entity>()).Cast<IDblEntity>().ToList();
+            return (await GetAsync<List<Entity>>($"bots/{_selfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
         }
 
         /// <summary>
