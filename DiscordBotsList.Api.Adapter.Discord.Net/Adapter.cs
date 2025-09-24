@@ -2,7 +2,6 @@
 
 using DiscordBotsList.Api.Objects;
 using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +9,10 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
     public class Adapter : IAdapter
     {
+        public event Action<string> Log = _ => { };
         public event Action<Exception?> Posted = _ => { };
         private readonly TimeSpan updateTime;
-        private readonly BackgroundWorker backgroundWorker;
+        private Timer? timer;
 
         public Adapter(TimeSpan updateTime)
         {
@@ -22,13 +22,6 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             }
 
             this.updateTime = updateTime;
-
-            backgroundWorker = new BackgroundWorker
-            {
-                WorkerSupportsCancellation = true
-            };
-
-            backgroundWorker.DoWork += Autopost;
         }
 
         public virtual Task RunAsync()
@@ -36,30 +29,23 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
             throw new NotImplementedException();
         }
 
-        public bool IsRunning()
-        {
-            return backgroundWorker.IsBusy;
-        }
+        public bool IsRunning() => timer != null;
 
-        private void Autopost(object? sender, DoWorkEventArgs e)
+        private async void Autopost(object? state)
         {
-            while (!backgroundWorker.CancellationPending)
+            try
             {
-                try
-                {
-                    RunAsync().GetAwaiter().GetResult();
-                }
-                catch (Exception err)
-                {
-                    Stop();
+                await RunAsync();
 
-                    Posted?.Invoke(err);
-                    break;
-                }
-
+                Log?.Invoke("Just automatically posted bot stats.");
                 Posted?.Invoke(null);
+            }
+            catch (Exception ex)
+            {
+                Stop();
 
-                Thread.Sleep(updateTime);
+                Log?.Invoke("Unable to automatically post bot stats: " + ex.Message);
+                Posted?.Invoke(ex);
             }
         }
 
@@ -67,16 +53,14 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             if (!IsRunning())
             {
-                backgroundWorker.RunWorkerAsync();
+                timer = new Timer(Autopost, null, TimeSpan.Zero, updateTime);
             }
         }
 
         public void Stop()
         {
-            if (IsRunning())
-            {
-                backgroundWorker.CancelAsync();
-            }
+            timer?.Dispose();
+            timer = null;
         }
     }
 }
