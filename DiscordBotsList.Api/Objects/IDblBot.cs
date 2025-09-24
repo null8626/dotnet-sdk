@@ -24,7 +24,7 @@ namespace DiscordBotsList.Api.Objects
 
         string InviteUrl { get; }
 
-        DateTime ApprovedAt { get; }
+        DateTime SubmittedAt { get; }
 
         bool IsCertified { get; }
 
