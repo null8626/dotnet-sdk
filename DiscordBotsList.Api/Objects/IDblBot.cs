@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DiscordBotsList.Api.Internal;
 
 namespace DiscordBotsList.Api.Objects
 {
     public interface IDblBot : IDblEntity
     {
+        ulong ClientId { get; }
+
+        string VanityTag { get; }
+        
         string PrefixUsed { get; }
 
         string ShortDescription { get; }
@@ -33,6 +38,8 @@ namespace DiscordBotsList.Api.Objects
         int Points { get; }
         
         int MonthlyPoints { get; }
+
+        BotReviews Reviews { get; }
 
         Task<IDblBotStats> GetStatsAsync();
     }

@@ -51,6 +51,8 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("reviews")]
         public BotReviews reviews { get; set; }
 
+        public ulong ClientId => clientId;
+
         public string VanityTag => vanity;
 
         [Obsolete("Actually refers to when the bot was submitted. Use SubmittedAt instead.")]
@@ -85,6 +87,8 @@ namespace DiscordBotsList.Api.Internal
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
         public string WebsiteUrl => websiteUrl;
+
+        public BotReviews Reviews => reviews;
 
         public async Task<IDblBotStats> GetStatsAsync()
         {
