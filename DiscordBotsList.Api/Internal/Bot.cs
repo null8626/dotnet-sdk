@@ -92,7 +92,7 @@ namespace DiscordBotsList.Api.Internal
 
         public async Task<IDblBotStats> GetStatsAsync()
         {
-            return await api.GetBotStatsAsync(Id);
+            return await ((AuthDiscordBotListApi)api).GetBotStatsAsync(Id);
         }
     }
 }
