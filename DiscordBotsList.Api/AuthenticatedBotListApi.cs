@@ -154,9 +154,9 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     returns true if user have voted for the past 12 hours
+        ///     returns true if the user has voted for your project in the past 12 hours
         /// </summary>
-        /// <param name="userId">Amount of days to filter</param>
+        /// <param name="userId">the user ID</param>
         /// <returns>True or False</returns>
         public async Task<bool> HasVoted(ulong userId)
         {
