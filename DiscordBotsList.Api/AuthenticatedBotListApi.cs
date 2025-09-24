@@ -11,6 +11,13 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api
 {
+    public enum SortBotsBy
+    {
+        MonthlyPoints,
+        Id,
+        Date,
+    }
+
     public class AuthDiscordBotListApi : DiscordBotListApi
     {
         private readonly ulong _selfId;
@@ -24,14 +31,18 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets bots from botlist
+        ///     Fetches bots from Top.gg
         /// </summary>
-        /// <param name="count">amount of bots to appear per page (max: 500)</param>
-        /// <param name="page">current page to query</param>
+        /// <param name="count">amount of bots to retrieve (max: 500)</param>
+        /// <param name="offset">amount of bots to skip</param>
+        /// <param name="sortBy">sorts results based on their monthly vote count, id, or their submission date</param>
         /// <returns>List of Bot Objects</returns>
-        public new async Task<ISearchResult<IDblBot>> GetBotsAsync(int count = 50, int page = 0)
+        public async Task<ISearchResult<IDblBot>> GetBotsAsync(int count = 50, int offset = 0, SortBotsBy sortBy = SortBotsBy.MonthlyPoints)
         {
-            var result = await GetAsync<BotListQuery>("bots");
+            var sortByString = sortBy.ToString();
+            sortByString = char.ToLowerInvariant(sortByString[0]) + sortByString[1..];
+
+            var result = await GetAsync<BotListQuery>($"bots?limit={count}&offset={offset}&sort={sortByString}");
             foreach (var bot in result.Items) (bot as Bot).api = this;
             return result;
         }
