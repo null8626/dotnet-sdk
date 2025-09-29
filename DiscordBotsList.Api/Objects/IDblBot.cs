@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DiscordBotsList.Api.Internal;
 
 namespace DiscordBotsList.Api.Objects
 {
     public interface IDblBot : IDblEntity
     {
+        ulong ClientId { get; }
+
+        string VanityTag { get; }
+        
         string PrefixUsed { get; }
 
         string ShortDescription { get; }
@@ -24,7 +29,7 @@ namespace DiscordBotsList.Api.Objects
 
         string InviteUrl { get; }
 
-        DateTime ApprovedAt { get; }
+        DateTime SubmittedAt { get; }
 
         bool IsCertified { get; }
 
@@ -34,12 +39,14 @@ namespace DiscordBotsList.Api.Objects
         
         int MonthlyPoints { get; }
 
+        BotReviews Reviews { get; }
+
         Task<IDblBotStats> GetStatsAsync();
     }
 
     public interface IDblSelfBot : IDblBot
     {
-        Task<List<IDblEntity>> GetVotersAsync();
+        Task<List<IDblEntity>> GetVotersAsync(int page = 1);
 
         Task<bool> HasVotedAsync(ulong userId);
 
