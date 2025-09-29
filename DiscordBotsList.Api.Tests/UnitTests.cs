@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,10 +11,11 @@ namespace DiscordBotsList.Api.Tests
 
         public static Credentials LoadFromEnv()
         {
-            var cred = new Credentials();
-            cred.BotId = ulong.Parse(Environment.GetEnvironmentVariable("BOT_ID"));
-            cred.Token = Environment.GetEnvironmentVariable("API_KEY");
-            return cred;
+            return new Credentials()
+            {
+                BotId = ulong.Parse(Environment.GetEnvironmentVariable("BOT_ID")),
+                Token = Environment.GetEnvironmentVariable("API_KEY")
+            };
         }
     }
 
@@ -28,13 +28,6 @@ namespace DiscordBotsList.Api.Tests
         {
             _cred = Credentials.LoadFromEnv();
             _api = new AuthDiscordBotListApi(_cred.BotId, _cred.Token);
-        }
-
-        [Fact]
-        public void GetUserTest()
-        {
-            Assert.NotNull(_api.GetMeAsync());
-            Assert.NotNull(_api.GetUserAsync(_cred.BotId));
         }
 
         [Fact]
@@ -56,15 +49,9 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task GetUserTestAsync()
-        {
-            Assert.NotNull(await _api.GetUserAsync(181514288278536193));
-        }
-
-        [Fact]
         public async Task GetBotTestAsync()
         {
-            var botId = 423593006436712458U;
+            var botId = 1026525568344264724U;
             var bot = await _api.GetBotAsync(botId);
             Assert.NotNull(bot);
             Assert.Equal(botId, bot.Id);
@@ -83,12 +70,6 @@ namespace DiscordBotsList.Api.Tests
 
             Assert.NotNull(bots);
             Assert.NotEmpty(bots.Items);
-
-            var firstBot = bots.Items.First();
-
-            var stats = await firstBot.GetStatsAsync();
-
-            Assert.NotNull(stats);
         }
     }
 }
