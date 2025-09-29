@@ -25,8 +25,10 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("website")] public string websiteUrl { get; set; }
 
         [JsonPropertyName("support")]
+        public string supportUrl { get; set; }
+
         [Obsolete("Actually refers to the entire support invite URL, not just its invite code. Use SupportUrl instead.")]
-        public string SupportInviteCode { get; set; }
+        public string SupportInviteCode => supportUrl;
 
         [JsonPropertyName("github")] public string githubUrl { get; set; }
 
@@ -79,9 +81,7 @@ namespace DiscordBotsList.Api.Internal
 
         public List<string> Tags => tags;
 
-#pragma warning disable CS0618
-        public string SupportUrl => SupportInviteCode;
-#pragma warning restore CS0618
+        public string SupportUrl => supportUrl;
 
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
