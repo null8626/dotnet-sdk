@@ -22,12 +22,10 @@ namespace DiscordBotsList.Api
     public class AuthDiscordBotListApi : DiscordBotListApi
     {
         private readonly ulong _selfId;
-        private readonly string _token;
 
         public AuthDiscordBotListApi(ulong selfId, string token)
         {
             _selfId = selfId;
-            _token = token;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
@@ -44,6 +42,7 @@ namespace DiscordBotsList.Api
             sortByString = char.ToLowerInvariant(sortByString[0]) + sortByString[1..];
 
             var result = await GetAsync<BotListQuery>($"bots?limit={count}&offset={offset}&sort={sortByString}");
+
             foreach (var bot in result.Items) (bot as Bot).api = this;
             return result;
         }
@@ -177,9 +176,9 @@ namespace DiscordBotsList.Api
                 .PostAsync($"{baseEndpoint}/bots/{_selfId}/stats", httpContent);
         }
 
-        protected async Task<T> GetAuthorizedAsync<T>(string url)
+        protected Task<T> GetAuthorizedAsync<T>(string url)
         {
-            return await GetAsync<T>(url);
+            return GetAsync<T>(url);
         }
 
         protected async Task<bool> HasVotedAsync(ulong userId)
