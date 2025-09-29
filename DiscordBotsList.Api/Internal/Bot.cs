@@ -34,9 +34,8 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("invite")] public string customInvite { get; set; }
 
-        [JsonPropertyName("date")]
         [Obsolete("Actually refers to when the bot was submitted. Use submittedAt instead.")]
-        public DateTime approvedAt { get; set; }
+        public DateTime approvedAt => submittedAt;
 
         [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
 
