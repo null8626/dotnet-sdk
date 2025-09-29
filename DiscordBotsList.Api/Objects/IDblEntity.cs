@@ -3,12 +3,12 @@
     public interface IDblEntity
     {
         /// <summary>
-        ///     Discord Id
+        ///     Id
         /// </summary>
         ulong Id { get; }
 
         /// <summary>
-        ///     Username of the entity
+        ///     Username
         /// </summary>
         string Username { get; }
 
@@ -18,7 +18,7 @@
         string Discriminator { get; }
 
         /// <summary>
-        ///     Discord avatar url, or default avatar if none found.
+        ///     Avatar url, or default avatar if none found.
         /// </summary>
         string AvatarUrl { get; }
     }

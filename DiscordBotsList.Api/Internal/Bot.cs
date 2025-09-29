@@ -1,7 +1,6 @@
 ﻿using DiscordBotsList.Api.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -10,6 +9,10 @@ namespace DiscordBotsList.Api.Internal
     public class Bot : Entity, IDblBot
     {
         internal DiscordBotListApi api;
+
+        [JsonPropertyName("clientid")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong clientId { get; set; }
 
         [JsonPropertyName("prefix")] public string prefix { get; set; }
 
@@ -21,7 +24,11 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("website")] public string websiteUrl { get; set; }
 
-        [JsonPropertyName("support")] public string SupportInviteCode { get; set; }
+        [JsonPropertyName("support")]
+        public string supportUrl { get; set; }
+
+        [Obsolete("Actually refers to the entire support invite URL, not just its invite code. Use SupportUrl instead.")]
+        public string SupportInviteCode => supportUrl;
 
         [JsonPropertyName("github")] public string githubUrl { get; set; }
 
@@ -29,7 +36,10 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonPropertyName("invite")] public string customInvite { get; set; }
 
-        [JsonPropertyName("date")] public DateTime approvedAt { get; set; }
+        [Obsolete("Actually refers to when the bot was submitted. Use submittedAt instead.")]
+        public DateTime approvedAt => submittedAt;
+
+        [JsonPropertyName("date")] public DateTime submittedAt { get; set; }
 
         [JsonPropertyName("certifiedBot")] public bool certified { get; set; }
 
@@ -39,9 +49,17 @@ namespace DiscordBotsList.Api.Internal
         
         [JsonPropertyName("monthlyPoints")] public int monthlyPoints { get; set; }
 
+        [JsonPropertyName("reviews")]
+        public BotReviews reviews { get; set; }
+
+        public ulong ClientId => clientId;
+
         public string VanityTag => vanity;
 
-        public DateTime ApprovedAt => approvedAt;
+        [Obsolete("Actually refers to when the bot was submitted. Use SubmittedAt instead.")]
+        public DateTime ApprovedAt => submittedAt;
+
+        public DateTime SubmittedAt => submittedAt;
 
         public string GithubUrl => githubUrl;
 
@@ -53,7 +71,7 @@ namespace DiscordBotsList.Api.Internal
 
         public string PrefixUsed => prefix;
 
-        public List<ulong> OwnerIds => owners.ToList();
+        public List<ulong> OwnerIds => owners;
 
         public int Points => points;
         
@@ -61,17 +79,19 @@ namespace DiscordBotsList.Api.Internal
 
         public string ShortDescription => shortDescription;
 
-        public List<string> Tags => tags.ToList();
+        public List<string> Tags => tags;
 
-        public string SupportUrl => "https://discord.gg/" + SupportInviteCode;
-        
+        public string SupportUrl => supportUrl;
+
         public string VanityUrl => "https://top.gg/bot/" + vanity;
 
         public string WebsiteUrl => websiteUrl;
 
+        public BotReviews Reviews => reviews;
+
         public async Task<IDblBotStats> GetStatsAsync()
         {
-            return await api.GetBotStatsAsync(Id);
+            return await ((AuthDiscordBotListApi)api).GetBotStatsAsync(Id);
         }
     }
 }
