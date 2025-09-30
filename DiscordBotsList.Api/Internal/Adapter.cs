@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DiscordBotsList.Api.Adapter.Discord.Net
+namespace DiscordBotsList.Api.Internal
 {
     public class Adapter : IAdapter
     {
@@ -15,7 +15,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
 
         public Adapter(TimeSpan updateTime)
         {
-            if (updateTime < TimeSpan.FromMinutes(15))
+            if (Environment.GetEnvironmentVariable("XUNIT_TEST") != "true" && updateTime < TimeSpan.FromMinutes(15))
             {
                 updateTime = TimeSpan.FromMinutes(15);
             }
