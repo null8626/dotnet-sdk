@@ -16,7 +16,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
     {
         protected DiscordSocketClient client;
 
-        public DiscordNetDblApi(DiscordSocketClient client, string dblToken) : base(null, dblToken)
+        public DiscordNetDblApi(DiscordSocketClient client, string dblToken) : base(client.CurrentUser.Id, dblToken)
         {
             client.Ready += () =>
             {
