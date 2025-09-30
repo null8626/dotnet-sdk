@@ -21,11 +21,28 @@ namespace DiscordBotsList.Api
 
     public class AuthDiscordBotListApi : DiscordBotListApi
     {
-        private readonly ulong _selfId;
+        private ulong? _selfId;
 
-        public AuthDiscordBotListApi(ulong selfId, string token)
+        public ulong SelfId
         {
-            _selfId = selfId;
+            private get
+            {
+                if (_selfId == null)
+                {
+                    throw new NullReferenceException("This client's self ID is still null.");
+                }
+
+                return (ulong)_selfId;
+            }
+            set
+            {
+                _selfId = value;
+            }
+        }
+
+        public AuthDiscordBotListApi(ulong? initialSelfId, string token)
+        {
+            _selfId = initialSelfId;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
@@ -79,7 +96,7 @@ namespace DiscordBotsList.Api
         /// <returns>IBotStats object related to the bot</returns>
         public new async Task<IDblBotStats> GetBotStatsAsync(ulong id = 0)
         {
-            return await GetAsync<BotStatsObject>($"bots/{_selfId}/stats");
+            return await GetAsync<BotStatsObject>($"bots/{SelfId}/stats");
         }
 
         /// <summary>
@@ -98,7 +115,7 @@ namespace DiscordBotsList.Api
         /// <returns>your own bot with as an ISelfBot</returns>
         public async Task<IDblSelfBot> GetMeAsync()
         {
-            var bot = await GetBotAsync<SelfBot>(_selfId);
+            var bot = await GetBotAsync<SelfBot>(SelfId);
             bot.api = this;
             return bot;
         }
@@ -110,7 +127,7 @@ namespace DiscordBotsList.Api
         /// <returns>A list of voters</returns>
         public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return (await GetAsync<List<Entity>>($"bots/{_selfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
+            return (await GetAsync<List<Entity>>($"bots/{SelfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
         }
 
         /// <summary>
@@ -164,8 +181,7 @@ namespace DiscordBotsList.Api
 
         protected async Task<List<T>> GetVotersAsync<T>()
         {
-            var query = $"bots/{_selfId}/votes";
-            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery(query));
+            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery($"bots/{SelfId}/votes"));
         }
 
         protected async Task UpdateStatsAsync(object statsObject)
@@ -173,7 +189,7 @@ namespace DiscordBotsList.Api
             var json = JsonSerializer.Serialize(statsObject);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             await _httpClient
-                .PostAsync($"{baseEndpoint}/bots/{_selfId}/stats", httpContent);
+                .PostAsync($"{baseEndpoint}/bots/{SelfId}/stats", httpContent);
         }
 
         protected Task<T> GetAuthorizedAsync<T>(string url)
@@ -183,8 +199,7 @@ namespace DiscordBotsList.Api
 
         protected async Task<bool> HasVotedAsync(ulong userId)
         {
-            var url = $"bots/{_selfId}/check?userId={userId}";
-            return (await GetAsync<HasVotedObject>(url)).HasVoted.GetValueOrDefault(0) == 1;
+            return (await GetAsync<HasVotedObject>($"bots/{SelfId}/check?userId={userId}")).HasVoted.GetValueOrDefault(0) == 1;
         }
     }
 }

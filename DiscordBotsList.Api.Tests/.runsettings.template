@@ -3,9 +3,9 @@
 <RunSettings>
   <RunConfiguration>
     <EnvironmentVariables>
-      <!-- API Key for top.gg bot -->
-      <API_KEY>MY_API_KEY</API_KEY>
       <BOT_ID>123456</BOT_ID>
+      <BOT_TOKEN>MY_BOT_TOKEN</BOT_TOKEN>
+      <TOPGG_TOKEN>MY_TOPGG_TOKEN</TOPGG_TOKEN>
     </EnvironmentVariables>
   </RunConfiguration>
 </RunSettings>

@@ -1,6 +1,6 @@
-﻿using Discord;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using System;
+using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
@@ -12,12 +12,19 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         }
     }
 
-    public class DiscordNetDblApi : DiscordBotListApi
+    public class DiscordNetDblApi : AuthDiscordBotListApi
     {
-        protected IDiscordClient client;
+        protected DiscordSocketClient client;
 
-        public DiscordNetDblApi(IDiscordClient client, string dblToken) : base(client.CurrentUser.Id, dblToken)
+        public DiscordNetDblApi(DiscordSocketClient client, string dblToken) : base(null, dblToken)
         {
+            client.Ready += () =>
+            {
+                SelfId = client.CurrentUser.Id;
+
+                return Task.CompletedTask;
+            };
+
             this.client = client;
         }
 

@@ -5,6 +5,13 @@
         <RuntimeFrameworkVersion>8.0.0</RuntimeFrameworkVersion>
 
         <IsPackable>false</IsPackable>
+        <RunSettings>
+            <RunConfiguration>
+                <DisableParallelization>true</DisableParallelization>
+                <ParallelizeAssemblies>false</ParallelizeAssemblies>
+                <ParallelizeTestCollections>false</ParallelizeTestCollections>
+            </RunConfiguration>
+        </RunSettings>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,6 +31,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DiscordBotsList.Api\DiscordBotsList.Api.csproj" />
+        <ProjectReference Include="..\DiscordBotsList.Api.Adapter.Discord.Net\DiscordBotsList.Api.Adapter.Discord.Net.csproj" />
     </ItemGroup>
 
 </Project>

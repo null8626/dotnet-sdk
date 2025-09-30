@@ -1,25 +1,17 @@
 ﻿using Discord;
-using DiscordBotsList.Api.Objects;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
-    public class SubmissionAdapter : Adapter
+    public class SubmissionAdapter(AuthDiscordBotListApi api, IDiscordClient client, TimeSpan updateTime) : Internal.Adapter(updateTime)
     {
-        private readonly DiscordBotListApi api;
-        private readonly IDiscordClient client;
-
-        public SubmissionAdapter(DiscordBotListApi api, IDiscordClient client, TimeSpan updateTime) : base(updateTime)
-        {
-            this.api = api;
-            this.client = client;
-        }
+        private readonly AuthDiscordBotListApi api = api;
+        private readonly IDiscordClient client = client;
 
         public override async Task RunAsync()
         {
-            await api.UpdateBotServerCountAsync((await client.GetGuildsAsync()).Count);
+            await api.UpdateStats((await client.GetGuildsAsync()).Count);
         }
     }
 }
