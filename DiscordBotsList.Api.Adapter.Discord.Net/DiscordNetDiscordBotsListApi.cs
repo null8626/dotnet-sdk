@@ -16,16 +16,23 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
     {
         protected DiscordSocketClient client;
 
-        public DiscordNetDblApi(DiscordSocketClient client, string dblToken) : base(client.CurrentUser.Id, dblToken)
+        public DiscordNetDblApi(DiscordSocketClient bot, string dblToken) : base(null, dblToken)
         {
-            client.Ready += () =>
+            try
             {
-                SelfId = client.CurrentUser.Id;
+                SelfId = bot.CurrentUser.Id;
+            }
+            catch (NullReferenceException)
+            {
+                bot.Ready += () =>
+                {
+                    SelfId = bot.CurrentUser.Id;
 
-                return Task.CompletedTask;
-            };
+                    return Task.CompletedTask;
+                };
+            }
 
-            this.client = client;
+            client = bot;
         }
 
         /// <summary>
