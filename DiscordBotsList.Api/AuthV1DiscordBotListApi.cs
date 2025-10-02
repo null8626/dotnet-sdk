@@ -12,8 +12,11 @@ namespace DiscordBotsList.Api
         Topgg,
     }
 
-    public class AuthV1DiscordBotListApi(ulong? initialSelfId, string token) : AuthDiscordBotListApi(initialSelfId, token)
+    public class AuthV1DiscordBotListApi : AuthDiscordBotListApi
     {
+        public AuthV1DiscordBotListApi(string token) : base(token) {}
+        public AuthV1DiscordBotListApi(ulong? initialSelfId, string token) : base(initialSelfId, token) {}
+
         /// <summary>
         ///     Updates the application commands list in your Discord bot's Top.gg page
         /// </summary>
@@ -21,7 +24,7 @@ namespace DiscordBotsList.Api
         /// <param name="commands">A list of application commands in raw Discord API JSON objects</param>
         public async Task UpdateBotCommandsAsync<T>(T commands)
         {
-            await PostAsync<T, string>($"/v1/projects/@me/commands", commands);
+            await PostAsync<T, string>("/v1/projects/@me/commands", commands);
         }
 
         /// <summary>

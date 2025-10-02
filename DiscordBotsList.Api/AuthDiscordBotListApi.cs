@@ -37,6 +37,12 @@ namespace DiscordBotsList.Api
             }
         }
 
+        public AuthDiscordBotListApi(string token)
+        {
+            _selfId = null;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
         public AuthDiscordBotListApi(ulong? initialSelfId, string token)
         {
             _selfId = initialSelfId;
