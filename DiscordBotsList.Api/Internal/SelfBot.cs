@@ -13,7 +13,7 @@ namespace DiscordBotsList.Api.Internal
 
         public async Task<bool> HasVotedAsync(ulong userId)
         {
-            return await ((AuthDiscordBotListApi)api).HasVoted(userId);
+            return await ((AuthDiscordBotListApi)api).HasVotedAsync(userId);
         }
 
         public async Task<bool> IsWeekendAsync()
@@ -23,17 +23,17 @@ namespace DiscordBotsList.Api.Internal
 
         public async Task UpdateStatsAsync(int guildCount)
         {
-            await ((AuthDiscordBotListApi)api).UpdateStats(guildCount);
+            await ((AuthDiscordBotListApi)api).UpdateStatsAsync(guildCount);
         }
 
         public async Task UpdateStatsAsync(int[] shards)
         {
-            await ((AuthDiscordBotListApi)api).UpdateStats(0, shards.Length, shards);
+            await ((AuthDiscordBotListApi)api).UpdateStatsAsync(0, shards.Length, shards);
         }
 
         public async Task UpdateStatsAsync(int shardCount, int totalShards, params int[] shards)
         {
-            await ((AuthDiscordBotListApi)api).UpdateStats(shardCount, totalShards, shards);
+            await ((AuthDiscordBotListApi)api).UpdateStatsAsync(shardCount, totalShards, shards);
         }
     }
 }

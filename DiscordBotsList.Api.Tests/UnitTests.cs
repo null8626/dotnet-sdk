@@ -33,7 +33,7 @@ namespace DiscordBotsList.Api.Tests
         [Fact]
         public async Task HasVotedTestAsync()
         {
-            Assert.False(await _api.HasVoted(0));
+            Assert.False(await _api.HasVotedAsync(0));
         }
 
         [Fact]

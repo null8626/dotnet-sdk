@@ -27,7 +27,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             if (DateTime.Now > lastTimeUpdated + updateTime)
             {
-                await api.UpdateStats(
+                await api.UpdateStatsAsync(
                     (await client.GetGuildsAsync()).Count
                 );
 
@@ -62,7 +62,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         {
             if (DateTime.Now > lastTimeUpdated + updateTime)
             {
-                await api.UpdateStats(
+                await api.UpdateStatsAsync(
                     0,
                     (client as DiscordShardedClient).Shards.Count,
                     (client as DiscordShardedClient).Shards.Select(x => x.Guilds.Count).ToArray()

@@ -1,8 +1,10 @@
 ﻿using DiscordBotsList.Api.Internal;
 using DiscordBotsList.Api.Objects;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -10,7 +12,7 @@ namespace DiscordBotsList.Api
 {
     public class DiscordBotListApi
     {
-        protected const string baseEndpoint = "https://top.gg/api/";
+        protected const string baseEndpoint = "https://top.gg/api";
         private readonly JsonSerializerOptions _serializerOptions;
         protected readonly HttpClient _httpClient;
 
@@ -21,8 +23,50 @@ namespace DiscordBotsList.Api
             _serializerOptions.Converters.Add(new ULongToStringConverter());
         }
 
+        private async Task<T> ProcessResponse<T>(HttpResponseMessage response)
+        {
+            response.EnsureSuccessStatusCode();
+
+            if (typeof(T) == typeof(string))
+            {
+                return (T)(object)await response.Content.ReadAsStringAsync();
+            }
+            else if (response.Headers.GetValues("content-type").FirstOrDefault()?.Contains("json") ?? false)
+            {
+                return await response.Content.ReadFromJsonAsync<T>(_serializerOptions);
+            }
+
+            return default;
+        }
+
         /// <summary>
-        ///     Gets bots from botlist
+        ///     Performs a GET request
+        /// </summary>
+        /// <typeparam name="T">Type to parse to</typeparam>
+        /// <param name="url">Url to get from</param>
+        /// <returns>Object of type T</returns>
+        protected async Task<T> GetAsync<T>(string url)
+        {
+            return await ProcessResponse<T>(await _httpClient.GetAsync(baseEndpoint + url));
+        }
+
+        /// <summary>
+        ///     Performs a POST request
+        /// </summary>
+        /// <typeparam name="B">Serializable request body type</typeparam>
+        /// <typeparam name="T">Type to parse to</typeparam>
+        /// <param name="url">Url to post from</param>
+        /// <param name="body">The request body</param>
+        /// <returns>Object of type T</returns>
+        protected async Task<T> PostAsync<B, T>(string url, B body)
+        {
+            var json = JsonSerializer.Serialize(body);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            return await ProcessResponse<T>(await _httpClient.PostAsync(baseEndpoint + url, httpContent));
+        }
+
+        /// <summary>
+        ///     Get bots
         /// </summary>
         /// <param name="count">amount of bots to appear per page (max: 500)</param>
         /// <param name="page">current page to query</param>
@@ -67,29 +111,12 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Gets and parses objects
-        /// </summary>
-        /// <typeparam name="T">Type to parse to</typeparam>
-        /// <param name="url">Url to get from</param>
-        /// <returns>Object of type T</returns>
-        protected async Task<T> GetAsync<T>(string url)
-        {
-            var t = await _httpClient.GetAsync(baseEndpoint + url);
-            var payload = await t.Content.ReadAsStringAsync();
-            var o = JsonSerializer.Deserialize<T>(payload, _serializerOptions);
-            var result = t.IsSuccessStatusCode
-                ? ApiResult<T>.FromSuccess(await t.Content.ReadFromJsonAsync<T>(_serializerOptions))
-                : ApiResult<T>.FromHttpError(t.StatusCode);
-            return result.Value;
-        }
-
-        /// <summary>
         ///     returns true if voting multiplier = x2
         /// </summary>
         /// <returns>True or False</returns>
         public async Task<bool> IsWeekendAsync()
         {
-            return (await GetAsync<WeekendObject>("weekend")).Weekend;
+            return (await GetAsync<WeekendObject>("/weekend")).Weekend;
         }
     }
 }

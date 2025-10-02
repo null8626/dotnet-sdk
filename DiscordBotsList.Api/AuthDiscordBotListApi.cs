@@ -4,10 +4,7 @@ using DiscordBotsList.Api.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api
@@ -21,11 +18,28 @@ namespace DiscordBotsList.Api
 
     public class AuthDiscordBotListApi : DiscordBotListApi
     {
-        private readonly ulong _selfId;
+        private ulong? _selfId;
 
-        public AuthDiscordBotListApi(ulong selfId, string token)
+        public ulong SelfId
         {
-            _selfId = selfId;
+            protected get
+            {
+                if (_selfId == null)
+                {
+                    throw new NullReferenceException("This client's self ID is still null.");
+                }
+
+                return (ulong)_selfId;
+            }
+            set
+            {
+                _selfId = value;
+            }
+        }
+
+        public AuthDiscordBotListApi(ulong? initialSelfId, string token)
+        {
+            _selfId = initialSelfId;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
@@ -41,7 +55,7 @@ namespace DiscordBotsList.Api
             var sortByString = sortBy.ToString();
             sortByString = char.ToLowerInvariant(sortByString[0]) + sortByString[1..];
 
-            var result = await GetAsync<BotListQuery>($"bots?limit={count}&offset={offset}&sort={sortByString}");
+            var result = await GetAsync<BotListQuery>($"/bots?limit={count}&offset={offset}&sort={sortByString}");
 
             foreach (var bot in result.Items) (bot as Bot).api = this;
             return result;
@@ -56,7 +70,7 @@ namespace DiscordBotsList.Api
         /// <returns>Bot object of type T</returns>
         internal async Task<T> GetBotAsync<T>(ulong id) where T : Bot
         {
-            var t = await GetAsync<T>($"bots/{id}");
+            var t = await GetAsync<T>($"/bots/{id}");
             if (t == null) return null;
             t.api = this;
             return t;
@@ -79,7 +93,7 @@ namespace DiscordBotsList.Api
         /// <returns>IBotStats object related to the bot</returns>
         public new async Task<IDblBotStats> GetBotStatsAsync(ulong id = 0)
         {
-            return await GetAsync<BotStatsObject>($"bots/{_selfId}/stats");
+            return await GetAsync<BotStatsObject>($"/bots/{SelfId}/stats");
         }
 
         /// <summary>
@@ -89,16 +103,16 @@ namespace DiscordBotsList.Api
         /// <returns>User Object</returns>
         public new async Task<IDblUser> GetUserAsync(ulong id)
         {
-            return await GetAsync<User>($"users/{id}");
+            return await GetAsync<User>($"/users/{id}");
         }
 
         /// <summary>
-        ///     Gets your own bot with as an ISelfBot
+        ///     Get your own bot
         /// </summary>
         /// <returns>your own bot with as an ISelfBot</returns>
         public async Task<IDblSelfBot> GetMeAsync()
         {
-            var bot = await GetBotAsync<SelfBot>(_selfId);
+            var bot = await GetBotAsync<SelfBot>(SelfId);
             bot.api = this;
             return bot;
         }
@@ -110,16 +124,26 @@ namespace DiscordBotsList.Api
         /// <returns>A list of voters</returns>
         public async Task<List<IDblEntity>> GetVotersAsync(int page = 1)
         {
-            return (await GetAsync<List<Entity>>($"bots/{_selfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
+            return (await GetAsync<List<Entity>>($"/bots/{SelfId}/votes?page={Math.Max(page, 1)}")).Cast<IDblEntity>().ToList();
         }
 
         /// <summary>
         ///     Update your stats unsharded
         /// </summary>
         /// <param name="guildCount">count of guilds</param>
-        public async Task UpdateStats(int guildCount)
+        public async Task UpdateStatsAsync(int guildCount)
         {
             await UpdateStatsAsync(new GuildCountObject(guildCount));
+        }
+
+        /// <summary>
+        ///     Update your stats unsharded
+        /// </summary>
+        /// <param name="guildCount">count of guilds</param>
+        [Obsolete("Is actually async. Please use UpdateStatsAsync instead.")]
+        public async Task UpdateStats(int guildCount)
+        {
+            await UpdateStatsAsync(guildCount);
         }
 
         /// <summary>
@@ -128,7 +152,7 @@ namespace DiscordBotsList.Api
         /// <param name="shardId">Begin shard id</param>
         /// <param name="shardCount">Total shards</param>
         /// <param name="shards">Guild count per shards</param>
-        public async Task UpdateStats(int shardId, int shardCount, params int[] shards)
+        public async Task UpdateStatsAsync(int shardId, int shardCount, params int[] shards)
         {
             await UpdateStatsAsync(new ShardedGuildCountObject
             {
@@ -141,9 +165,21 @@ namespace DiscordBotsList.Api
         /// <summary>
         ///     Update your stats sharded
         /// </summary>
+        /// <param name="shardId">Begin shard id</param>
+        /// <param name="shardCount">Total shards</param>
+        /// <param name="shards">Guild count per shards</param>
+        [Obsolete("Is actually async. Please use UpdateStatsAsync instead.")]
+        public async Task UpdateStats(int shardId, int shardCount, params int[] shards)
+        {
+            await UpdateStatsAsync(shardId, shardCount, shards);
+        }
+
+        /// <summary>
+        ///     Update your stats sharded
+        /// </summary>
         /// <param name="guildCount">count of guilds</param>
         /// <param name="shardCount">Total shards</param>
-        public async Task UpdateStats(int guildCount, int shardCount)
+        public async Task UpdateStatsAsync(int guildCount, int shardCount)
         {
             await UpdateStatsAsync(new ShardedGuildCountObject
             {
@@ -153,27 +189,30 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
+        ///     Update your stats sharded
+        /// </summary>
+        /// <param name="guildCount">count of guilds</param>
+        /// <param name="shardCount">Total shards</param>
+        [Obsolete("Is actually async. Please use UpdateStatsAsync instead.")]
+        public async Task UpdateStats(int guildCount, int shardCount)
+        {
+            await UpdateStatsAsync(guildCount, shardCount);
+        }
+
+        /// <summary>
         ///     returns true if the user has voted for your project in the past 12 hours
         /// </summary>
         /// <param name="userId">the user ID</param>
         /// <returns>True or False</returns>
+        [Obsolete("Is actually async. Please use HasVotedAsync instead.")]
         public async Task<bool> HasVoted(ulong userId)
         {
             return await HasVotedAsync(userId);
         }
 
-        protected async Task<List<T>> GetVotersAsync<T>()
-        {
-            var query = $"bots/{_selfId}/votes";
-            return await GetAuthorizedAsync<List<T>>(Utils.CreateQuery(query));
-        }
-
         protected async Task UpdateStatsAsync(object statsObject)
         {
-            var json = JsonSerializer.Serialize(statsObject);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient
-                .PostAsync($"{baseEndpoint}/bots/{_selfId}/stats", httpContent);
+            await PostAsync<object, string>($"/bots/{SelfId}/stats", statsObject);
         }
 
         protected Task<T> GetAuthorizedAsync<T>(string url)
@@ -181,10 +220,14 @@ namespace DiscordBotsList.Api
             return GetAsync<T>(url);
         }
 
-        protected async Task<bool> HasVotedAsync(ulong userId)
+        /// <summary>
+        ///     returns true if the user has voted for your project in the past 12 hours
+        /// </summary>
+        /// <param name="userId">the user ID</param>
+        /// <returns>True or False</returns>
+        public async Task<bool> HasVotedAsync(ulong userId)
         {
-            var url = $"bots/{_selfId}/check?userId={userId}";
-            return (await GetAsync<HasVotedObject>(url)).HasVoted.GetValueOrDefault(0) == 1;
+            return (await GetAsync<HasVotedObject>($"/bots/{SelfId}/check?userId={userId}")).HasVoted.GetValueOrDefault(0) == 1;
         }
     }
 }
