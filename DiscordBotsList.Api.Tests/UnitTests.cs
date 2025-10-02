@@ -27,7 +27,7 @@ namespace DiscordBotsList.Api.Tests
         public UnitTests()
         {
             _cred = Credentials.LoadFromEnv();
-            _api = new AuthDiscordBotListApi(_cred.BotId, _cred.Token);
+            _api = new AuthV1DiscordBotListApi(_cred.BotId, _cred.Token);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task GetUsersGetStatsTest()
+        public async Task GetBotsTestAsync()
         {
             var bots = await _api.GetBotsAsync();
 
