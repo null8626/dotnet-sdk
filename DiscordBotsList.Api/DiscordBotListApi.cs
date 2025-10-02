@@ -1,7 +1,6 @@
 ﻿using DiscordBotsList.Api.Internal;
 using DiscordBotsList.Api.Objects;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -12,7 +11,7 @@ namespace DiscordBotsList.Api
 {
     public class DiscordBotListApi
     {
-        protected const string baseEndpoint = "https://top.gg/api";
+        internal static string baseEndpoint = "https://top.gg/api";
         private readonly JsonSerializerOptions _serializerOptions;
         protected readonly HttpClient _httpClient;
 
@@ -31,7 +30,7 @@ namespace DiscordBotsList.Api
             {
                 return (T)(object)await response.Content.ReadAsStringAsync();
             }
-            else if (response.Headers.GetValues("content-type").FirstOrDefault()?.Contains("json") ?? false)
+            else if (response.Content.Headers.ContentType?.MediaType?.Contains("json") ?? false)
             {
                 return await response.Content.ReadFromJsonAsync<T>(_serializerOptions);
             }
@@ -53,15 +52,25 @@ namespace DiscordBotsList.Api
         /// <summary>
         ///     Performs a POST request
         /// </summary>
-        /// <typeparam name="B">Serializable request body type</typeparam>
+        /// <typeparam name="B">Serializable request body type. If this is a string, this is treated as a raw JSON string</typeparam>
         /// <typeparam name="T">Type to parse to</typeparam>
         /// <param name="url">Url to post from</param>
         /// <param name="body">The request body</param>
         /// <returns>Object of type T</returns>
         protected async Task<T> PostAsync<B, T>(string url, B body)
         {
-            var json = JsonSerializer.Serialize(body);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            StringContent httpContent;
+
+            if (typeof(B) == typeof(string))
+            {
+                httpContent = new StringContent((string)(object)body, Encoding.UTF8, "application/json");
+            }
+            else
+            {
+                var json = JsonSerializer.Serialize(body);
+                httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
             return await ProcessResponse<T>(await _httpClient.PostAsync(baseEndpoint + url, httpContent));
         }
 

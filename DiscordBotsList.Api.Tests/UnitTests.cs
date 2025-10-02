@@ -14,14 +14,14 @@ namespace DiscordBotsList.Api.Tests
             return new Credentials()
             {
                 BotId = ulong.Parse(Environment.GetEnvironmentVariable("BOT_ID")),
-                Token = Environment.GetEnvironmentVariable("API_KEY")
+                Token = Environment.GetEnvironmentVariable("TOPGG_TOKEN")
             };
         }
     }
 
     public class UnitTests
     {
-        private readonly AuthDiscordBotListApi _api;
+        private readonly AuthV1DiscordBotListApi _api;
         private readonly Credentials _cred;
 
         public UnitTests()
@@ -70,6 +70,18 @@ namespace DiscordBotsList.Api.Tests
 
             Assert.NotNull(bots);
             Assert.NotEmpty(bots.Items);
+        }
+
+        [Fact]
+        public async Task RawUpdateBotCommandsAsync()
+        {
+            await _api.UpdateBotCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
+        }
+
+        [Fact]
+        public async Task GetVoteAsync()
+        {
+            await _api.GetVoteAsync(661200758510977084);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace DiscordBotsList.Api
         {
             try
             {
-                return await GetAsync<Vote>($"/v1/projects/@me/votes/${id}?source=${source.ToString().ToLower()}");
+                return await GetAsync<Vote>($"/v1/projects/@me/votes/{id}?source={source.ToString().ToLower()}");
             }
             catch (HttpRequestException error)
             {
