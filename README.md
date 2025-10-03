@@ -1,52 +1,250 @@
-# DBL-dotnet-Library
-top.gg botlist wrapper
+# Top.gg .NET SDK
+
+The community-maintained .NET library for Top.gg.
+
+## Chapters
+
+- [Installation](#installation)
+  - [Main API wrapper](#main-api-wrapper)
+    - [Library agnostic](#library-agnostic)
+    - [Discord.NET-based](#discordnet-based)
+  - [Webhooks only](#webhooks-only)
+- [Setting up](#setting-up)
+  - [Library agnostic](#library-agnostic)
+    - [v1](#v1)
+    - [v0](#v0)
+  - [Discord.NET-based](#discordnet-based)
+    - [v1](#v1)
+    - [v0](#v0)
+- [Usage](#usage)
+  - [API v1](#api-v1)
+    - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
+    - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
+  - [API v0](#api-v0)
+    - [Getting a bot](#getting-a-bot)
+    - [Getting several bots](#getting-several-bots)
+    - [Getting your project's voters](#getting-your-projects-voters)
+    - [Check if a user has voted for your project](#check-if-a-user-has-voted-for-your-project)
+    - [Getting your bot's statistics](#getting-your-bots-statistics)
+    - [Posting your bot's statistics](#posting-your-bots-statistics)
+    - [Automatically posting your bot's statistics every few minutes](#automatically-posting-your-bots-statistics-every-few-minutes)
+    - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
+    - [Generating widget URLs](#generating-widget-urls)
+  - [Webhooks](#webhooks)
+    - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
+
+
+## Installation
+
+### Main API wrapper
+
+
+#### Library agnostic
+
+```powershell
+> Install-Package DiscordBotsList.Api
+```
+
+#### Discord.NET-based
+
+```powershell
+> Install-Package DiscordBotsList.Api.Adapter.Discord.Net
+```
+
+### Webhooks only
+
+```powershell
+> Install-Package DiscordBotsList.Api.Webhooks
+```
+
+## Setting up
+
+
+### Library agnostic
+
+
+#### v1
+
+```cs
+var client = new AuthV1DiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
+```
+
+#### v0
+
+```cs
+var client = new AuthDiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
+```
+
+### Discord.NET-based
+
+
+#### v1
+
+```cs
+var discordNetClient = ...;
+var client = new DiscordNetV1DblApi(discordNetClient, "TOPGG_TOKEN");
+```
+
+#### v0
+
+```cs
+var discordNetClient = ...;
+var client = new DiscordNetDblApi(discordNetClient, "TOPGG_TOKEN");
+```
 
 ## Usage
-### Unauthorized api usage
-#### Setting up
+
+### API v1
+
+#### Getting your project's vote information of a user
+
 ```cs
-DiscordBotListApi DblApi = new DiscordBotListApi();
+var vote = await client.GetVoteAsync(661200758510977084);
 ```
 
-#### Getting bots
+#### Posting your bot's application commands list
+
 ```cs
-//                            discord id
-IBot bot = DblApi.GetBotAsync(160105994217586689);
+// Array of application commands in Discord API's raw JSON format.
+await client.UpdateBotCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
 ```
 
-#### Getting users
+### API v0
+
+#### Getting a bot
+
+
+##### Specific bot
+
 ```cs
-//                              discord id
-IUser bot = DblApi.GetUserAsync(121919449996460033);
+var bot = await client.GetBotAsync(264811613708746752U);
 ```
 
-### Authorized api usage
-#### Setting up
+##### Own bot
+
 ```cs
-AuthDiscordBotListApi DblApi = new AuthDiscordBotListApi(BOT_DISCORD_ID, YOUR_TOKEN);
+var bot = await client.GetMeAsync();
 ```
 
-#### Updating stats
-```cs
-IDblSelfBot me = await DblApi.GetMeAsync();
-// Update stats sharded   indexShard shardCount shards
-await me.UpdateStatsAsync(24,        50,        new[] { 12, 421, 62, 241, 524, 534 });
+#### Getting several bots
 
-// Update stats           guildCount
-await me.UpdateStatsAsync(2133);
+
+##### With defaults
+
+```cs
+var bots = await client.GetBotsAsync();
 ```
 
-#### Widgets
+##### With explicit arguments
+
 ```cs
-string widgetUrl = new SmallWidgetOptions()
-	.SetType(WidgetType.OWNER)
-	.SetLeftColor(255, 255, 255);
-	.Build(160105994217586689);
+//                                   Limit  Offset  Sort by
+var bots = await client.GetBotsAsync(100,   1,      SortBotsBy.MonthlyPoints);
 ```
 
-Generates ![](https://top.gg/api/widget/status/160105994217586689.svg?leftcolor=FFFFFF)
+#### Getting your project's voters
 
-### Download
-#### Nuget
-If you're using Nuget you can use find it with the ID `DiscordBotsList.Api` or use
-> Install-Package DiscordBotsList.Api
+
+##### First page
+
+```cs
+var voters = await client.GetVotersAsync();
+```
+
+##### Subsequent pages
+
+```cs
+//                                       Page number
+var voters = await client.GetVotersAsync(2);
+```
+
+#### Check if a user has voted for your project
+
+```cs
+var voted = await client.HasVotedAsync(661200758510977084U);
+```
+
+#### Getting your bot's statistics
+
+```cs
+var stats = await client.GetBotStatsAsync();
+```
+
+#### Posting your bot's statistics
+
+```cs
+await client.UpdateStatsAsync(bot.GetServerCount());
+```
+
+#### Automatically posting your bot's statistics every few minutes
+
+With Discord.NET:
+
+```cs
+var submissionAdapter = client.CreateListener();
+
+submissionAdapter.Start();
+
+// ...
+
+submissionAdapter.Stop(); // Optional
+```
+
+#### Checking if the weekend vote multiplier is active
+
+```cs
+var isWeekend = await client.IsWeekendAsync();
+```
+
+#### Generating widget URLs
+
+
+##### Large
+
+```cs
+var widgetUrl = Widget.Large(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+##### Votes
+
+```cs
+var widgetUrl = Widget.Votes(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+##### Owner
+
+```cs
+var widgetUrl = Widget.Owner(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+##### Social
+
+```cs
+var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
+```
+
+### Webhooks
+
+#### Being notified whenever someone voted for your project
+
+With ASP.NET Core or Blazor:
+
+```cs
+using DiscordBotsList.Api.Webhooks;
+
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => "Hello World!");
+
+var webhooks = new Webhooks(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_PASSWORD"));
+
+app.MapPost("/webhooks", webhooks.Listener((context, vote) =>
+{
+  Console.WriteLine($"A user with the ID of {vote.VoterId} has voted us on Top.gg!");
+
+  return Task.CompletedTask;
+}));
+
+app.Run();
+```
