@@ -5,17 +5,7 @@ The community-maintained .NET library for Top.gg.
 ## Chapters
 
 - [Installation](#installation)
-  - [Main API wrapper](#main-api-wrapper)
-    - [Library agnostic](#library-agnostic)
-    - [Discord.NET-based](#discordnet-based)
-  - [Webhooks only](#webhooks-only)
 - [Setting up](#setting-up)
-  - [Library agnostic](#library-agnostic)
-    - [v1](#v1)
-    - [v0](#v0)
-  - [Discord.NET-based](#discordnet-based)
-    - [v1](#v1)
-    - [v0](#v0)
 - [Usage](#usage)
   - [API v1](#api-v1)
     - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
@@ -33,11 +23,9 @@ The community-maintained .NET library for Top.gg.
   - [Webhooks](#webhooks)
     - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
-
 ## Installation
 
 ### Main API wrapper
-
 
 #### Library agnostic
 
@@ -59,17 +47,17 @@ The community-maintained .NET library for Top.gg.
 
 ## Setting up
 
-
 ### Library agnostic
 
+#### API v1
 
-#### v1
+> **NOTE**: API v1 also includes API v0.
 
 ```cs
 var client = new AuthV1DiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
 ```
 
-#### v0
+#### API v0
 
 ```cs
 var client = new AuthDiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
@@ -77,15 +65,16 @@ var client = new AuthDiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
 
 ### Discord.NET-based
 
+#### API v1
 
-#### v1
+> **NOTE**: API v1 also includes API v0.
 
 ```cs
 var discordNetClient = ...;
 var client = new DiscordNetV1DblApi(discordNetClient, "TOPGG_TOKEN");
 ```
 
-#### v0
+#### API v0
 
 ```cs
 var discordNetClient = ...;
@@ -113,7 +102,6 @@ await client.UpdateBotCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_l
 
 #### Getting a bot
 
-
 ##### Specific bot
 
 ```cs
@@ -127,7 +115,6 @@ var bot = await client.GetMeAsync();
 ```
 
 #### Getting several bots
-
 
 ##### With defaults
 
@@ -143,7 +130,6 @@ var bots = await client.GetBotsAsync(100,   1,      SortBotsBy.MonthlyPoints);
 ```
 
 #### Getting your project's voters
-
 
 ##### First page
 
@@ -197,7 +183,6 @@ var isWeekend = await client.IsWeekendAsync();
 ```
 
 #### Generating widget URLs
-
 
 ##### Large
 
