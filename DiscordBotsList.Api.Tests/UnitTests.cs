@@ -73,9 +73,9 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task RawUpdateBotCommandsAsync()
+        public async Task RawUpdateCommandsAsync()
         {
-            await _api.UpdateBotCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
+            await _api.UpdateCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
         }
 
         [Fact]

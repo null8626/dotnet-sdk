@@ -22,7 +22,7 @@ namespace DiscordBotsList.Api
         /// </summary>
         /// <typeparam name="T">Serializable list of Discord application commands</typeparam>
         /// <param name="commands">A list of application commands in raw Discord API JSON objects</param>
-        public async Task UpdateBotCommandsAsync<T>(T commands)
+        public async Task UpdateCommandsAsync<T>(T commands)
         {
             await PostAsync<T, string>("/v1/projects/@me/commands", commands);
         }
