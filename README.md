@@ -18,16 +18,8 @@ The community-maintained .NET library for Top.gg.
 
 ### Main API wrapper
 
-#### Library agnostic
-
 ```powershell
 > Install-Package DiscordBotsList.Api
-```
-
-#### Discord.NET-based
-
-```powershell
-> Install-Package DiscordBotsList.Api.Adapter.Discord.Net
 ```
 
 ### Webhooks only
@@ -38,17 +30,8 @@ The community-maintained .NET library for Top.gg.
 
 ## Setting up
 
-### Library agnostic
-
 ```cs
 var client = new AuthDiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
-```
-
-### Discord.NET-based
-
-```cs
-var discordNetClient = ...;
-var client = new DiscordNetDblApi(discordNetClient, "TOPGG_TOKEN");
 ```
 
 ## Usage
