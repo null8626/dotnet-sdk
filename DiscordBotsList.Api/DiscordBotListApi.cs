@@ -1,6 +1,5 @@
-﻿using DiscordBotsList.Api.Internal;
-using DiscordBotsList.Api.Objects;
-using System;
+﻿using DiscordBotsList.Api.Objects;
+using DiscordBotsList.Api.Serialization;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;

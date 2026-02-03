@@ -48,6 +48,15 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
+        ///     Gets your project's information
+        /// </summary>
+        /// returns>Your project's information</returns>
+        public async Task<Project> GetSelfAsync()
+        {
+            return await GetAsync<Project>("/v1/projects/@me");
+        }
+
+        /// <summary>
         ///     Updates the application commands list in your Discord bot's Top.gg page
         /// </summary>
         /// <typeparam name="T">Serializable list of Discord application commands</typeparam>

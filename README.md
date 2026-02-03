@@ -7,6 +7,7 @@ The community-maintained .NET library for Top.gg.
 - [Installation](#installation)
 - [Setting up](#setting-up)
 - [Usage](#usage)
+  - [Getting your project's information](#getting-your-projects-information)
   - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
   - [Generating widget URLs](#generating-widget-urls)
@@ -51,6 +52,12 @@ var client = new DiscordNetDblApi(discordNetClient, "TOPGG_TOKEN");
 ```
 
 ## Usage
+
+### Getting your project's information
+
+```cs
+var project = await client.GetSelfAsync();
+```
 
 ### Getting your project's vote information of a user
 

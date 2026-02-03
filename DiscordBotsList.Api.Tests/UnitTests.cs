@@ -31,13 +31,19 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task TaskIsWeekendTestAsync()
+        public async Task IsWeekendAsync()
         {
             await _api.IsWeekendAsync();
         }
 
         [Fact]
-        public async Task RawUpdateCommandsAsync()
+        public async Task GetSelfAsync()
+        {
+            await _api.GetSelfAsync();
+        }
+
+        [Fact]
+        public async Task UpdateCommandsAsync()
         {
             await _api.UpdateCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
         }
