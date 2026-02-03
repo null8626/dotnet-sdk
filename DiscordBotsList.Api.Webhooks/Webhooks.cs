@@ -1,3 +1,8 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -6,12 +11,12 @@ namespace DiscordBotsList.Api.Webhooks
 {
     public class Webhooks
     {
-        private readonly string authorization;
+        private readonly byte[] authorization;
         private readonly JsonSerializerOptions serializerOptions;
 
         public Webhooks(string authorization)
         {
-            this.authorization = authorization;
+            this.authorization = Encoding.UTF8.GetBytes(authorization);
 
             serializerOptions = new JsonSerializerOptions();
             serializerOptions.Converters.Add(new ULongToStringConverter());
@@ -23,13 +28,48 @@ namespace DiscordBotsList.Api.Webhooks
         {
             return async (context) =>
             {
-                if (!context.Request.Headers.TryGetValue("Authorization", out var authorizationInput) || !authorizationInput.Equals(authorization))
+                if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) && !context.Response.HasStarted)
                 {
-                    if (!context.Response.HasStarted)
+                    context.Response.StatusCode = 401;
+
+                    await context.Response.WriteAsync("Missing Top.gg Signature");
+
+                    return;
+                }
+
+                try
+                {
+                    var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
+
+                    using var bodyStream = new MemoryStream();
+
+                    await context.Request.Body.CopyToAsync(bodyStream);
+                    var body = bodyStream.ToArray();
+
+                    context.Request.Body.Position = 0;
+
+                    var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
+
+                    var hmac = new HMACSHA256(authorization);
+
+                    hmac.TransformFinalBlock(transformBuffer, 0, transformBuffer.Length);
+
+                    if (!parsedSignature["v1"].Equals(Convert.ToHexString(hmac.Hash).ToLowerInvariant()) && !context.Response.HasStarted)
                     {
                         context.Response.StatusCode = 401;
 
-                        await context.Response.WriteAsync("Unauthorized");
+                        await context.Response.WriteAsync("Invalid Authorization");
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    if (!context.Response.HasStarted)
+                    {
+                        context.Response.StatusCode = 400;
+
+                        await context.Response.WriteAsync("Malformed Top.gg Signature");
 
                         return;
                     }
