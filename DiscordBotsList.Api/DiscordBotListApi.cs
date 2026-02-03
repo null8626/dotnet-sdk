@@ -75,51 +75,6 @@ namespace DiscordBotsList.Api
         }
 
         /// <summary>
-        ///     Get bots
-        /// </summary>
-        /// <param name="count">amount of bots to appear per page (max: 500)</param>
-        /// <param name="page">current page to query</param>
-        /// <returns>List of Bot Objects</returns>
-        [Obsolete("This method requires a token to work. Please use the AuthenticatedBotListApi class instead.", true)]
-        public Task<ISearchResult<IDblBot>> GetBotsAsync(int count = 50, int page = 0)
-        {
-            return null;
-        }
-
-        /// <summary>
-        ///     Get specific bot by Discord id
-        /// </summary>
-        /// <param name="id">Discord id</param>
-        /// <returns>Bot Object</returns>
-        [Obsolete("This method requires a token to work. Please use the AuthenticatedBotListApi class instead.", true)]
-        public Task<IDblBot> GetBotAsync(ulong id)
-        {
-            return null;
-        }
-
-        /// <summary>
-        ///     Get bot stats
-        /// </summary>
-        /// <param name="id">Discord id</param>
-        /// <returns>IBotStats object related to the bot</returns>
-        [Obsolete("This method requires a token to work. Please use the AuthenticatedBotListApi class instead.", true)]
-        public Task<IDblBotStats> GetBotStatsAsync(ulong id)
-        {
-            return null;
-        }
-
-        /// <summary>
-        ///     Get specific user by Discord id
-        /// </summary>
-        /// <param name="id">Discord id</param>
-        /// <returns>User Object</returns>
-        [Obsolete("This method requires a token to work. Please use the AuthenticatedBotListApi class instead.", true)]
-        public Task<IDblUser> GetUserAsync(ulong id)
-        {
-            return null;
-        }
-
-        /// <summary>
         ///     returns true if voting multiplier = x2
         /// </summary>
         /// <returns>True or False</returns>

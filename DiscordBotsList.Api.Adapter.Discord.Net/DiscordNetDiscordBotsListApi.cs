@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using DiscordBotsList.Api.Objects;
 using System;
-using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Adapter.Discord.Net
 {
@@ -19,24 +18,9 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         }
     }
 
-    public class DiscordNetDblApi : AuthDiscordBotListApi
+    public class DiscordNetDblApi(IDiscordClient client, string dblToken) : AuthDiscordBotListApi(client.CurrentUser.Id, dblToken)
     {
-        protected IDiscordClient client;
-
-        public DiscordNetDblApi(IDiscordClient client, string dblToken) : base(client.CurrentUser.Id, dblToken)
-        {
-            this.client = client;
-        }
-
-        public async Task<IDblBot> GetBotAsync(IUser user)
-        {
-            return await GetBotAsync(user.Id);
-        }
-
-        public async Task<IDblUser> GetUserAsync(IUser user)
-        {
-            return await GetUserAsync(user.Id);
-        }
+        private readonly IDiscordClient client = client;
 
         /// <summary>
         ///     Creates an IAdapter that updates your servercount on RunAsync().
@@ -54,12 +38,8 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         }
     }
 
-    public class ShardedDiscordNetDblApi : DiscordNetDblApi
+    public class ShardedDiscordNetDblApi(DiscordShardedClient client, string dblToken) : DiscordNetDblApi(client, dblToken)
     {
-        public ShardedDiscordNetDblApi(DiscordShardedClient client, string dblToken) : base(client, dblToken)
-        {
-        }
-
         /// <summary>
         ///     Creates an IAdapter that updates your servercount on RunAsync().
         /// </summary>
@@ -72,7 +52,7 @@ namespace DiscordBotsList.Api.Adapter.Discord.Net
         /// <seealso cref="ListenAsync()" />
         public override IAdapter CreateListener(TimeSpan? updateTime = null)
         {
-            return new ShardedSubmissionAdapter(this, client as DiscordShardedClient, updateTime ?? TimeSpan.Zero);
+            return new ShardedSubmissionAdapter(this, client, updateTime ?? TimeSpan.Zero);
         }
     }
 }
