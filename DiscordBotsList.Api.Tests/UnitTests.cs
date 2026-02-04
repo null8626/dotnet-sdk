@@ -31,12 +31,6 @@ namespace DiscordBotsList.Api.Tests
         }
 
         [Fact]
-        public async Task IsWeekendAsync()
-        {
-            await _api.IsWeekendAsync();
-        }
-
-        [Fact]
         public async Task GetSelfAsync()
         {
             await _api.GetSelfAsync();

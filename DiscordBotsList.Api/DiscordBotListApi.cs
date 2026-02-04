@@ -72,14 +72,5 @@ namespace DiscordBotsList.Api
 
             return await ProcessResponse<T>(await _httpClient.PostAsync(baseEndpoint + url, httpContent));
         }
-
-        /// <summary>
-        ///     returns true if voting multiplier = x2
-        /// </summary>
-        /// <returns>True or False</returns>
-        public async Task<bool> IsWeekendAsync()
-        {
-            return (await GetAsync<WeekendObject>("/weekend")).Weekend;
-        }
     }
 }
