@@ -60,9 +60,7 @@ namespace DiscordBotsList.Api.Webhooks
                         return;
                     }
 
-                    bodyStream.Position = 0;
-
-                    var vote = await JsonSerializer.DeserializeAsync<Vote>(bodyStream, serializerOptions);
+                    var vote = JsonSerializer.Deserialize<Vote>(body, serializerOptions);
 
                     if (vote != null)
                     {
