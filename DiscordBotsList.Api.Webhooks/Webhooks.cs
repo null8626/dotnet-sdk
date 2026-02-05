@@ -45,9 +45,6 @@ namespace DiscordBotsList.Api.Webhooks
 
                     await context.Request.Body.CopyToAsync(bodyStream);
                     var body = bodyStream.ToArray();
-
-                    context.Request.Body.Position = 0;
-
                     var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
 
                     var hmac = new HMACSHA256(authorization);
@@ -62,35 +59,31 @@ namespace DiscordBotsList.Api.Webhooks
 
                         return;
                     }
-                }
-                catch
-                {
-                    if (!context.Response.HasStarted)
-                    {
-                        context.Response.StatusCode = 400;
 
-                        await context.Response.WriteAsync("Malformed Top.gg Signature");
+                    bodyStream.Position = 0;
+
+                    var vote = await JsonSerializer.DeserializeAsync<Vote>(bodyStream, serializerOptions);
+
+                    if (vote != null)
+                    {
+                        await voteDelegate(context, vote);
+
+                        if (!context.Response.HasStarted)
+                        {
+                            context.Response.StatusCode = 204;
+                        }
 
                         return;
                     }
                 }
+                catch
+                {}
 
-                var vote = await JsonSerializer.DeserializeAsync<Vote>(context.Request.Body, serializerOptions);
-
-                if (vote != null)
-                {
-                    await voteDelegate(context, vote);
-
-                    if (!context.Response.HasStarted)
-                    {
-                        context.Response.StatusCode = 204;
-                    }
-                }
-                else if (!context.Response.HasStarted)
+                if (!context.Response.HasStarted)
                 {
                     context.Response.StatusCode = 400;
 
-                    await context.Response.WriteAsync("Bad request");
+                    await context.Response.WriteAsync("Invalid Request");
                 }
             };
         }
