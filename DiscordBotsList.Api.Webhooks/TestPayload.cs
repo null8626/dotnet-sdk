@@ -10,13 +10,11 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     The project that the test refers to.
         /// </summary>
-        [JsonPropertyName("project")]
         public PartialProject project { get; init; }
         
         /// <summary>
         ///     The user who triggered this test.
         /// </summary>
-        [JsonPropertyName("user")]
         public User user { get; init; }
     }
 }

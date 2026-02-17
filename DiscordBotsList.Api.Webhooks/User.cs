@@ -10,14 +10,12 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     The user's ID.
         /// </summary>
-        [JsonPropertyName("id")]
         [JsonConverter(typeof(ULongToStringConverter))]
         public ulong id { get; init; }
 
         /// <summary>
         ///     The user's name.
         /// </summary>
-        [JsonPropertyName("name")]
         public string name { get; init; }
 
         /// <summary>

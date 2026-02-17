@@ -10,21 +10,18 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     The project's ID.
         /// </summary>
-        [JsonPropertyName("id")]
         [JsonConverter(typeof(ULongToStringConverter))]
         public ulong id { get; init; }
 
         /// <summary>
         ///     The project's type.
         /// </summary>
-        [JsonPropertyName("type")]
         [JsonConverter(typeof(ProjectTypeConverter))]
         public ProjectType type { get; init; }
 
         /// <summary>
         ///     The project's platform.
         /// </summary>
-        [JsonPropertyName("platform")]
         [JsonConverter(typeof(PlatformConverter))]
         public Platform platform { get; init; }
 

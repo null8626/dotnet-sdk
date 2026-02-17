@@ -23,13 +23,11 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     The project that the integration refers to.
         /// </summary>
-        [JsonPropertyName("project")]
         public PartialProject project { get; init; }
         
         /// <summary>
         ///     The user who triggered this event.
         /// </summary>
-        [JsonPropertyName("user")]
         public User user { get; init; }
     }
 

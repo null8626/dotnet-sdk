@@ -45,10 +45,7 @@ namespace DiscordBotsList.Api.Webhooks
     }
 
     internal class Payload {
-        [JsonPropertyName("type")]
         public string type { get; init; }
-
-        [JsonPropertyName("data")]
         public JsonElement data { get; init; }
     }
 
