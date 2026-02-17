@@ -47,11 +47,9 @@ namespace DiscordBotsList.Api.Webhooks
                     var body = bodyStream.ToArray();
                     var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
 
-                    var hmac = new HMACSHA256(authorization);
+                    var hash = Convert.ToHexString(HMACSHA256.HashData(authorization, transformBuffer)).ToLowerInvariant();
 
-                    hmac.TransformFinalBlock(transformBuffer, 0, transformBuffer.Length);
-
-                    if (!parsedSignature["v1"].Equals(Convert.ToHexString(hmac.Hash).ToLowerInvariant()) && !context.Response.HasStarted)
+                    if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
                     {
                         context.Response.StatusCode = 401;
 
