@@ -37,7 +37,7 @@ namespace DiscordBotsList.Api.Webhooks
         {
             if (!context.Response.HasStarted)
             {
-                context.Response.StatusCode = 200;
+                context.Response.StatusCode = 204;
             }
 
             return Task.CompletedTask;
@@ -88,11 +88,6 @@ namespace DiscordBotsList.Api.Webhooks
             else
             {
                 await callback(context, data, trace);
-
-                if (!context.Response.HasStarted)
-                {
-                    context.Response.StatusCode = 204;
-                }
             }
         }
 
