@@ -12,7 +12,7 @@ namespace DiscordBotsList.Api.Webhooks
         /// </summary>
         [JsonPropertyName("connection_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong connectionID { get; init; }
+        public ulong connectionId { get; init; }
         
         /// <summary>
         ///     The secret used to verify future webhook deliveries.
@@ -41,6 +41,6 @@ namespace DiscordBotsList.Api.Webhooks
         /// </summary>
         [JsonPropertyName("connection_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong connectionID { get; init; }
+        public ulong connectionId { get; init; }
     }
 }

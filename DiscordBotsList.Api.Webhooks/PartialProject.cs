@@ -30,6 +30,6 @@ namespace DiscordBotsList.Api.Webhooks
         /// </summary>
         [JsonPropertyName("platform_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong platformID { get; init; }
+        public ulong platformId { get; init; }
     }
 }

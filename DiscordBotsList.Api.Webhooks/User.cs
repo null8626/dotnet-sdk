@@ -22,13 +22,13 @@ namespace DiscordBotsList.Api.Webhooks
         ///     The user's avatar URL.
         /// </summary>
         [JsonPropertyName("avatar_url")]
-        public string avatarURL { get; init; }
+        public string avatarUrl { get; init; }
 
         /// <summary>
         ///     The user's platform ID.
         /// </summary>
         [JsonPropertyName("platform_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong platformID { get; init; }
+        public ulong platformId { get; init; }
     }
 }
