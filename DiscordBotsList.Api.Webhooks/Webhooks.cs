@@ -129,7 +129,8 @@ namespace DiscordBotsList.Api.Webhooks
                         return;
                     }
                 }
-                catch {}
+                catch
+                {}
 
                 if (!context.Response.HasStarted)
                 {
