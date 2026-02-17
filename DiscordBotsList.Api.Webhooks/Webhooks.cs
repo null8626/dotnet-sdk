@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Api.Webhooks
 {
@@ -22,64 +23,93 @@ namespace DiscordBotsList.Api.Webhooks
             serializerOptions.Converters.Add(new ULongToStringConverter());
         }
         
-        public delegate Task VoteDelegate(HttpContext context, Vote vote);
+        public delegate Task VoteCreateDelegate(HttpContext context, VoteCreatePayload vote, StringValues trace);
+        public delegate Task TestDelegate(HttpContext context, TestPayload test, StringValues trace);
 
-        public RequestDelegate Listener(VoteDelegate voteDelegate)
+        public async Task<(T payload, StringValues trace)> ParsePayload<T>(HttpContext context)
         {
-            return async (context) =>
+            if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) && !context.Response.HasStarted)
             {
-                if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) && !context.Response.HasStarted)
+                context.Response.StatusCode = 401;
+
+                await context.Response.WriteAsync("Missing Top.gg Signature");
+
+                return default;
+            }
+
+            context.Request.Headers.TryGetValue("x-topgg-trace", out var trace);
+
+            try
+            {
+                var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
+
+                using var bodyStream = new MemoryStream();
+
+                await context.Request.Body.CopyToAsync(bodyStream);
+                var body = bodyStream.ToArray();
+                var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
+
+                var hash = Convert.ToHexString(HMACSHA256.HashData(authorization, transformBuffer)).ToLowerInvariant();
+
+                if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
                 {
                     context.Response.StatusCode = 401;
 
-                    await context.Response.WriteAsync("Missing Top.gg Signature");
+                    await context.Response.WriteAsync("Invalid Authorization");
+
+                    return default;
+                }
+
+                return (JsonSerializer.Deserialize<T>(body, serializerOptions), trace);
+            }
+            catch {}
+
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 400;
+
+                await context.Response.WriteAsync("Invalid Request");
+            }
+
+            return default;
+        }
+
+        public RequestDelegate VoteCreateListener(VoteCreateDelegate voteCreateDelegate)
+        {
+            return async (context) =>
+            {
+                var (vote, trace) = await ParsePayload<VoteCreatePayload>(context);
+
+                if (vote != null)
+                {
+                    await voteCreateDelegate(context, vote, trace);
+
+                    if (!context.Response.HasStarted)
+                    {
+                        context.Response.StatusCode = 204;
+                    }
 
                     return;
                 }
+            };
+        }
 
-                try
+        public RequestDelegate TestListener(TestDelegate testDelegate)
+        {
+            return async (context) =>
+            {
+                var (test, trace) = await ParsePayload<TestPayload>(context);
+
+                if (test != null)
                 {
-                    var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
+                    await testDelegate(context, test, trace);
 
-                    using var bodyStream = new MemoryStream();
-
-                    await context.Request.Body.CopyToAsync(bodyStream);
-                    var body = bodyStream.ToArray();
-                    var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
-
-                    var hash = Convert.ToHexString(HMACSHA256.HashData(authorization, transformBuffer)).ToLowerInvariant();
-
-                    if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
+                    if (!context.Response.HasStarted)
                     {
-                        context.Response.StatusCode = 401;
-
-                        await context.Response.WriteAsync("Invalid Authorization");
-
-                        return;
+                        context.Response.StatusCode = 204;
                     }
 
-                    var vote = JsonSerializer.Deserialize<Vote>(body, serializerOptions);
-
-                    if (vote != null)
-                    {
-                        await voteDelegate(context, vote);
-
-                        if (!context.Response.HasStarted)
-                        {
-                            context.Response.StatusCode = 204;
-                        }
-
-                        return;
-                    }
-                }
-                catch
-                {}
-
-                if (!context.Response.HasStarted)
-                {
-                    context.Response.StatusCode = 400;
-
-                    await context.Response.WriteAsync("Invalid Request");
+                    return;
                 }
             };
         }
