@@ -21,6 +21,8 @@ namespace DiscordBotsList.Api.Webhooks
 
             serializerOptions = new JsonSerializerOptions();
             serializerOptions.Converters.Add(new ULongToStringConverter());
+            serializerOptions.Converters.Add(new PlatformConverter());
+            serializerOptions.Converters.Add(new ProjectTypeConverter());
         }
         
         public delegate Task VoteCreateDelegate(HttpContext context, VoteCreatePayload vote, StringValues trace);
