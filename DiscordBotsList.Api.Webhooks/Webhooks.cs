@@ -14,14 +14,34 @@ namespace DiscordBotsList.Api.Webhooks
     public interface WebhookListener
     {
         /// <summary>
+        ///     A user has connected to your webhook integration.
+        /// </summary>
+        Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, StringValues trace) => defaultResponse(context);
+
+        /// <summary>
+        ///     A user has disconnected from your webhook integration.
+        /// </summary>
+        Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, StringValues trace) => defaultResponse(context);
+
+        /// <summary>
         ///     Test webhook sent from the dashboard.
         /// </summary>
-        Task OnTest(HttpContext context, TestPayload test, StringValues trace);
+        Task OnTest(HttpContext context, TestPayload test, StringValues trace) => defaultResponse(context);
 
         /// <summary>
         ///     Fired when a user votes for your project.
         /// </summary>
-        Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, StringValues trace);
+        Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, StringValues trace) => defaultResponse(context);
+
+        private Task defaultResponse(HttpContext context)
+        {
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 200;
+            }
+
+            return Task.CompletedTask;
+        }
     }
 
     internal class Payload {
@@ -34,17 +54,22 @@ namespace DiscordBotsList.Api.Webhooks
 
     public abstract class Webhooks
     {
-        private readonly byte[] authorization;
+        private byte[] authorization;
         private readonly JsonSerializerOptions serializerOptions;
 
         public Webhooks(string authorization)
         {
-            this.authorization = Encoding.UTF8.GetBytes(authorization);
+            setAuthorization(authorization);
 
             serializerOptions = new JsonSerializerOptions();
             serializerOptions.Converters.Add(new ULongToStringConverter());
             serializerOptions.Converters.Add(new PlatformConverter());
             serializerOptions.Converters.Add(new ProjectTypeConverter());
+        }
+
+        public void setAuthorization(string authorization)
+        {
+            this.authorization = Encoding.UTF8.GetBytes(authorization);
         }
 
         private async Task Dispatch<T>(Func<HttpContext, T, StringValues, Task> callback, HttpContext context, Payload payload, StringValues trace)
@@ -113,17 +138,10 @@ namespace DiscordBotsList.Api.Webhooks
                     {
                         switch (payload.type)
                         {
-                            case "webhook.test":
-                            {
-                                await Dispatch<TestPayload>(listener.OnTest, context, payload, trace);
-                                break;
-                            }
-
-                            case "vote.create":
-                            {
-                                await Dispatch<VoteCreatePayload>(listener.OnVoteCreate, context, payload, trace);
-                                break;
-                            }
+                            case "integration.create": await Dispatch<IntegrationCreatePayload>(listener.OnIntegrationCreate, context, payload, trace); break;
+                            case "integration.delete": await Dispatch<IntegrationDeletePayload>(listener.OnIntegrationDelete, context, payload, trace); break;
+                            case "webhook.test": await Dispatch<TestPayload>(listener.OnTest, context, payload, trace); break;
+                            case "vote.create": await Dispatch<VoteCreatePayload>(listener.OnVoteCreate, context, payload, trace); break;
                         }
 
                         return;
