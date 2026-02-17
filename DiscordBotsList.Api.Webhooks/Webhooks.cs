@@ -4,13 +4,35 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Api.Webhooks
 {
-    public class Webhooks
+    public interface WebhookListener
+    {
+        /// <summary>
+        ///     Test webhook sent from the dashboard.
+        /// </summary>
+        Task OnTest(HttpContext context, TestPayload test, StringValues trace);
+
+        /// <summary>
+        ///     Fired when a user votes for your project.
+        /// </summary>
+        Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, StringValues trace);
+    }
+
+    internal class Payload {
+        [JsonPropertyName("type")]
+        public string type { get; init; }
+
+        [JsonPropertyName("data")]
+        public JsonElement data { get; init; }
+    }
+
+    public abstract class Webhooks
     {
         private readonly byte[] authorization;
         private readonly JsonSerializerOptions serializerOptions;
@@ -24,13 +46,32 @@ namespace DiscordBotsList.Api.Webhooks
             serializerOptions.Converters.Add(new PlatformConverter());
             serializerOptions.Converters.Add(new ProjectTypeConverter());
         }
-        
-        public delegate Task VoteCreateDelegate(HttpContext context, VoteCreatePayload vote, StringValues trace);
-        public delegate Task TestDelegate(HttpContext context, TestPayload test, StringValues trace);
 
-        private RequestDelegate Listener<T, D>(D callback)
-        where
-            D: Delegate
+        private async Task Dispatch<T>(Func<HttpContext, T, StringValues, Task> callback, HttpContext context, Payload payload, StringValues trace)
+        {
+            var data = payload.data.Deserialize<T>(serializerOptions);
+
+            if (data == null)
+            {
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = 400;
+
+                    await context.Response.WriteAsync("Invalid Request");
+                }
+            }
+            else
+            {
+                await callback(context, data, trace);
+
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = 204;
+                }
+            }
+        }
+
+        public RequestDelegate Listener(WebhookListener listener)
         {
             return async (context) =>
             {
@@ -66,20 +107,23 @@ namespace DiscordBotsList.Api.Webhooks
                         return;
                     }
 
-                    var payload = JsonSerializer.Deserialize<T>(body, serializerOptions);
+                    var payload = JsonSerializer.Deserialize<Payload>(body, serializerOptions);
 
                     if (payload != null)
                     {
-                        var result = callback.DynamicInvoke(context, payload, trace);
-
-                        if (result is Task task)
+                        switch (payload.type)
                         {
-                            await task;
-                        }
+                            case "webhook.test":
+                            {
+                                await Dispatch<TestPayload>(listener.OnTest, context, payload, trace);
+                                break;
+                            }
 
-                        if (!context.Response.HasStarted)
-                        {
-                            context.Response.StatusCode = 204;
+                            case "vote.create":
+                            {
+                                await Dispatch<VoteCreatePayload>(listener.OnVoteCreate, context, payload, trace);
+                                break;
+                            }
                         }
 
                         return;
@@ -94,16 +138,6 @@ namespace DiscordBotsList.Api.Webhooks
                     await context.Response.WriteAsync("Invalid Request");
                 }
             };
-        }
-
-        public RequestDelegate VoteCreateListener(VoteCreateDelegate voteCreateDelegate)
-        {
-            return Listener<VoteCreatePayload, VoteCreateDelegate>(voteCreateDelegate);
-        }
-
-        public RequestDelegate TestListener(TestDelegate testDelegate)
-        {
-            return Listener<TestPayload, TestDelegate>(testDelegate);
         }
     }
 }
