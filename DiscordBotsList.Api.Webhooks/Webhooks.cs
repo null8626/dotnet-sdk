@@ -33,7 +33,7 @@ namespace DiscordBotsList.Api.Webhooks
         /// </summary>
         Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, StringValues trace) => defaultResponse(context);
 
-        private Task defaultResponse(HttpContext context)
+        private static Task defaultResponse(HttpContext context)
         {
             if (!context.Response.HasStarted)
             {
