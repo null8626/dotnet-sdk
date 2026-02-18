@@ -84,7 +84,19 @@ namespace DiscordBotsList.Api.Webhooks
             }
             else
             {
-                await callback(context, data, trace);
+                try
+                {
+                    await callback(context, data, trace);
+                }
+                catch
+                {
+                    if (!context.Response.HasStarted)
+                    {
+                        context.Response.StatusCode = 500;
+
+                        await context.Response.WriteAsync("Internal Server Error");
+                    }
+                }
             }
         }
 
