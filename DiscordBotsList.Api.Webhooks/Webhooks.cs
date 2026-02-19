@@ -1,17 +1,10 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Api.Webhooks
 {
-    public interface WebhookListener
+    public interface IWebhookListener
     {
         /// <summary>
         ///     A user has connected to your webhook integration.
@@ -100,7 +93,7 @@ namespace DiscordBotsList.Api.Webhooks
             }
         }
 
-        public RequestDelegate Listener(WebhookListener listener)
+        public RequestDelegate Listener(IWebhookListener listener)
         {
             return async (context) =>
             {
