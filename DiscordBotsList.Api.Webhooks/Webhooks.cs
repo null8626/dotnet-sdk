@@ -72,7 +72,7 @@ namespace DiscordBotsList.Api.Webhooks
                 {
                     context.Response.StatusCode = 400;
 
-                    await context.Response.WriteAsync("Invalid Request");
+                    await context.Response.WriteAsync("Bad Request");
                 }
             }
             else
@@ -151,7 +151,7 @@ namespace DiscordBotsList.Api.Webhooks
                 {
                     context.Response.StatusCode = 400;
 
-                    await context.Response.WriteAsync("Invalid Request");
+                    await context.Response.WriteAsync("Bad Request");
                 }
             };
         }
