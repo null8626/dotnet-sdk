@@ -21,7 +21,7 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     When the vote was cast.
         /// </summary>
-        [JsonPropertyName("voted_at")]
+        [JsonPropertyName("created_at")]
         public DateTime votedAt { get; init; }
 
         /// <summary>
