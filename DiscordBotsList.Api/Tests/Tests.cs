@@ -9,18 +9,18 @@ using Xunit;
 
 namespace DiscordBotsList.Api.Tests
 {
-    public class UnitTests
+    public class Tests
     {
         public static IEnumerable<object[]> UserSources => Enum.GetValues<UserSource>().Select(source => new object[] { source });
         public static IEnumerable<object[]> ProjectTypes => Enum.GetValues<ProjectType>().Select(type => new object[] { type });
 
-        private readonly DiscordBotListApi Client = new(new HttpClient(new Mocks()));
+        private readonly DiscordBotListApi Client = new(new HttpClient(new Mock()));
 
         [Fact]
         public async Task GetSelfAsync() => await Client.GetSelfAsync();
 
         [Fact]
-        public async Task PostCommandsAsync() => await Client.PostCommandsAsync(Mocks.ReadJson("PostCommands"));
+        public async Task PostCommandsAsync() => await Client.PostCommandsAsync(Mock.ReadJson("PostCommands"));
 
         [Theory]
         [MemberData(nameof(UserSources))]

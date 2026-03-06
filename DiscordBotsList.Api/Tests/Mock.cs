@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Tests
 {
-    public class Mocks : HttpMessageHandler
+    public class Mock : HttpMessageHandler
     {
-        private static Stream StreamJson(string name) => typeof(Mocks).Assembly.GetManifestResourceStream($"DiscordBotsList.Api.Tests.mocks.{name}.json");
+        private static Stream StreamJson(string name) => typeof(Mock).Assembly.GetManifestResourceStream($"DiscordBotsList.Api.Tests.Mocks.{name}.json");
 
         internal static string ReadJson(string name)
         {
