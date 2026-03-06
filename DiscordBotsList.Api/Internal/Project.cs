@@ -25,10 +25,7 @@ namespace DiscordBotsList.Api.Internal
             {
                 switch (reader.GetString())
                 {
-                    case "discord":
-                    {
-                        return Platform.Discord;
-                    }
+                    case "discord": return Platform.Discord;
                 }
             }
 
@@ -58,15 +55,8 @@ namespace DiscordBotsList.Api.Internal
             {
                 switch (reader.GetString())
                 {
-                    case "bot":
-                    {
-                        return ProjectType.DiscordBot;
-                    }
-
-                    case "server":
-                    {
-                        return ProjectType.DiscordServer;
-                    }
+                    case "bot": return ProjectType.DiscordBot;
+                    case "server": return ProjectType.DiscordServer;
                 }
             }
 
