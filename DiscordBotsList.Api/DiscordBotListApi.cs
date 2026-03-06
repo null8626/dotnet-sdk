@@ -19,13 +19,22 @@ namespace DiscordBotsList.Api
         private readonly JsonSerializerOptions SerializerOptions;
         private readonly HttpClient Http;
 
-        public DiscordBotListApi(string token)
+        public DiscordBotListApi(HttpClient http)
         {
-            Http = new HttpClient();
-            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            Http = http;
 
             SerializerOptions = new JsonSerializerOptions();
             SerializerOptions.Converters.Add(new ULongToStringConverter());
+        }
+
+        public DiscordBotListApi(string token) : this(DefaultHttpClient(token)) {}
+
+        private static HttpClient DefaultHttpClient(string token)
+        {
+            var Http = new HttpClient();
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            return Http;
         }
 
         /// <summary>
