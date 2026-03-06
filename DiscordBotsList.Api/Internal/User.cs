@@ -117,11 +117,11 @@ namespace DiscordBotsList.Api.Internal
     public class PaginatedVotes : IEnumerable
     {
         [JsonPropertyName("data")]
-        internal List<Vote> Votes;
+        internal List<Vote> Votes { get; set; }
 
         [JsonInclude]
         [JsonPropertyName("cursor")]
-        internal string Cursor;
+        internal string Cursor { get; set; }
 
         internal DiscordBotListApi Client;
 
