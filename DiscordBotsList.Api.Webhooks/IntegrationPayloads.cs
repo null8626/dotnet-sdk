@@ -12,23 +12,25 @@ namespace DiscordBotsList.Api.Webhooks
         /// </summary>
         [JsonPropertyName("connection_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong connectionId { get; init; }
+        public ulong ConnectionId { get; internal init; }
         
         /// <summary>
         ///     The secret used to verify future webhook deliveries.
         /// </summary>
         [JsonPropertyName("webhook_secret")]
-        public string secret { get; init; }
+        public string Secret { get; internal init; }
 
         /// <summary>
         ///     The project that the integration refers to.
         /// </summary>
-        public PartialProject project { get; init; }
+        [JsonPropertyName("project")]
+        public PartialProject Project { get; internal init; }
         
         /// <summary>
         ///     The user who triggered this event.
         /// </summary>
-        public User user { get; init; }
+        [JsonPropertyName("user")]
+        public User User { get; internal init; }
     }
 
     /// <summary>
@@ -41,6 +43,6 @@ namespace DiscordBotsList.Api.Webhooks
         /// </summary>
         [JsonPropertyName("connection_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong connectionId { get; init; }
+        public ulong ConnectionId { get; internal init; }
     }
 }

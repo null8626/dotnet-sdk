@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace DiscordBotsList.Api.Webhooks
 {
     /// <summary>
@@ -8,11 +10,13 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     The project that the test refers to.
         /// </summary>
-        public PartialProject project { get; init; }
+        [JsonPropertyName("project")]
+        public PartialProject Project { get; internal init; }
         
         /// <summary>
         ///     The user who triggered this test.
         /// </summary>
-        public User user { get; init; }
+        [JsonPropertyName("user")]
+        public User User { get; internal init; }
     }
 }

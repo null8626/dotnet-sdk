@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace DiscordBotsList.Api.Webhooks
@@ -10,34 +11,38 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     The vote's ID.
         /// </summary>
+        [JsonPropertyName("id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong id { get; init; }
+        public ulong Id { get; internal init; }
 
         /// <summary>
         ///     The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth.
         /// </summary>
-        public int weight { get; init; }
+        [JsonPropertyName("weight")]
+        public int Weight { get; internal init; }
 
         /// <summary>
         ///     When the vote was cast.
         /// </summary>
         [JsonPropertyName("created_at")]
-        public DateTime votedAt { get; init; }
+        public DateTime VotedAt { get; internal init; }
 
         /// <summary>
         ///     When the vote expires (the user can vote again.)
         /// </summary>
         [JsonPropertyName("expires_at")]
-        public DateTime expiresAt { get; init; }
+        public DateTime ExpiresAt { get; internal init; }
         
         /// <summary>
         ///     The project that received this vote.
         /// </summary>
-        public PartialProject project { get; init; }
+        [JsonPropertyName("project")]
+        public PartialProject Project { get; internal init; }
         
         /// <summary>
         ///     The user who voted for this project.
         /// </summary>
-        public User user { get; init; }
+        [JsonPropertyName("user")]
+        public User User { get; internal init; }
     }
 }

@@ -1,8 +1,12 @@
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace DiscordBotsList.Api.Webhooks
 {
+    /// <summary>
+    ///     A project's platform.
+    /// </summary>
     public enum Platform
     {
         Discord
@@ -19,19 +23,13 @@ namespace DiscordBotsList.Api.Webhooks
             {
                 switch (reader.GetString())
                 {
-                    case "discord":
-                    {
-                        return Platform.Discord;
-                    }
+                    case "discord": return Platform.Discord;
                 }
             }
 
             throw new InvalidOperationException();
         }
 
-        public override void Write(Utf8JsonWriter writer, Platform value, JsonSerializerOptions options)
-        {
-            throw new InvalidOperationException();
-        }
+        public override void Write(Utf8JsonWriter writer, Platform platform, JsonSerializerOptions options) => throw new InvalidOperationException();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace DiscordBotsList.Api.Webhooks
@@ -18,9 +19,6 @@ namespace DiscordBotsList.Api.Webhooks
             throw new InvalidOperationException();
         }
 
-        public override void Write(Utf8JsonWriter writer, ulong value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToString());
-        }
+        public override void Write(Utf8JsonWriter writer, ulong value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 }

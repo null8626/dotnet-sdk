@@ -1,8 +1,12 @@
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace DiscordBotsList.Api.Webhooks
 {
+    /// <summary>
+    ///     A project's type.
+    /// </summary>
     public enum ProjectType
     {
         DiscordBot,
@@ -20,24 +24,14 @@ namespace DiscordBotsList.Api.Webhooks
             {
                 switch (reader.GetString())
                 {
-                    case "bot":
-                    {
-                        return ProjectType.DiscordBot;
-                    }
-
-                    case "server":
-                    {
-                        return ProjectType.DiscordServer;
-                    }
+                    case "bot": return ProjectType.DiscordBot;
+                    case "server": return ProjectType.DiscordServer;
                 }
             }
 
             throw new InvalidOperationException();
         }
 
-        public override void Write(Utf8JsonWriter writer, ProjectType value, JsonSerializerOptions options)
-        {
-            throw new InvalidOperationException();
-        }
+        public override void Write(Utf8JsonWriter writer, ProjectType type, JsonSerializerOptions options) => throw new InvalidOperationException();
     }
 }

@@ -1,6 +1,13 @@
+using System;
+using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Api.Webhooks
 {
@@ -9,24 +16,24 @@ namespace DiscordBotsList.Api.Webhooks
         /// <summary>
         ///     A user has connected to your webhook integration.
         /// </summary>
-        Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, StringValues trace) => defaultResponse(context);
+        Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse(context);
 
         /// <summary>
         ///     A user has disconnected from your webhook integration.
         /// </summary>
-        Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, StringValues trace) => defaultResponse(context);
+        Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, string trace) => DefaultResponse(context);
 
         /// <summary>
         ///     Test webhook sent from the dashboard.
         /// </summary>
-        Task OnTest(HttpContext context, TestPayload test, StringValues trace) => defaultResponse(context);
+        Task OnTest(HttpContext context, TestPayload test, string trace) => DefaultResponse(context);
 
         /// <summary>
         ///     Fired when a user votes for your project.
         /// </summary>
-        Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, StringValues trace) => defaultResponse(context);
+        Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, string trace) => DefaultResponse(context);
 
-        private static Task defaultResponse(HttpContext context)
+        private static Task DefaultResponse(HttpContext context)
         {
             if (!context.Response.HasStarted)
             {
@@ -38,33 +45,28 @@ namespace DiscordBotsList.Api.Webhooks
     }
 
     internal class Payload {
-        public string type { get; init; }
-        public JsonElement data { get; init; }
+        [JsonPropertyName("type")]
+        public string Type { get; init; }
+
+        [JsonPropertyName("data")]
+        public JsonElement Data { get; init; }
     }
 
     public abstract class Webhooks
     {
-        private byte[] authorization;
-        private readonly JsonSerializerOptions serializerOptions;
-
-        public Webhooks(string authorization)
+        private byte[] Authorization;
+        private readonly JsonSerializerOptions SerializerOptions = new()
         {
-            setAuthorization(authorization);
+            Converters = {new ULongToStringConverter(), new PlatformConverter(), new ProjectTypeConverter()}
+        };
 
-            serializerOptions = new JsonSerializerOptions();
-            serializerOptions.Converters.Add(new ULongToStringConverter());
-            serializerOptions.Converters.Add(new PlatformConverter());
-            serializerOptions.Converters.Add(new ProjectTypeConverter());
-        }
+        public Webhooks(string authorization) => SetAuthorization(authorization);
 
-        public void setAuthorization(string authorization)
+        public void SetAuthorization(string newAuthorization) => Authorization = Encoding.UTF8.GetBytes(newAuthorization);
+
+        private async Task Dispatch<T>(Func<HttpContext, T, string, Task> callback, HttpContext context, Payload payload, StringValues trace)
         {
-            this.authorization = Encoding.UTF8.GetBytes(authorization);
-        }
-
-        private async Task Dispatch<T>(Func<HttpContext, T, StringValues, Task> callback, HttpContext context, Payload payload, StringValues trace)
-        {
-            var data = payload.data.Deserialize<T>(serializerOptions);
+            var data = payload.Data.Deserialize<T>(SerializerOptions);
 
             if (data == null)
             {
@@ -79,7 +81,7 @@ namespace DiscordBotsList.Api.Webhooks
             {
                 try
                 {
-                    await callback(context, data, trace);
+                    await callback(context, data, trace.First());
                 }
                 catch
                 {
@@ -118,7 +120,7 @@ namespace DiscordBotsList.Api.Webhooks
                     var body = bodyStream.ToArray();
                     var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
 
-                    var hash = Convert.ToHexString(HMACSHA256.HashData(authorization, transformBuffer)).ToLowerInvariant();
+                    var hash = Convert.ToHexString(HMACSHA256.HashData(Authorization, transformBuffer)).ToLowerInvariant();
 
                     if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
                     {
@@ -129,11 +131,11 @@ namespace DiscordBotsList.Api.Webhooks
                         return;
                     }
 
-                    var payload = JsonSerializer.Deserialize<Payload>(body, serializerOptions);
+                    var payload = JsonSerializer.Deserialize<Payload>(body, SerializerOptions);
 
                     if (payload != null)
                     {
-                        switch (payload.type)
+                        switch (payload.Type)
                         {
                             case "integration.create": await Dispatch<IntegrationCreatePayload>(listener.OnIntegrationCreate, context, payload, trace); break;
                             case "integration.delete": await Dispatch<IntegrationDeletePayload>(listener.OnIntegrationDelete, context, payload, trace); break;
