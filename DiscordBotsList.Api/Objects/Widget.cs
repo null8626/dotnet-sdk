@@ -1,13 +1,8 @@
 using System.Text.RegularExpressions;
+using DiscordBotsList.Api.Internal;
 
 namespace DiscordBotsList.Api.Objects
 {
-    public enum WidgetType
-    {
-        DiscordBot,
-        DiscordServer,
-    }
-
     public static partial class Widget
     {
         [GeneratedRegex("(?<!^)([A-Z])", RegexOptions.Compiled)]
@@ -16,33 +11,33 @@ namespace DiscordBotsList.Api.Objects
         /// <summary>
         ///     Generates a large widget URL.
         /// </summary>
-        /// <param name="type">The widget type.</param>
-        /// <param name="projectId">The project ID.</param>
+        /// <param name="type">The project's type.</param>
+        /// <param name="id">The project ID.</param>
         /// <returns>The widget URL.</returns>
-        public static string Large(WidgetType type, ulong projectId) => $"{DiscordBotListApi.baseEndpoint}/v1/widgets/large/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{projectId}";
+        public static string Large(ProjectType type, ulong id) => $"{DiscordBotListApi.BaseURL}/widgets/large/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
 
         /// <summary>
         ///     Generates a small widget URL for displaying votes.
         /// </summary>
-        /// <param name="type">The widget type.</param>
-        /// <param name="projectId">The project ID.</param>
+        /// <param name="type">The project's type.</param>
+        /// <param name="id">The project ID.</param>
         /// <returns>The widget URL.</returns>
-        public static string Votes(WidgetType type, ulong projectId) => $"{DiscordBotListApi.baseEndpoint}/v1/widgets/small/votes/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{projectId}";
+        public static string Votes(ProjectType type, ulong id) => $"{DiscordBotListApi.BaseURL}/widgets/small/votes/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
 
         /// <summary>
         ///     Generates a small widget URL for displaying a project's owner.
         /// </summary>
-        /// <param name="type">The widget type.</param>
-        /// <param name="projectId">The project ID.</param>
+        /// <param name="type">The project's type.</param>
+        /// <param name="id">The project ID.</param>
         /// <returns>The widget URL.</returns>
-        public static string Owner(WidgetType type, ulong projectId) => $"{DiscordBotListApi.baseEndpoint}/v1/widgets/small/owner/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{projectId}";
+        public static string Owner(ProjectType type, ulong id) => $"{DiscordBotListApi.BaseURL}/widgets/small/owner/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
 
         /// <summary>
         ///     Generates a small widget URL for displaying social stats.
         /// </summary>
-        /// <param name="type">The widget type.</param>
-        /// <param name="projectId">The project ID.</param>
+        /// <param name="type">The project's type.</param>
+        /// <param name="id">The project ID.</param>
         /// <returns>The widget URL.</returns>
-        public static string Social(WidgetType type, ulong projectId) => $"{DiscordBotListApi.baseEndpoint}/v1/widgets/small/social/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{projectId}";
+        public static string Social(ProjectType type, ulong id) => $"{DiscordBotListApi.BaseURL}/widgets/small/social/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
     }
 }

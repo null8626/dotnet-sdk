@@ -19,9 +19,6 @@ namespace DiscordBotsList.Api.Serialization
             throw new InvalidOperationException();
         }
 
-        public override void Write(Utf8JsonWriter writer, ulong value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToString());
-        }
+        public override void Write(Utf8JsonWriter writer, ulong value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 }
