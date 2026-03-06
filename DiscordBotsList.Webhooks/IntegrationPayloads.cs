@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DiscordBotsList.Api.Webhooks
+namespace DiscordBotsList.Webhooks
 {
     /// <summary>
     ///     An `integration.create` webhook payload.

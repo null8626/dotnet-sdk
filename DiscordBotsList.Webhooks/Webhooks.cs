@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
-namespace DiscordBotsList.Api.Webhooks
+namespace DiscordBotsList.Webhooks
 {
     public interface IWebhookListener
     {
