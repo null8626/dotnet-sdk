@@ -122,7 +122,7 @@ namespace DiscordBotsList.Api.Internal
 
         [JsonInclude]
         [JsonPropertyName("cursor")]
-        internal string Cursor { get; set; }
+        internal string Cursor { get; init; }
 
         internal DiscordBotListApi Client;
 
