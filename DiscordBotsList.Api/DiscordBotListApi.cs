@@ -14,7 +14,7 @@ namespace DiscordBotsList.Api
 {
     public class DiscordBotListApi(HttpClient httpClient)
     {
-        internal static string BaseURL = "https://top.gg/api/v1";
+        internal static readonly string BaseURL = "https://top.gg/api/v1";
         private readonly JsonSerializerOptions SerializerOptions = new()
         {
             Converters = {new ULongToStringConverter()}

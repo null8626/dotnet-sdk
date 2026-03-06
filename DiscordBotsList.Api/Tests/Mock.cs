@@ -13,7 +13,7 @@ namespace DiscordBotsList.Api.Tests
     public class Mock : HttpMessageHandler
     {
 #pragma warning disable SYSLIB1045
-        private static (HttpMethod Method, Regex Endpoint, string? Name)[] Routes = {
+        private static readonly (HttpMethod Method, Regex Endpoint, string? Name)[] Routes = {
             (HttpMethod.Get, new Regex(@"^\/projects\/@me$", RegexOptions.Compiled), "GetSelf"),
             (HttpMethod.Get, new Regex(@"^\/projects\/@me\/votes\/\d+$", RegexOptions.Compiled), "GetVote"),
             (HttpMethod.Get, new Regex(@"^\/projects\/@me\/votes$", RegexOptions.Compiled), "GetVotes"),
