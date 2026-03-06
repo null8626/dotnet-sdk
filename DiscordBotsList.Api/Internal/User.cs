@@ -16,26 +16,26 @@ namespace DiscordBotsList.Api.Internal
         /// </summary>
         [JsonPropertyName("id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong Id { get; internal set; }
+        public ulong Id { get; internal init; }
 
         /// <summary>
         ///     The user's name.
         /// </summary>
         [JsonPropertyName("name")]
-        public string Name { get; internal set; }
+        public string Name { get; internal init; }
 
         /// <summary>
         ///     The user's avatar URL.
         /// </summary>
         [JsonPropertyName("avatar_url")]
-        public string Avatar { get; internal set; }
+        public string Avatar { get; internal init; }
 
         /// <summary>
         ///     The user's platform ID.
         /// </summary>
         [JsonPropertyName("platform_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong PlatformId { get; internal set; }
+        public ulong PlatformId { get; internal init; }
     }
 
     /// <summary>
@@ -57,32 +57,32 @@ namespace DiscordBotsList.Api.Internal
         /// </summary>
         [JsonPropertyName("user_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong VoterId { get; internal set; }
+        public ulong VoterId { get; internal init; }
 
         /// <summary>
         ///     The voter's ID on the project's platform.
         /// </summary>
         [JsonPropertyName("platform_id")]
         [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong PlatformId { get; internal set; }
+        public ulong PlatformId { get; internal init; }
 
         /// <summary>
         ///     When the vote was cast.
         /// </summary>
         [JsonPropertyName("created_at")]
-        public DateTime VotedAt { get; internal set; }
+        public DateTime VotedAt { get; internal init; }
 
         /// <summary>
         ///     When the vote expires and the user is required to vote again.
         /// </summary>
         [JsonPropertyName("expires_at")]
-        public DateTime ExpiresAt { get; internal set; }
+        public DateTime ExpiresAt { get; internal init; }
 
         /// <summary>
         ///     The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth.
         /// </summary>
         [JsonPropertyName("weight")]
-        public int Weight { get; internal set; }
+        public int Weight { get; internal init; }
     }
 
     /// <summary>
@@ -94,19 +94,19 @@ namespace DiscordBotsList.Api.Internal
         ///     When the vote was cast.
         /// </summary>
         [JsonPropertyName("created_at")]
-        public DateTime VotedAt { get; internal set; }
+        public DateTime VotedAt { get; internal init; }
 
         /// <summary>
         ///     When the vote expires and the user is required to vote again.
         /// </summary>
         [JsonPropertyName("expires_at")]
-        public DateTime ExpiresAt { get; internal set; }
+        public DateTime ExpiresAt { get; internal init; }
 
         /// <summary>
         ///     The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth.
         /// </summary>
         [JsonPropertyName("weight")]
-        public int Weight { get; internal set; }
+        public int Weight { get; internal init; }
     }
     
     /// <summary>
@@ -118,7 +118,7 @@ namespace DiscordBotsList.Api.Internal
         ///     The votes in this page.
         /// </summary>
         [JsonPropertyName("data")]
-        public List<Vote> Votes { get; internal set; }
+        public List<Vote> Votes { get; internal init; }
 
         [JsonInclude]
         [JsonPropertyName("cursor")]

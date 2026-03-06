@@ -23,6 +23,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DiscordBotsList.Api\DiscordBotsList.Api.csproj" />
+        <EmbeddedResource Include="mocks\*.json" />
     </ItemGroup>
 
 </Project>

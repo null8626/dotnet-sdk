@@ -13,29 +13,19 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api
 {
-    public class DiscordBotListApi
+    public class DiscordBotListApi(HttpClient httpClient)
     {
         internal static string BaseURL = "https://top.gg/api/v1";
-        private readonly JsonSerializerOptions SerializerOptions;
-        private readonly HttpClient Http;
-
-        public DiscordBotListApi(HttpClient http)
+        private readonly JsonSerializerOptions SerializerOptions = new()
         {
-            Http = http;
+            Converters = {new ULongToStringConverter()}
+        };
+        private readonly HttpClient Http = httpClient;
 
-            SerializerOptions = new JsonSerializerOptions();
-            SerializerOptions.Converters.Add(new ULongToStringConverter());
-        }
-
-        public DiscordBotListApi(string token) : this(DefaultHttpClient(token)) {}
-
-        private static HttpClient DefaultHttpClient(string token)
+        public DiscordBotListApi(string token) : this(new HttpClient()
         {
-            var Http = new HttpClient();
-            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            return Http;
-        }
+            DefaultRequestHeaders = {{ "Authorization", $"Bearer {token}" }}
+        }) {}
 
         /// <summary>
         ///     Tries to get your project's information.

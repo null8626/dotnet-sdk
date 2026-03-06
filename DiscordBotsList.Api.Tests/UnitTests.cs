@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DiscordBotsList.Api.Internal;
 using Xunit;
@@ -7,15 +8,13 @@ namespace DiscordBotsList.Api.Tests
 {
     public class UnitTests
     {
-        private readonly DiscordBotListApi Client;
-
-        public UnitTests() => Client = new DiscordBotListApi(Environment.GetEnvironmentVariable("TOPGG_TOKEN"));
+        private readonly DiscordBotListApi Client = new(new HttpClient(new Mocks()));
 
         [Fact]
         public async Task GetSelfAsync() => await Client.GetSelfAsync();
 
         [Fact]
-        public async Task PostCommandsAsync() => await Client.PostCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
+        public async Task PostCommandsAsync() => await Client.PostCommandsAsync(Mocks.ReadJson("PostCommands"));
 
         [Fact]
         public async Task GetVoteAsync()
