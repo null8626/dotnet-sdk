@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DiscordBotsList.Api.Serialization;
@@ -114,22 +112,19 @@ namespace DiscordBotsList.Api.Internal
     /// <summary>
     ///     A paginated list of a project's vote information.
     /// </summary>
-    public class PaginatedVotes : IEnumerable
+    public class PaginatedVotes
     {
+        /// <summary>
+        ///     The votes in this page.
+        /// </summary>
         [JsonPropertyName("data")]
-        internal List<Vote> Votes { get; set; }
+        public List<Vote> Votes { get; internal set; }
 
         [JsonInclude]
         [JsonPropertyName("cursor")]
         internal string Cursor { get; set; }
 
         internal DiscordBotListApi Client;
-
-        /// <summary>
-        ///     Gets an iterator of the votes in the current page.
-        /// </summary>
-        /// <returns>An iterator of the votes in the current page.</returns>
-        IEnumerator IEnumerable.GetEnumerator() => Votes.GetEnumerator();
 
         /// <summary>
         ///     Tries to advance to the next page.

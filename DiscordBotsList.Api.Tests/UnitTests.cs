@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DiscordBotsList.Api.Internal;
 using Xunit;
 
 namespace DiscordBotsList.Api.Tests
@@ -17,13 +18,17 @@ namespace DiscordBotsList.Api.Tests
         public async Task PostCommandsAsync() => await Client.PostCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
 
         [Fact]
-        public async Task GetVoteAsync() => await Client.GetVoteAsync(661200758510977084);
+        public async Task GetVoteAsync()
+        {
+            await Client.GetVoteAsync(661200758510977084, UserSource.Discord);
+            await Client.GetVoteAsync(8226924471638491136, UserSource.Topgg);
+        }
 
         [Fact]
         public async Task GetVotesAsync()
         {
             var firstPage = await Client.GetVotesAsync(DateTime.Now);
-            var secondPage = await firstPage.Next();
+            await firstPage.Next();
         }
     }
 }
