@@ -4,48 +4,26 @@ using Xunit;
 
 namespace DiscordBotsList.Api.Tests
 {
-    public class Credentials
-    {
-        public ulong BotId { get; set; }
-        public string Token { get; set; }
-
-        public static Credentials LoadFromEnv()
-        {
-            return new Credentials()
-            {
-                BotId = ulong.Parse(Environment.GetEnvironmentVariable("BOT_ID")),
-                Token = Environment.GetEnvironmentVariable("TOPGG_TOKEN")
-            };
-        }
-    }
-
     public class UnitTests
     {
-        private readonly AuthDiscordBotListApi _api;
-        private readonly Credentials _cred;
+        private readonly DiscordBotListApi Client;
 
-        public UnitTests()
-        {
-            _cred = Credentials.LoadFromEnv();
-            _api = new AuthDiscordBotListApi(_cred.BotId, _cred.Token);
-        }
+        public UnitTests() => Client = new DiscordBotListApi(Environment.GetEnvironmentVariable("TOPGG_TOKEN"));
 
         [Fact]
-        public async Task GetSelfAsync()
-        {
-            await _api.GetSelfAsync();
-        }
+        public async Task GetSelfAsync() => await Client.GetSelfAsync();
 
         [Fact]
-        public async Task UpdateCommandsAsync()
-        {
-            await _api.UpdateCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
-        }
+        public async Task PostCommandsAsync() => await Client.PostCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
 
         [Fact]
-        public async Task GetVoteAsync()
+        public async Task GetVoteAsync() => await Client.GetVoteAsync(661200758510977084);
+
+        [Fact]
+        public async Task GetVotesAsync()
         {
-            await _api.GetVoteAsync(661200758510977084);
+            var firstPage = await Client.GetVotesAsync(DateTime.Now);
+            var secondPage = await firstPage.Next();
         }
     }
 }
