@@ -1,7 +1,10 @@
+#nullable enable
+
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +12,16 @@ namespace DiscordBotsList.Api.Tests
 {
     public class Mock : HttpMessageHandler
     {
-        private static Stream StreamJson(string name) => typeof(Mock).Assembly.GetManifestResourceStream($"DiscordBotsList.Api.Tests.Mocks.{name}.json");
+#pragma warning disable SYSLIB1045
+        private static (HttpMethod Method, Regex Endpoint, string? Name)[] Routes = {
+            (HttpMethod.Get, new Regex(@"^\/projects\/@me$", RegexOptions.Compiled), "GetSelf"),
+            (HttpMethod.Get, new Regex(@"^\/projects\/@me\/votes\/\d+$", RegexOptions.Compiled), "GetVote"),
+            (HttpMethod.Get, new Regex(@"^\/projects\/@me\/votes$", RegexOptions.Compiled), "GetVotes"),
+            (HttpMethod.Post, new Regex(@"^\/projects\/@me\/commands$", RegexOptions.Compiled), null)
+        };
+#pragma warning restore SYSLIB1045
+
+        private static Stream StreamJson(string name) => typeof(Mock).Assembly.GetManifestResourceStream($"DiscordBotsList.Api.Tests.Mocks.{name}.json")!;
 
         internal static string ReadJson(string name)
         {
@@ -21,42 +33,29 @@ namespace DiscordBotsList.Api.Tests
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request.RequestUri.Host == "top.gg" && request.RequestUri.AbsolutePath.StartsWith("/api/v1/"))
+            if (request.RequestUri!.Host == "top.gg" && request.RequestUri.AbsolutePath.StartsWith("/api/v1/"))
             {
-                var route = request.RequestUri.AbsolutePath[7..];
+                var endpoint = request.RequestUri.AbsolutePath[7..];
 
-                if (request.Method == HttpMethod.Get)
+                foreach (var (Method, Endpoint, Name) in Routes)
                 {
-                    Stream body;
-
-                    if (route == "/projects/@me")
+                    if (request.Method == Method && Endpoint.IsMatch(endpoint))
                     {
-                        body = StreamJson("GetSelf");
+                        if (Name == null)
+                        {
+                            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NoContent));
+                        }
+                        else
+                        {
+                            var content = new StreamContent(StreamJson(Name));
+                            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        
+                            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = content,
+                            });
+                        }
                     }
-                    else if (route == "/projects/@me/votes/")
-                    {
-                        body = StreamJson("GetVote");
-                    }
-                    else if (route == "/projects/@me/votes")
-                    {
-                        body = StreamJson("GetVotes");
-                    }
-                    else
-                    {
-                        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
-                    }
-
-                    var content = new StreamContent(body);
-                    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
-                    {
-                        Content = content,
-                    });
-                }
-                else if (request.Method == HttpMethod.Post && route == "/projects/@me/commands")
-                {
-                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NoContent));
                 }
             }
 
