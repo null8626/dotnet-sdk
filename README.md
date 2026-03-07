@@ -145,6 +145,7 @@ var widgetUrl = Widget.Social(ProjectType.DiscordBot, 574652751745777665);
 ### Webhooks
 
 ```cs
+using DiscordBotsList.Webhooks.Payloads;
 using DiscordBotsList.Webhooks;
 
 public class CustomWebhooks() : Webhooks(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
