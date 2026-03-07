@@ -17,14 +17,15 @@ namespace DiscordBotsList.Api
         internal static readonly string BaseURL = "https://top.gg/api/v1";
         private readonly JsonSerializerOptions SerializerOptions = new()
         {
-            Converters = {new ULongToStringConverter()}
+            Converters = { new ULongToStringConverter() }
         };
         private readonly HttpClient Http = httpClient;
 
         public DiscordBotListApi(string token) : this(new HttpClient()
         {
-            DefaultRequestHeaders = {{ "Authorization", $"Bearer {token}" }}
-        }) {}
+            DefaultRequestHeaders = { { "Authorization", $"Bearer {token}" } }
+        })
+        { }
 
         /// <summary>
         ///     Tries to get your project's information.

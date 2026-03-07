@@ -76,7 +76,7 @@ namespace DiscordBotsList.Api.Internal
         [JsonPropertyName("weight")]
         public int Weight { get; internal init; }
     }
-    
+
     /// <summary>
     ///     A paginated list of a project's vote information.
     /// </summary>

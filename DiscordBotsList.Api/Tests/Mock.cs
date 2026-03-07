@@ -49,7 +49,7 @@ namespace DiscordBotsList.Api.Tests
                         {
                             var content = new StreamContent(StreamJson(Name));
                             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        
+
                             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                             {
                                 Content = content,
