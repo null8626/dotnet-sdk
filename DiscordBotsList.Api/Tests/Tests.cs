@@ -11,8 +11,8 @@ namespace DiscordBotsList.Api.Tests
 {
     public class Tests
     {
-        public static IEnumerable<object[]> UserSources => Enum.GetValues<UserSource>().Select(source => new object[] { source });
-        public static IEnumerable<object[]> ProjectTypes => Enum.GetValues<ProjectType>().Select(type => new object[] { type });
+        public static IEnumerable<TheoryDataRow<UserSource>> UserSources => Enum.GetValues<UserSource>().Select(source => new TheoryDataRow<UserSource>(source));
+        public static IEnumerable<TheoryDataRow<ProjectType>> ProjectTypes => Enum.GetValues<ProjectType>().Select(payload => new TheoryDataRow<ProjectType>(payload));
 
         private readonly DiscordBotListApi Client = new(new HttpClient(new Mock()));
 
