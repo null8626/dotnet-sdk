@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api.Tests
 {
-    public class Mock : HttpMessageHandler
+    internal class Mock : HttpMessageHandler
     {
 #pragma warning disable SYSLIB1045
         private static readonly (HttpMethod Method, Regex Endpoint, string? Name)[] Routes = {
