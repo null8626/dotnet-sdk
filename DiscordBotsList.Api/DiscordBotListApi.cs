@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-using DiscordBotsList.Api.Internal;
+using DiscordBotsList.Api.Data;
 using DiscordBotsList.Api.Serialization;
 using System;
 using System.Net;

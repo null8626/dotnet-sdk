@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DiscordBotsList.Api.Serialization;
 
-namespace DiscordBotsList.Api.Internal
+namespace DiscordBotsList.Api.Data
 {
     /// <summary>
     ///     A user account from an external platform that is linked to a Top.gg user account.

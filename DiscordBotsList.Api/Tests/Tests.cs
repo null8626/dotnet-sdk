@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DiscordBotsList.Api.Internal;
-using DiscordBotsList.Api.Objects;
+using DiscordBotsList.Api.Data;
 using Xunit;
 
 namespace DiscordBotsList.Api.Tests

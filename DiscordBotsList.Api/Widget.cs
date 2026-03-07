@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
-using DiscordBotsList.Api.Internal;
+using DiscordBotsList.Api.Data;
 
-namespace DiscordBotsList.Api.Objects
+namespace DiscordBotsList.Api
 {
     public static partial class Widget
     {

@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using DiscordBotsList.Api.Serialization;
 
-namespace DiscordBotsList.Api.Internal
+namespace DiscordBotsList.Api.Data
 {
     /// <summary>
     ///     A project's platform.
