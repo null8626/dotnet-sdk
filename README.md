@@ -82,6 +82,16 @@ foreach (var vote in secondPage.Votes)
 
 ### Posting your bot's application commands list
 
+#### Discord.Net
+
+```cs
+var commands = $"[{string.Join(",", (await bot.GetGlobalApplicationCommandsAsync()).Select(command => command.ToJson()))}]";
+
+await client.PostCommandsAsync(commands);
+```
+
+#### Raw
+
 ```cs
 // Array of application commands that
 // can be serialized to Discord API's raw JSON format.
