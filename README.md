@@ -144,6 +144,8 @@ var widgetUrl = Widget.Social(ProjectType.DiscordBot, 574652751745777665);
 
 ### Webhooks
 
+With ASP.NET Core:
+
 ```cs
 using DiscordBotsList.Webhooks.Payloads;
 using DiscordBotsList.Webhooks;
@@ -170,4 +172,18 @@ public class CustomWebhooks() : Webhooks(Environment.GetEnvironmentVariable("TOP
         }
     }
 }
+```
+
+Later, in your server's setup:
+
+```cs
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+var webhooks = new CustomWebhooks();
+
+// POST /webhook
+app.MapPost("/webhook", webhooks.Handler);
+
+app.Run();
 ```
