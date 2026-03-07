@@ -11,39 +11,6 @@ using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Webhooks
 {
-    public interface IWebhookListener
-    {
-        /// <summary>
-        ///     A user has connected to your webhook integration.
-        /// </summary>
-        Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse(context);
-
-        /// <summary>
-        ///     A user has disconnected from your webhook integration.
-        /// </summary>
-        Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, string trace) => DefaultResponse(context);
-
-        /// <summary>
-        ///     Test webhook sent from the dashboard.
-        /// </summary>
-        Task OnTest(HttpContext context, TestPayload test, string trace) => DefaultResponse(context);
-
-        /// <summary>
-        ///     Fired when a user votes for your project.
-        /// </summary>
-        Task OnVoteCreate(HttpContext context, VoteCreatePayload vote, string trace) => DefaultResponse(context);
-
-        private static Task DefaultResponse(HttpContext context)
-        {
-            if (!context.Response.HasStarted)
-            {
-                context.Response.StatusCode = 204;
-            }
-
-            return Task.CompletedTask;
-        }
-    }
-
     internal class Payload {
         [JsonPropertyName("type")]
         public string Type { get; init; }
@@ -54,15 +21,19 @@ namespace DiscordBotsList.Webhooks
 
     public abstract class Webhooks
     {
-        private byte[] Authorization;
+        private byte[] Secret;
         private readonly JsonSerializerOptions SerializerOptions = new()
         {
             Converters = {new ULongToStringConverter(), new PlatformConverter(), new ProjectTypeConverter()}
         };
 
-        public Webhooks(string authorization) => SetAuthorization(authorization);
+        public Webhooks(string secret) => SetSecret(secret);
 
-        public void SetAuthorization(string newAuthorization) => Authorization = Encoding.UTF8.GetBytes(newAuthorization);
+        /// <summary>
+        ///     Sets the webhook secret to use to authorize external requests.
+        /// </summary>
+        /// <param name="newSecret">The new webhook secret to use to authorize external requests.</param>
+        public void SetSecret(string newSecret) => Secret = Encoding.UTF8.GetBytes(newSecret);
 
         private async Task Dispatch<T>(Func<HttpContext, T, string, Task> callback, HttpContext context, Payload payload, StringValues trace)
         {
@@ -95,67 +66,114 @@ namespace DiscordBotsList.Webhooks
             }
         }
 
-        public RequestDelegate Listener(IWebhookListener listener)
+        /// <summary>
+        ///     The handler method to be passed to ASP.NET Core.
+        /// </summary>
+        /// <param name="context">The HTTP request context from ASP.NET Core.</param>
+        public async void Handler(HttpContext context)
         {
-            return async (context) =>
+            if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) && !context.Response.HasStarted)
             {
-                if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) && !context.Response.HasStarted)
+                context.Response.StatusCode = 401;
+
+                await context.Response.WriteAsync("Missing Top.gg Signature");
+
+                return;
+            }
+
+            context.Request.Headers.TryGetValue("x-topgg-trace", out var trace);
+
+            try
+            {
+                var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
+
+                using var bodyStream = new MemoryStream();
+
+                await context.Request.Body.CopyToAsync(bodyStream);
+                var body = bodyStream.ToArray();
+                var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
+
+                var hash = Convert.ToHexString(HMACSHA256.HashData(Secret, transformBuffer)).ToLowerInvariant();
+
+                if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
                 {
                     context.Response.StatusCode = 401;
 
-                    await context.Response.WriteAsync("Missing Top.gg Signature");
+                    await context.Response.WriteAsync("Invalid Secret");
 
                     return;
                 }
 
-                context.Request.Headers.TryGetValue("x-topgg-trace", out var trace);
+                var payload = JsonSerializer.Deserialize<Payload>(body, SerializerOptions);
 
-                try
+                if (payload != null)
                 {
-                    var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
-
-                    using var bodyStream = new MemoryStream();
-
-                    await context.Request.Body.CopyToAsync(bodyStream);
-                    var body = bodyStream.ToArray();
-                    var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
-
-                    var hash = Convert.ToHexString(HMACSHA256.HashData(Authorization, transformBuffer)).ToLowerInvariant();
-
-                    if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
+                    switch (payload.Type)
                     {
-                        context.Response.StatusCode = 401;
-
-                        await context.Response.WriteAsync("Invalid Authorization");
-
-                        return;
+                        case "integration.create": await Dispatch<IntegrationCreatePayload>(OnIntegrationCreate, context, payload, trace); break;
+                        case "integration.delete": await Dispatch<IntegrationDeletePayload>(OnIntegrationDelete, context, payload, trace); break;
+                        case "webhook.test": await Dispatch<TestPayload>(OnTest, context, payload, trace); break;
+                        case "vote.create": await Dispatch<VoteCreatePayload>(OnVoteCreate, context, payload, trace); break;
                     }
 
-                    var payload = JsonSerializer.Deserialize<Payload>(body, SerializerOptions);
-
-                    if (payload != null)
-                    {
-                        switch (payload.Type)
-                        {
-                            case "integration.create": await Dispatch<IntegrationCreatePayload>(listener.OnIntegrationCreate, context, payload, trace); break;
-                            case "integration.delete": await Dispatch<IntegrationDeletePayload>(listener.OnIntegrationDelete, context, payload, trace); break;
-                            case "webhook.test": await Dispatch<TestPayload>(listener.OnTest, context, payload, trace); break;
-                            case "vote.create": await Dispatch<VoteCreatePayload>(listener.OnVoteCreate, context, payload, trace); break;
-                        }
-
-                        return;
-                    }
+                    return;
                 }
-                catch
-                {}
+            }
+            catch
+            {}
 
-                if (!context.Response.HasStarted)
-                {
-                    context.Response.StatusCode = 400;
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 400;
 
-                    await context.Response.WriteAsync("Bad Request");
-                }
-            };
+                await context.Response.WriteAsync("Bad Request");
+            }
+        }
+
+        /// <summary>
+        ///     A user has connected to your webhook integration.
+        /// </summary>
+        /// <param name="context">The HTTP request context from ASP.NET Core.</param>
+        /// <param name="payload">The webhook payload.</param>
+        /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
+        /// <returns>The response for this request.</returns>
+        public virtual Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse(context);
+
+        /// <summary>
+        ///     A user has disconnected from your webhook integration.
+        /// </summary>
+        /// <param name="context">The HTTP request context from ASP.NET Core.</param>
+        /// <param name="payload">The webhook payload.</param>
+        /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
+        /// <returns>The response for this request.</returns>
+        public virtual Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, string trace) => DefaultResponse(context);
+
+        /// <summary>
+        ///     Test webhook sent from the dashboard.
+        /// </summary>
+        /// <param name="context">The HTTP request context from ASP.NET Core.</param>
+        /// <param name="payload">The webhook payload.</param>
+        /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
+        /// <returns>The response for this request.</returns>
+        public virtual Task OnTest(HttpContext context, TestPayload payload, string trace) => DefaultResponse(context);
+
+        /// <summary>
+        ///     Fired when a user votes for your project.
+        /// </summary>
+        /// <param name="context">The HTTP request context from ASP.NET Core.</param>
+        /// <param name="payload">The webhook payload.</param>
+        /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
+        /// <returns>The response for this request.</returns>
+        public virtual Task OnVoteCreate(HttpContext context, VoteCreatePayload payload, string trace) => DefaultResponse(context);
+
+        private static Task DefaultResponse(HttpContext context)
+        {
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 204;
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
