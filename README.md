@@ -9,29 +9,31 @@ The community-maintained .NET library for Top.gg.
 - [Usage](#usage)
   - [Getting your project's information](#getting-your-projects-information)
   - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
+  - [Getting a cursor-based paginated list of votes for your project](#getting-a-cursor-based-paginated-list-of-votes-for-your-project)
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
   - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
-    - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
 ## Installation
 
 ### Main API wrapper
 
-```powershell
-> Install-Package DiscordBotsList.Api
+```console
+$ dotnet add package DiscordBotsList.Api --version 2.0.0
 ```
 
 ### Webhooks only
 
-```powershell
-> Install-Package DiscordBotsList.Api.Webhooks
+```console
+$ dotnet add package DiscordBotsList.Webhooks --version 2.0.0
 ```
 
 ## Setting up
 
 ```cs
-var client = new AuthDiscordBotListApi(DISCORD_ID, "TOPGG_TOKEN");
+using DiscordBotsList.Api;
+
+var client = new DiscordBotListApi(Environment.GetEnvironmentVariable("TOPGG_TOKEN"));
 ```
 
 ## Usage
@@ -44,15 +46,62 @@ var project = await client.GetSelfAsync();
 
 ### Getting your project's vote information of a user
 
+#### Discord ID
+
 ```cs
-var vote = await client.GetVoteAsync(661200758510977084);
+using DiscordBotsList.Api.Data;
+
+var vote = await client.GetVoteAsync(661200758510977084, UserSource.Discord);
+```
+
+#### Top.gg ID
+
+```cs
+using DiscordBotsList.Api.Data;
+
+var vote = await client.GetVoteAsync(8226924471638491136, UserSource.Topgg);
+```
+
+### Getting a cursor-based paginated list of votes for your project
+
+```cs
+var firstPage = await client.GetVotesAsync(DateTime.Now);
+
+foreach (var vote in firstPage.Votes)
+{
+    // ...
+}
+
+var secondPage = await firstPage.Next();
+
+foreach (var vote in secondPage.Votes)
+{
+    // ...
+}
 ```
 
 ### Posting your bot's application commands list
 
 ```cs
-// Array of application commands in Discord API's raw JSON format.
-await client.UpdateCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_localizations\":null,\"description\":\"command description\",\"description_localizations\":null,\"contexts\":[],\"default_permission\":null,\"default_member_permissions\":null,\"dm_permission\":false,\"integration_types\":[],\"nsfw\":false}]");
+// Array of application commands that
+// can be serialized to Discord API's raw JSON format.
+var commands = @"[
+  {
+    ""options"": [],
+    ""name"": ""test"",
+    ""name_localizations"": null,
+    ""description"": ""command description"",
+    ""description_localizations"": null,
+    ""contexts"": [],
+    ""default_permission"": null,
+    ""default_member_permissions"": null,
+    ""dm_permission"": false,
+    ""integration_types"": [],
+    ""nsfw"": false
+  }
+]";
+
+await client.PostCommandsAsync(commands);
 ```
 
 ### Generating widget URLs
@@ -60,49 +109,64 @@ await client.UpdateCommandsAsync("[{\"options\":[],\"name\":\"test\",\"name_loca
 #### Large
 
 ```cs
-var widgetUrl = Widget.Large(WidgetType.DISCORD_BOT, 1026525568344264724U);
+using DiscordBotsList.Api.Data;
+using DiscordBotsList.Api;
+
+var widgetUrl = Widget.Large(ProjectType.DiscordBot, 574652751745777665);
 ```
 
 #### Votes
 
 ```cs
-var widgetUrl = Widget.Votes(WidgetType.DISCORD_BOT, 1026525568344264724U);
+using DiscordBotsList.Api.Data;
+using DiscordBotsList.Api;
+
+var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 574652751745777665);
 ```
 
 #### Owner
 
 ```cs
-var widgetUrl = Widget.Owner(WidgetType.DISCORD_BOT, 1026525568344264724U);
+using DiscordBotsList.Api.Data;
+using DiscordBotsList.Api;
+
+var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 574652751745777665);
 ```
 
 #### Social
 
 ```cs
-var widgetUrl = Widget.Social(WidgetType.DISCORD_BOT, 1026525568344264724U);
+using DiscordBotsList.Api.Data;
+using DiscordBotsList.Api;
+
+var widgetUrl = Widget.Social(ProjectType.DiscordBot, 574652751745777665);
 ```
 
 ### Webhooks
 
-#### Being notified whenever someone voted for your project
-
-With ASP.NET Core or Blazor:
-
 ```cs
-using DiscordBotsList.Api.Webhooks;
+using DiscordBotsList.Webhooks;
 
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-app.MapGet("/", () => "Hello World!");
-
-var webhooks = new Webhooks(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_PASSWORD"));
-
-app.MapPost("/webhooks", webhooks.Listener((context, vote) =>
+public class CustomWebhooks() : Webhooks(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
 {
-  Console.WriteLine($"A user with the ID of {vote.VoterId} has voted us on Top.gg!");
+    // Optional
+    public override Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse(context);
 
-  return Task.CompletedTask;
-}));
+    // Optional
+    public override Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, string trace) => DefaultResponse(context);
 
-app.Run();
+    // Optional
+    public override Task OnTest(HttpContext context, TestPayload payload, string trace) => DefaultResponse(context);
+
+    // Optional
+    public override Task OnVoteCreate(HttpContext context, VoteCreatePayload payload, string trace) => DefaultResponse(context);
+
+    private static async Task DefaultResponse(HttpContext context)
+    {
+        if (!context.Response.HasStarted)
+        {
+            context.Response.StatusCode = 200;
+        }
+    }
+}
 ```
