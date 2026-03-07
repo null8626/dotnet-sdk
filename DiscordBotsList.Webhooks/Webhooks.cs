@@ -4,21 +4,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using DiscordBotsList.Webhooks.Data;
+using DiscordBotsList.Webhooks.Payloads;
+using DiscordBotsList.Webhooks.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Webhooks
 {
-    internal class Payload {
-        [JsonPropertyName("type")]
-        public string Type { get; init; }
-
-        [JsonPropertyName("data")]
-        public JsonElement Data { get; init; }
-    }
-
     public abstract class Webhooks
     {
         private byte[] Secret;

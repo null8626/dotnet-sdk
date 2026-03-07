@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DiscordBotsList.Webhooks.Payloads;
 using Microsoft.AspNetCore.Http;
 
 namespace DiscordBotsList.Webhooks.Tests

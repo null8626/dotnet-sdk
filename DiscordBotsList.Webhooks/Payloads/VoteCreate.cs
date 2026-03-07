@@ -1,7 +1,9 @@
 using System;
 using System.Text.Json.Serialization;
+using DiscordBotsList.Webhooks.Data;
+using DiscordBotsList.Webhooks.Serialization;
 
-namespace DiscordBotsList.Webhooks
+namespace DiscordBotsList.Webhooks.Payloads
 {
     /// <summary>
     ///     A `vote.create` webhook payload.

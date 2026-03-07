@@ -1,33 +1,34 @@
 using System.Text.Json.Serialization;
+using DiscordBotsList.Webhooks.Serialization;
 
-namespace DiscordBotsList.Webhooks
+namespace DiscordBotsList.Webhooks.Data
 {
     /// <summary>
-    ///     A brief information on project listed on Top.gg.
+    ///     A Top.gg user.
     /// </summary>
-    public class PartialProject
+    public class User
     {
         /// <summary>
-        ///     The project's ID.
+        ///     The user's ID.
         /// </summary>
         [JsonPropertyName("id")]
         [JsonConverter(typeof(ULongToStringConverter))]
         public ulong Id { get; internal init; }
 
         /// <summary>
-        ///     The project's ID.
+        ///     The user's name.
         /// </summary>
-        [JsonPropertyName("type")]
-        public ProjectType Type { get; internal init; }
+        [JsonPropertyName("name")]
+        public string Name { get; internal init; }
 
         /// <summary>
-        ///     The project's platform.
+        ///     The user's avatar URL.
         /// </summary>
-        [JsonPropertyName("platform")]
-        public Platform Platform { get; internal init; }
+        [JsonPropertyName("avatar_url")]
+        public string Avatar { get; internal init; }
 
         /// <summary>
-        ///     The project's platform ID.
+        ///     The user's platform ID.
         /// </summary>
         [JsonPropertyName("platform_id")]
         [JsonConverter(typeof(ULongToStringConverter))]

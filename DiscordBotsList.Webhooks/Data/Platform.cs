@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DiscordBotsList.Webhooks
+namespace DiscordBotsList.Webhooks.Data
 {
     /// <summary>
     ///     A project's platform.

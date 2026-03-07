@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
+using DiscordBotsList.Webhooks.Data;
 
-namespace DiscordBotsList.Webhooks
+namespace DiscordBotsList.Webhooks.Payloads
 {
     /// <summary>
     ///     A `webhook.test` webhook payload.

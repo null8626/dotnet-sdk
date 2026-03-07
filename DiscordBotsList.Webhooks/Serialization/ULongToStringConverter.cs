@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DiscordBotsList.Webhooks
+namespace DiscordBotsList.Webhooks.Serialization
 {
     /// <summary>
     ///     Converts API responses from strings to longs and vice versa.
