@@ -16,44 +16,6 @@ namespace DiscordBotsList.Api.Data
     }
 
     /// <summary>
-    ///     A project's vote information.
-    /// </summary>
-    public class Vote
-    {
-        /// <summary>
-        ///     The voter's ID.
-        /// </summary>
-        [JsonPropertyName("user_id")]
-        [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong VoterId { get; internal init; }
-
-        /// <summary>
-        ///     The voter's ID on the project's platform.
-        /// </summary>
-        [JsonPropertyName("platform_id")]
-        [JsonConverter(typeof(ULongToStringConverter))]
-        public ulong PlatformId { get; internal init; }
-
-        /// <summary>
-        ///     When the vote was cast.
-        /// </summary>
-        [JsonPropertyName("created_at")]
-        public DateTime VotedAt { get; internal init; }
-
-        /// <summary>
-        ///     When the vote expires and the user is required to vote again.
-        /// </summary>
-        [JsonPropertyName("expires_at")]
-        public DateTime ExpiresAt { get; internal init; }
-
-        /// <summary>
-        ///     The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth.
-        /// </summary>
-        [JsonPropertyName("weight")]
-        public int Weight { get; internal init; }
-    }
-
-    /// <summary>
     ///     A brief information of a project's vote.
     /// </summary>
     public class PartialVote
@@ -75,6 +37,26 @@ namespace DiscordBotsList.Api.Data
         /// </summary>
         [JsonPropertyName("weight")]
         public int Weight { get; internal init; }
+    }
+
+    /// <summary>
+    ///     A project's vote information.
+    /// </summary>
+    public class Vote : PartialVote
+    {
+        /// <summary>
+        ///     The voter's ID.
+        /// </summary>
+        [JsonPropertyName("user_id")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong VoterId { get; internal init; }
+
+        /// <summary>
+        ///     The voter's ID on the project's platform.
+        /// </summary>
+        [JsonPropertyName("platform_id")]
+        [JsonConverter(typeof(ULongToStringConverter))]
+        public ulong PlatformId { get; internal init; }
     }
 
     /// <summary>
