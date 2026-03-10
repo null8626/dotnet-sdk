@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace DiscordBotsList.Api
 {
     /// <summary>
-    ///     Interact with API v1's endpoints.
+    ///     Interact with Top.gg API v1's endpoints.
     /// </summary>
     public class DiscordBotListApi(HttpClient httpClient)
     {
@@ -126,3 +126,4 @@ namespace DiscordBotsList.Api
     }
 
 }
+
