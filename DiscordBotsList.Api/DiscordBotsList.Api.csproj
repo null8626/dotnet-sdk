@@ -3,13 +3,13 @@
         <TargetFramework>net8.0</TargetFramework>
         <Authors>Velddev, Faith</Authors>
         <Company>Top.gg</Company>
-        <Description>top.gg api wrapper</Description>
+        <Description>The community-maintained .NET library for Top.gg.</Description>
         <Copyright>Mike Veldsink</Copyright>
         <PackageProjectUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>discord bots list org wrapper api</PackageTags>
-        <PackageReleaseNotes>update to net 8</PackageReleaseNotes>
+        <PackageTags>discord bots topgg api</PackageTags>
+        <PackageReleaseNotes>Adapt to Top.gg API v1</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <AssemblyName>DiscordBotsList.Api</AssemblyName>
