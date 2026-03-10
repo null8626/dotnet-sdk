@@ -13,6 +13,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace DiscordBotsList.Webhooks
 {
+    /// <summary>
+    ///     A Top.gg webhook manager.
+    /// </summary>
     public abstract class Webhooks
     {
         private byte[] Secret;
