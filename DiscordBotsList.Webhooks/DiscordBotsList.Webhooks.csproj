@@ -3,12 +3,12 @@
         <TargetFramework>net8.0</TargetFramework>
         <Authors>Velddev, Faith, null8626</Authors>
         <Company>Top.gg</Company>
-        <Description>Top.gg API webhooks wrapper for ASP.NET</Description>
+        <Description>The community-maintained ASP.NET webhooks library for Top.gg.</Description>
         <Copyright>Mike Veldsink</Copyright>
         <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>discord bots topgg api webhooks asp.net</PackageTags>
+        <PackageTags>discord bots topgg api webhooks aspnet</PackageTags>
         <Version>2.0.0</Version>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
