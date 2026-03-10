@@ -180,7 +180,7 @@ public class CustomWebhooks() : Webhooks(Environment.GetEnvironmentVariable("TOP
     {
         if (!context.Response.HasStarted)
         {
-            context.Response.StatusCode = 200;
+            context.Response.StatusCode = 204;
         }
     }
 }
