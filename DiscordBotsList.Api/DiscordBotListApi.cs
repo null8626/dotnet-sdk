@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace DiscordBotsList.Api
 {
+    /// <summary>
+    ///     Interact with API v1's endpoints.
+    /// </summary>
     public class DiscordBotListApi(HttpClient httpClient)
     {
         internal static readonly string BaseURL = "https://top.gg/api/v1";
@@ -121,4 +124,5 @@ namespace DiscordBotsList.Api
             return await ProcessResponse<T>(await Http.PostAsync(BaseURL + url, httpContent));
         }
     }
+
 }
