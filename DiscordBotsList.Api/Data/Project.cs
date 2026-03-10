@@ -134,7 +134,7 @@ namespace DiscordBotsList.Api.Data
     }
 
     /// <summary>
-    ///     A brief information on project listed on Top.gg.
+    ///     A brief information on a project listed on Top.gg.
     /// </summary>
     public class PartialProject
     {
