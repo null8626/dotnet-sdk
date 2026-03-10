@@ -65,7 +65,9 @@ var vote = await client.GetVoteAsync(8226924471638491136, UserSource.Topgg);
 ### Getting a cursor-based paginated list of votes for your project
 
 ```cs
-var firstPage = await client.GetVotesAsync(DateTime.Now);
+var since = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+var firstPage = await client.GetVotesAsync(since);
 
 foreach (var vote in firstPage.Votes)
 {

@@ -31,7 +31,9 @@ namespace DiscordBotsList.Api.Tests
         [Fact]
         public async Task GetVotesAsync()
         {
-            var firstPage = await Client.GetVotesAsync(DateTime.Now);
+            var since = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var firstPage = await Client.GetVotesAsync(since);
             await firstPage.Next();
         }
 
