@@ -11,6 +11,9 @@
         <PackageTags>discord bots topgg api webhooks aspnet</PackageTags>
         <Version>1.0.0</Version>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <AssemblyName>Topgg.Sdk.Webhooks</AssemblyName>
+        <RootNamespace>Topgg.Sdk.Webhooks</RootNamespace>
+        <Product>The .NET SDK for Top.gg Webhooks</Product>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore" Version="2.3.9" />
