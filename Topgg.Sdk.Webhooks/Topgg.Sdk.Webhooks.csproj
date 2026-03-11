@@ -9,7 +9,7 @@
         <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>discord bots topgg api webhooks aspnet</PackageTags>
-        <Version>2.0.0</Version>
+        <Version>1.0.0</Version>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
     <ItemGroup>
