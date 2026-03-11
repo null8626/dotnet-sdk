@@ -1,6 +1,6 @@
 # Top.gg .NET SDK
 
-The community-maintained .NET library for Top.gg.
+The community-maintained .NET SDK for Top.gg.
 
 ## Chapters
 

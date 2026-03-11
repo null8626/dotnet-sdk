@@ -3,7 +3,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Authors>Velddev, Faith</Authors>
         <Company>Top.gg</Company>
-        <Description>The community-maintained .NET library for Top.gg.</Description>
+        <Description>The community-maintained .NET SDK for Top.gg.</Description>
         <Copyright>Mike Veldsink</Copyright>
         <PackageProjectUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</RepositoryUrl>
