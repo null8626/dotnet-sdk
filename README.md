@@ -51,7 +51,7 @@ var project = await client.GetSelfAsync();
 ```cs
 using Topgg.Sdk.Api.Data;
 
-var vote = await client.GetVoteAsync(661200758510977084, UserSource.Discord);
+var vote = await client.GetVoteAsync(661200758510977084);
 ```
 
 #### Top.gg ID
