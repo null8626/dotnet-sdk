@@ -12,9 +12,7 @@ using System.Threading.Tasks;
 
 namespace Topgg.Sdk.Api;
 
-/// <summary>
-///     Interact with Top.gg API v1's endpoints.
-/// </summary>
+/// <summary>Interact with Top.gg API v1's endpoints.</summary>
 public class TopggApi(HttpClient httpClient)
 {
     internal static readonly string BaseURL = "https://top.gg/api/v1";
@@ -30,22 +28,16 @@ public class TopggApi(HttpClient httpClient)
     })
     { }
 
-    /// <summary>
-    ///     Tries to get your project's information.
-    /// </summary>
+    /// <summary>Tries to get your project's information.</summary>
     /// <returns>Your project's information.</returns>
     public async Task<Project> GetSelfAsync() => (await GetAsync<Project>("/projects/@me"))!;
 
-    /// <summary>
-    ///     Tries to update the application commands list in your Discord bot's Top.gg page.
-    /// </summary>
+    /// <summary>Tries to update the application commands list in your Discord bot's Top.gg page.</summary>
     /// <typeparam name="T">Serializable list of Discord application commands.</typeparam>
     /// <param name="commands"> A list of your Discord bot's application commands in the form of Discord API's raw JSON format.</param>
     public async Task PostCommandsAsync<T>(T commands) => await PostAsync<T, string>("/projects/@me/commands", commands);
 
-    /// <summary>
-    ///     Tries to get the latest vote information of a user on your project. Returns null if the user has not voted.
-    /// </summary>
+    /// <summary>Tries to get the latest vote information of a user on your project. Returns null if the user has not voted.</summary>
     /// <param name="id">The user's ID.</param>
     /// <param name="source">The user's source.</param>
     /// <returns>The latest vote information of a user on your project or null if the user has not voted.</returns>
@@ -67,9 +59,7 @@ public class TopggApi(HttpClient httpClient)
     }
 
 
-    /// <summary>
-    ///     Tries to get a cursor-based paginated list of votes for your project, ordered by creation date.
-    /// </summary>
+    /// <summary>Tries to get a cursor-based paginated list of votes for your project, ordered by creation date.</summary>
     /// <param name="since">The earliest possible date for all votes.</param>
     /// <returns>A cursor-based paginated list of votes for your project, ordered by creation date.</returns>
     public async Task<PaginatedVotes> GetVotesAsync(DateTime since)

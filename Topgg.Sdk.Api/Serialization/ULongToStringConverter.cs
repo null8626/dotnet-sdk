@@ -4,9 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Topgg.Sdk.Api.Serialization;
 
-/// <summary>
-///     Converts API responses from strings to longs and vice versa.
-/// </summary>
+/// <summary>Converts API responses from strings to longs and vice versa.</summary>
 internal class ULongToStringConverter : JsonConverter<ulong>
 {
     public override ulong Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
