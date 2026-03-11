@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Topgg.Sdk.Webhooks;
 
@@ -89,6 +90,13 @@ public abstract class WebhookEventListener
         try
         {
             var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
+
+            var maxBodyFeature = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
+
+            if (maxBodyFeature != null && !maxBodyFeature.IsReadOnly)
+            {
+                maxBodyFeature.MaxRequestBodySize = 2 * 1024 * 1024;
+            }
 
             using var bodyStream = new MemoryStream();
 
