@@ -1,0 +1,26 @@
+using System.Text.Json.Serialization;
+using Topgg.Sdk.Webhooks.Serialization;
+
+namespace Topgg.Sdk.Webhooks.Data;
+
+/// <summary>A brief information on project listed on Top.gg.</summary>
+public class PartialProject
+{
+    /// <summary>The project's ID.</summary>
+    [JsonPropertyName("id")]
+    [JsonConverter(typeof(ULongToStringConverter))]
+    public ulong Id { get; internal init; }
+
+    /// <summary>The project's ID.</summary>
+    [JsonPropertyName("type")]
+    public ProjectType Type { get; internal init; }
+
+    /// <summary>The project's platform.</summary>
+    [JsonPropertyName("platform")]
+    public Platform Platform { get; internal init; }
+
+    /// <summary>The project's platform ID.</summary>
+    [JsonPropertyName("platform_id")]
+    [JsonConverter(typeof(ULongToStringConverter))]
+    public ulong PlatformId { get; internal init; }
+}
