@@ -5,8 +5,8 @@
         <Company>Top.gg</Company>
         <Description>The community-maintained .NET SDK for Top.gg.</Description>
         <Copyright>Mike Veldsink</Copyright>
-        <PackageProjectUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/DiscordBotList/DBL-dotnet-Library</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>discord bots topgg api</PackageTags>
         <PackageReleaseNotes>Adapt to Top.gg API v1</PackageReleaseNotes>
