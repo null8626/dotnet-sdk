@@ -7,22 +7,18 @@ namespace Topgg.Sdk.Webhooks.Data;
 public class PartialProject
 {
     /// <summary>The project's ID.</summary>
-    [JsonPropertyName("id")]
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong Id { get; internal init; }
 
     /// <summary>The project's ID.</summary>
-    [JsonPropertyName("type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ProjectType Type { get; internal init; }
 
     /// <summary>The project's platform.</summary>
-    [JsonPropertyName("platform")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Platform Platform { get; internal init; }
 
     /// <summary>The project's platform ID.</summary>
-    [JsonPropertyName("platform_id")]
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong PlatformId { get; internal init; }
 }

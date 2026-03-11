@@ -8,7 +8,6 @@ namespace Topgg.Sdk.Webhooks.Payloads;
 public class IntegrationCreatePayload
 {
     /// <summary>The unique identifier for this connection.</summary>
-    [JsonPropertyName("connection_id")]
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong ConnectionId { get; internal init; }
 
@@ -17,11 +16,9 @@ public class IntegrationCreatePayload
     public string Secret { get; internal init; }
 
     /// <summary>The project that the integration refers to.</summary>
-    [JsonPropertyName("project")]
     public PartialProject Project { get; internal init; }
 
     /// <summary>The user who triggered this event.</summary>
-    [JsonPropertyName("user")]
     public User User { get; internal init; }
 }
 
@@ -29,7 +26,6 @@ public class IntegrationCreatePayload
 public class IntegrationDeletePayload
 {
     /// <summary>The unique identifier for this connection.</summary>
-    [JsonPropertyName("connection_id")]
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong ConnectionId { get; internal init; }
 }

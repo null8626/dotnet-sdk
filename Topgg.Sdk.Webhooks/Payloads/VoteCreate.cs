@@ -9,12 +9,10 @@ namespace Topgg.Sdk.Webhooks.Payloads;
 public class VoteCreatePayload
 {
     /// <summary>The vote's ID.</summary>
-    [JsonPropertyName("id")]
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong Id { get; internal init; }
 
     /// <summary>The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth.</summary>
-    [JsonPropertyName("weight")]
     public int Weight { get; internal init; }
 
     /// <summary>When the vote was cast.</summary>
@@ -22,14 +20,11 @@ public class VoteCreatePayload
     public DateTime VotedAt { get; internal init; }
 
     /// <summary>When the vote expires (the user can vote again.)</summary>
-    [JsonPropertyName("expires_at")]
     public DateTime ExpiresAt { get; internal init; }
 
     /// <summary>The project that received this vote.</summary>
-    [JsonPropertyName("project")]
     public PartialProject Project { get; internal init; }
 
     /// <summary>The user who voted for this project.</summary>
-    [JsonPropertyName("user")]
     public User User { get; internal init; }
 }
