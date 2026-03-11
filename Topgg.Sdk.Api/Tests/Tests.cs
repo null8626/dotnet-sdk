@@ -11,7 +11,7 @@ namespace Topgg.Sdk.Api.Tests;
 public class Tests
 {
     public static IEnumerable<TheoryDataRow<UserSource>> UserSources => Enum.GetValues<UserSource>().Select(source => new TheoryDataRow<UserSource>(source));
-    public static IEnumerable<TheoryDataRow<ProjectType>> ProjectTypes => Enum.GetValues<ProjectType>().Select(payload => new TheoryDataRow<ProjectType>(payload));
+    public static IEnumerable<TheoryDataRow<Platform, ProjectType>> PlatformsAndProjectTypes => Enum.GetValues<Platform>().SelectMany(platform => Enum.GetValues<ProjectType>(), (platform, projectType) => new TheoryDataRow<Platform, ProjectType>(platform, projectType));
 
     private readonly TopggApi Client = new(new HttpClient(new Mock()));
 
@@ -38,12 +38,12 @@ public class Tests
     }
 
     [Theory]
-    [MemberData(nameof(ProjectTypes))]
-    public void Widgets(ProjectType type)
+    [MemberData(nameof(PlatformsAndProjectTypes))]
+    public void Widgets(Platform platform, ProjectType projectType)
     {
-        Widget.Large(type, 123456);
-        Widget.Votes(type, 123456);
-        Widget.Owner(type, 123456);
-        Widget.Social(type, 123456);
+        Widget.Large(platform, projectType, 123456);
+        Widget.Votes(platform, projectType, 123456);
+        Widget.Owner(platform, projectType, 123456);
+        Widget.Social(platform, projectType, 123456);
     }
 }
