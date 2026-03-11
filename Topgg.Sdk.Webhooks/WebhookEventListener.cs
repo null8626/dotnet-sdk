@@ -122,28 +122,28 @@ public abstract class WebhookEventListener
         }
     }
 
-    /// <summary>A user has connected to your webhook integration.</summary>
+    /// <summary>Registers a listener that fires when a user has connected to your webhook integration.</summary>
     /// <param name="context">The HTTP request context from ASP.NET Core.</param>
     /// <param name="payload">The webhook payload.</param>
     /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
     /// <returns>The response for this request.</returns>
     public virtual Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse(context);
 
-    /// <summary>A user has disconnected from your webhook integration.</summary>
+    /// <summary>Registers a listener that fires when a user has disconnected from your webhook integration.</summary>
     /// <param name="context">The HTTP request context from ASP.NET Core.</param>
     /// <param name="payload">The webhook payload.</param>
     /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
     /// <returns>The response for this request.</returns>
     public virtual Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, string trace) => DefaultResponse(context);
 
-    /// <summary>Test webhook sent from the dashboard.</summary>
+    /// <summary>Registers a listener that fires when a test webhook was sent from the dashboard.</summary>
     /// <param name="context">The HTTP request context from ASP.NET Core.</param>
     /// <param name="payload">The webhook payload.</param>
     /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
     /// <returns>The response for this request.</returns>
     public virtual Task OnTest(HttpContext context, TestPayload payload, string trace) => DefaultResponse(context);
 
-    /// <summary>Fired when a user votes for your project.</summary>
+    /// <summary>Registers a listener that fires when a user votes for your project.</summary>
     /// <param name="context">The HTTP request context from ASP.NET Core.</param>
     /// <param name="payload">The webhook payload.</param>
     /// <param name="trace">The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support.</param>
