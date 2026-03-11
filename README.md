@@ -162,7 +162,7 @@ With ASP.NET Core:
 using Topgg.Sdk.Webhooks.Payloads;
 using Topgg.Sdk.Webhooks;
 
-public class CustomWebhooks() : WebhookEventListener(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
+public class Webhooks() : WebhookEventListener(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
 {
     // Optional
     public override Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse(context);
