@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Topgg.Sdk.Webhooks.Tests;
 
-internal class CustomWebhooks() : Webhooks(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
+internal class CustomWebhooks() : WebhookEventListener(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
 {
     public override Task OnIntegrationCreate(HttpContext context, IntegrationCreatePayload payload, string trace) => DefaultResponse("IntegrationCreate", context, trace);
     public override Task OnIntegrationDelete(HttpContext context, IntegrationDeletePayload payload, string trace) => DefaultResponse("IntegrationDelete", context, trace);

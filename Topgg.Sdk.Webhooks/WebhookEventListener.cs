@@ -13,8 +13,8 @@ using System.Text.Json.Serialization;
 
 namespace Topgg.Sdk.Webhooks;
 
-/// <summary>A Top.gg webhook manager.</summary>
-public abstract class Webhooks
+/// <summary>A Top.gg webhook event listener.</summary>
+public abstract class WebhookEventListener
 {
     private byte[] Secret;
     private readonly JsonSerializerOptions SerializerOptions = new()
@@ -23,7 +23,7 @@ public abstract class Webhooks
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
     };
 
-    public Webhooks(string secret) => SetSecret(secret);
+    public WebhookEventListener(string secret) => SetSecret(secret);
 
     /// <summary>Sets the webhook secret to use to authorize external requests.</summary>
     /// <param name="newSecret">The new webhook secret to use to authorize external requests.</param>
