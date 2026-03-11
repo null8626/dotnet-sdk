@@ -10,6 +10,7 @@ using Topgg.Sdk.Webhooks.Payloads;
 using Topgg.Sdk.Webhooks.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using System.Text.Json.Serialization;
 
 namespace Topgg.Sdk.Webhooks;
 
@@ -19,7 +20,7 @@ public abstract class Webhooks
     private byte[] Secret;
     private readonly JsonSerializerOptions SerializerOptions = new()
     {
-        Converters = { new ULongToStringConverter(), new PlatformConverter(), new ProjectTypeConverter() }
+        Converters = { new ULongToStringConverter(), new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
 
     public Webhooks(string secret) => SetSecret(secret);

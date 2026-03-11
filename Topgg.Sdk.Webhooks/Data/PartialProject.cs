@@ -13,10 +13,12 @@ public class PartialProject
 
     /// <summary>The project's ID.</summary>
     [JsonPropertyName("type")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ProjectType Type { get; internal init; }
 
     /// <summary>The project's platform.</summary>
     [JsonPropertyName("platform")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Platform Platform { get; internal init; }
 
     /// <summary>The project's platform ID.</summary>
