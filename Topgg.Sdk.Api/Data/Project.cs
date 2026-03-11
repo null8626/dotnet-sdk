@@ -62,7 +62,7 @@ public class PartialProject
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong Id { get; internal init; }
 
-    /// <summary>The project's ID.</summary>
+    /// <summary>The project's type.</summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ProjectType Type { get; internal init; }
 
@@ -73,4 +73,5 @@ public class PartialProject
     /// <summary>The project's platform ID.</summary>
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong PlatformId { get; internal init; }
+
 }
