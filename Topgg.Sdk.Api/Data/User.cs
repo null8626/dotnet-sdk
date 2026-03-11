@@ -21,11 +21,9 @@ public class PartialVote
     public DateTime VotedAt { get; internal init; }
 
     /// <summary>When the vote expires and the user is required to vote again.</summary>
-    [JsonPropertyName("expires_at")]
     public DateTime ExpiresAt { get; internal init; }
 
     /// <summary>The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth.</summary>
-    [JsonPropertyName("weight")]
     public int Weight { get; internal init; }
 }
 
@@ -38,7 +36,6 @@ public class Vote : PartialVote
     public ulong VoterId { get; internal init; }
 
     /// <summary>The voter's ID on the project's platform.</summary>
-    [JsonPropertyName("platform_id")]
     [JsonConverter(typeof(ULongToStringConverter))]
     public ulong PlatformId { get; internal init; }
 }
@@ -51,7 +48,6 @@ public class PaginatedVotes
     public List<Vote> Votes { get; internal init; }
 
     [JsonInclude]
-    [JsonPropertyName("cursor")]
     internal string Cursor { get; init; }
 
     internal TopggApi Client;

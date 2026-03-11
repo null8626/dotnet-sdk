@@ -19,7 +19,8 @@ public class TopggApi(HttpClient httpClient)
     internal static readonly string BaseURL = "https://top.gg/api/v1";
     private readonly JsonSerializerOptions SerializerOptions = new()
     {
-        Converters = { new ULongToStringConverter(), new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        Converters = { new ULongToStringConverter(), new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
     };
     private readonly HttpClient Http = httpClient;
 
