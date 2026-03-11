@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Authors>Velddev, Faith</Authors>
+        <Authors>Velddev, Faith, null8626</Authors>
         <Company>Top.gg</Company>
         <Description>The community-maintained .NET SDK for the Top.gg API.</Description>
         <Copyright>Mike Veldsink</Copyright>
