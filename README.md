@@ -124,7 +124,7 @@ await client.PostCommandsAsync(commands);
 using DiscordBotsList.Api.Data;
 using DiscordBotsList.Api;
 
-var widgetUrl = Widget.Large(ProjectType.DiscordBot, 574652751745777665);
+var widgetUrl = Widget.Large(ProjectType.DiscordBot, 1026525568344264724);
 ```
 
 #### Votes
@@ -133,7 +133,7 @@ var widgetUrl = Widget.Large(ProjectType.DiscordBot, 574652751745777665);
 using DiscordBotsList.Api.Data;
 using DiscordBotsList.Api;
 
-var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 574652751745777665);
+var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 1026525568344264724);
 ```
 
 #### Owner
@@ -142,7 +142,7 @@ var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 574652751745777665);
 using DiscordBotsList.Api.Data;
 using DiscordBotsList.Api;
 
-var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 574652751745777665);
+var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 1026525568344264724);
 ```
 
 #### Social
@@ -151,7 +151,7 @@ var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 574652751745777665);
 using DiscordBotsList.Api.Data;
 using DiscordBotsList.Api;
 
-var widgetUrl = Widget.Social(ProjectType.DiscordBot, 574652751745777665);
+var widgetUrl = Widget.Social(ProjectType.DiscordBot, 1026525568344264724);
 ```
 
 ### Webhooks
