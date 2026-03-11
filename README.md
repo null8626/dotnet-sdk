@@ -124,7 +124,7 @@ await client.PostCommandsAsync(commands);
 using Topgg.Sdk.Api.Data;
 using Topgg.Sdk.Api;
 
-var widgetUrl = Widget.Large(ProjectType.DiscordBot, 1026525568344264724);
+var widgetUrl = Widget.Large(Platform.Discord, ProjectType.Bot, 1026525568344264724);
 ```
 
 #### Votes
@@ -133,7 +133,7 @@ var widgetUrl = Widget.Large(ProjectType.DiscordBot, 1026525568344264724);
 using Topgg.Sdk.Api.Data;
 using Topgg.Sdk.Api;
 
-var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 1026525568344264724);
+var widgetUrl = Widget.Votes(Platform.Discord, ProjectType.Bot, 1026525568344264724);
 ```
 
 #### Owner
@@ -142,7 +142,7 @@ var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 1026525568344264724);
 using Topgg.Sdk.Api.Data;
 using Topgg.Sdk.Api;
 
-var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 1026525568344264724);
+var widgetUrl = Widget.Owner(Platform.Discord, ProjectType.Bot, 1026525568344264724);
 ```
 
 #### Social
@@ -151,7 +151,7 @@ var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 1026525568344264724);
 using Topgg.Sdk.Api.Data;
 using Topgg.Sdk.Api;
 
-var widgetUrl = Widget.Social(ProjectType.DiscordBot, 1026525568344264724);
+var widgetUrl = Widget.Social(Platform.Discord, ProjectType.Bot, 1026525568344264724);
 ```
 
 ### Webhooks

@@ -9,6 +9,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Topgg.Sdk.Api;
 
@@ -18,7 +19,7 @@ public class TopggApi(HttpClient httpClient)
     internal static readonly string BaseURL = "https://top.gg/api/v1";
     private readonly JsonSerializerOptions SerializerOptions = new()
     {
-        Converters = { new ULongToStringConverter() }
+        Converters = { new ULongToStringConverter(), new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
     private readonly HttpClient Http = httpClient;
 

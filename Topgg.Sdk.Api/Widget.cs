@@ -1,34 +1,34 @@
-using System.Text.RegularExpressions;
 using Topgg.Sdk.Api.Data;
 
 namespace Topgg.Sdk.Api;
 
-public static partial class Widget
+public static class Widget
 {
-    [GeneratedRegex("(?<!^)([A-Z])", RegexOptions.Compiled)]
-    private static partial Regex TypeConversionRegex();
-
     /// <summary>Generates a large widget URL.</summary>
-    /// <param name="type">The project's type.</param>
+    /// <param name="platform">The project's platform.</param>
+    /// <param name="projectType">The project's type.</param>
     /// <param name="id">The project ID.</param>
     /// <returns>The widget URL.</returns>
-    public static string Large(ProjectType type, ulong id) => $"{TopggApi.BaseURL}/widgets/large/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
+    public static string Large(Platform platform, ProjectType projectType, ulong id) => $"{TopggApi.BaseURL}/widgets/large/{platform.ToString().ToLower()}/{projectType.ToString().ToLower()}/{id}";
 
     /// <summary>Generates a small widget URL for displaying votes.</summary>
-    /// <param name="type">The project's type.</param>
+    /// <param name="platform">The project's platform.</param>
+    /// <param name="projectType">The project's type.</param>
     /// <param name="id">The project ID.</param>
     /// <returns>The widget URL.</returns>
-    public static string Votes(ProjectType type, ulong id) => $"{TopggApi.BaseURL}/widgets/small/votes/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
+    public static string Votes(Platform platform, ProjectType projectType, ulong id) => $"{TopggApi.BaseURL}/widgets/small/votes/{platform.ToString().ToLower()}/{projectType.ToString().ToLower()}/{id}";
 
     /// <summary>Generates a small widget URL for displaying a project's owner.</summary>
-    /// <param name="type">The project's type.</param>
+    /// <param name="platform">The project's platform.</param>
+    /// <param name="projectType">The project's type.</param>
     /// <param name="id">The project ID.</param>
     /// <returns>The widget URL.</returns>
-    public static string Owner(ProjectType type, ulong id) => $"{TopggApi.BaseURL}/widgets/small/owner/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
+    public static string Owner(Platform platform, ProjectType projectType, ulong id) => $"{TopggApi.BaseURL}/widgets/small/owner/{platform.ToString().ToLower()}/{projectType.ToString().ToLower()}/{id}";
 
     /// <summary>Generates a small widget URL for displaying social stats.</summary>
-    /// <param name="type">The project's type.</param>
+    /// <param name="platform">The project's platform.</param>
+    /// <param name="projectType">The project's type.</param>
     /// <param name="id">The project ID.</param>
     /// <returns>The widget URL.</returns>
-    public static string Social(ProjectType type, ulong id) => $"{TopggApi.BaseURL}/widgets/small/social/{TypeConversionRegex().Replace(type.ToString(), "/$1").ToLower()}/{id}";
+    public static string Social(Platform platform, ProjectType projectType, ulong id) => $"{TopggApi.BaseURL}/widgets/small/social/{platform.ToString().ToLower()}/{projectType.ToString().ToLower()}/{id}";
 }

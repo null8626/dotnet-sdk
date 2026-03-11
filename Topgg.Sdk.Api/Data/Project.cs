@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Topgg.Sdk.Api.Serialization;
 
@@ -12,50 +10,11 @@ public enum Platform
     Discord
 }
 
-/// <summary>Converts platform strings to their enum counterparts.</summary>
-internal class PlatformConverter : JsonConverter<Platform>
-{
-    public override Platform Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            switch (reader.GetString())
-            {
-                case "discord": return Platform.Discord;
-            }
-        }
-
-        throw new InvalidOperationException();
-    }
-
-    public override void Write(Utf8JsonWriter writer, Platform platform, JsonSerializerOptions options) => throw new InvalidOperationException();
-}
-
 /// <summary>A project's type.</summary>
 public enum ProjectType
 {
-    DiscordBot,
-    DiscordServer
-}
-
-/// <summary>Converts project type strings to their enum counterparts.</summary>
-internal class ProjectTypeConverter : JsonConverter<ProjectType>
-{
-    public override ProjectType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            switch (reader.GetString())
-            {
-                case "bot": return ProjectType.DiscordBot;
-                case "server": return ProjectType.DiscordServer;
-            }
-        }
-
-        throw new InvalidOperationException();
-    }
-
-    public override void Write(Utf8JsonWriter writer, ProjectType type, JsonSerializerOptions options) => throw new InvalidOperationException();
+    Bot,
+    Server
 }
 
 /// <summary>A project listed on Top.gg.</summary>
@@ -72,10 +31,12 @@ public class Project
 
     /// <summary>The project's platform.</summary>
     [JsonPropertyName("platform")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Platform Platform { get; internal init; }
 
     /// <summary>The project's type.</summary>
     [JsonPropertyName("type")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ProjectType Type { get; internal init; }
 
     /// <summary>The project's short description.</summary>
@@ -113,10 +74,12 @@ public class PartialProject
 
     /// <summary>The project's ID.</summary>
     [JsonPropertyName("type")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ProjectType Type { get; internal init; }
 
     /// <summary>The project's platform.</summary>
     [JsonPropertyName("platform")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Platform Platform { get; internal init; }
 
     /// <summary>The project's platform ID.</summary>
