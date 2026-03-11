@@ -10,6 +10,7 @@ using Topgg.Sdk.Webhooks.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 
 namespace Topgg.Sdk.Webhooks;
 
@@ -17,13 +18,20 @@ namespace Topgg.Sdk.Webhooks;
 public abstract class WebhookEventListener
 {
     private byte[] Secret;
+    private ILogger Logger;
     private readonly JsonSerializerOptions SerializerOptions = new()
     {
         Converters = { new ULongToStringConverter(), new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
     };
 
-    public WebhookEventListener(string secret) => SetSecret(secret);
+    public WebhookEventListener(string secret)
+    {
+        SetSecret(secret);
+
+        using var factory = LoggerFactory.Create(builder => builder.AddConsole());
+        Logger = factory.CreateLogger("Top.gg WebhookEventListener");
+    }
 
     /// <summary>Sets the webhook secret to use to authorize external requests.</summary>
     /// <param name="newSecret">The new webhook secret to use to authorize external requests.</param>
@@ -64,16 +72,19 @@ public abstract class WebhookEventListener
     /// <param name="context">The HTTP request context from ASP.NET Core.</param>
     public async void Handler(HttpContext context)
     {
-        if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) && !context.Response.HasStarted)
+        if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) || !context.Request.Headers.TryGetValue("x-topgg-trace", out var trace))
         {
-            context.Response.StatusCode = 401;
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 401;
 
-            await context.Response.WriteAsync("Missing Top.gg Signature");
+                await context.Response.WriteAsync("Missing required headers");
+            }
 
             return;
         }
 
-        context.Request.Headers.TryGetValue("x-topgg-trace", out var trace);
+        byte[] body = [];
 
         try
         {
@@ -82,7 +93,7 @@ public abstract class WebhookEventListener
             using var bodyStream = new MemoryStream();
 
             await context.Request.Body.CopyToAsync(bodyStream);
-            var body = bodyStream.ToArray();
+            body = bodyStream.ToArray();
             var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
 
             var hash = Convert.ToHexString(HMACSHA256.HashData(Secret, transformBuffer)).ToLowerInvariant();
@@ -111,8 +122,18 @@ public abstract class WebhookEventListener
                 return;
             }
         }
-        catch
-        { }
+        catch (JsonException err)
+        {
+            Logger.LogWarning("Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: {Cause}\n--- BEGIN BODY DUMP ---\n{Body}\n--- END BODY DUMP ---", err.Message, Encoding.UTF8.GetString(body));
+
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 204;
+            }
+
+            return;
+        }
+        catch (Exception) { }
 
         if (!context.Response.HasStarted)
         {
