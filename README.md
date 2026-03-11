@@ -19,21 +19,21 @@ The community-maintained .NET SDK for Top.gg.
 ### Main API wrapper
 
 ```console
-$ dotnet add package DiscordBotsList.Api --version 2.0.0
+$ dotnet add package Topgg.Sdk.Api --version 1.0.0
 ```
 
 ### Webhooks only
 
 ```console
-$ dotnet add package DiscordBotsList.Webhooks --version 2.0.0
+$ dotnet add package Topgg.Sdk.Webhooks --version 1.0.0
 ```
 
 ## Setting up
 
 ```cs
-using DiscordBotsList.Api;
+using Topgg.Sdk.Api;
 
-var client = new DiscordBotListApi(Environment.GetEnvironmentVariable("TOPGG_TOKEN"));
+var client = new TopggApi(Environment.GetEnvironmentVariable("TOPGG_TOKEN"));
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ var project = await client.GetSelfAsync();
 #### Discord ID
 
 ```cs
-using DiscordBotsList.Api.Data;
+using Topgg.Sdk.Api.Data;
 
 var vote = await client.GetVoteAsync(661200758510977084, UserSource.Discord);
 ```
@@ -57,7 +57,7 @@ var vote = await client.GetVoteAsync(661200758510977084, UserSource.Discord);
 #### Top.gg ID
 
 ```cs
-using DiscordBotsList.Api.Data;
+using Topgg.Sdk.Api.Data;
 
 var vote = await client.GetVoteAsync(8226924471638491136, UserSource.Topgg);
 ```
@@ -121,8 +121,8 @@ await client.PostCommandsAsync(commands);
 #### Large
 
 ```cs
-using DiscordBotsList.Api.Data;
-using DiscordBotsList.Api;
+using Topgg.Sdk.Api.Data;
+using Topgg.Sdk.Api;
 
 var widgetUrl = Widget.Large(ProjectType.DiscordBot, 1026525568344264724);
 ```
@@ -130,8 +130,8 @@ var widgetUrl = Widget.Large(ProjectType.DiscordBot, 1026525568344264724);
 #### Votes
 
 ```cs
-using DiscordBotsList.Api.Data;
-using DiscordBotsList.Api;
+using Topgg.Sdk.Api.Data;
+using Topgg.Sdk.Api;
 
 var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 1026525568344264724);
 ```
@@ -139,8 +139,8 @@ var widgetUrl = Widget.Votes(ProjectType.DiscordBot, 1026525568344264724);
 #### Owner
 
 ```cs
-using DiscordBotsList.Api.Data;
-using DiscordBotsList.Api;
+using Topgg.Sdk.Api.Data;
+using Topgg.Sdk.Api;
 
 var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 1026525568344264724);
 ```
@@ -148,8 +148,8 @@ var widgetUrl = Widget.Owner(ProjectType.DiscordBot, 1026525568344264724);
 #### Social
 
 ```cs
-using DiscordBotsList.Api.Data;
-using DiscordBotsList.Api;
+using Topgg.Sdk.Api.Data;
+using Topgg.Sdk.Api;
 
 var widgetUrl = Widget.Social(ProjectType.DiscordBot, 1026525568344264724);
 ```
@@ -159,8 +159,8 @@ var widgetUrl = Widget.Social(ProjectType.DiscordBot, 1026525568344264724);
 With ASP.NET Core:
 
 ```cs
-using DiscordBotsList.Webhooks.Payloads;
-using DiscordBotsList.Webhooks;
+using Topgg.Sdk.Webhooks.Payloads;
+using Topgg.Sdk.Webhooks;
 
 public class CustomWebhooks() : Webhooks(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"))
 {

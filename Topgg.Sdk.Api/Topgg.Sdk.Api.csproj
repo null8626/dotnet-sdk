@@ -3,7 +3,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Authors>Velddev, Faith</Authors>
         <Company>Top.gg</Company>
-        <Description>The community-maintained .NET SDK for Top.gg.</Description>
+        <Description>The community-maintained .NET SDK for the Top.gg API.</Description>
         <Copyright>Mike Veldsink</Copyright>
         <PackageProjectUrl>https://github.com/Top-gg-Community/dotnet-sdk</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Top-gg-Community/dotnet-sdk</RepositoryUrl>
@@ -12,10 +12,10 @@
         <PackageReleaseNotes>Adapt to Top.gg API v1</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyName>DiscordBotsList.Api</AssemblyName>
-        <RootNamespace>DiscordBotsList.Api</RootNamespace>
-        <Product>DiscordBotsList.Api</Product>
-        <Version>2.0.0</Version>
+        <AssemblyName>Topgg.Sdk.Api</AssemblyName>
+        <RootNamespace>Topgg.Sdk.Api</RootNamespace>
+        <Product>The .NET SDK for the Top.gg API</Product>
+        <Version>1.0.0</Version>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
     <ItemGroup>
