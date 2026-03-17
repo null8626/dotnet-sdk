@@ -8,7 +8,7 @@ namespace Topgg.Sdk.Webhooks.Tests;
 
 internal class Mock
 {
-    private static readonly byte[] Secret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("TOPGG_WEBHOOK_SECRET"));
+    public static readonly string Secret = "testsecret1234";
 
     internal static readonly string Prefix = "Topgg.Sdk.Webhooks.Tests.Mocks.";
 
@@ -25,7 +25,7 @@ internal class Mock
     internal static string Signature(string body)
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var hash = Convert.ToHexString(HMACSHA256.HashData(Secret, Encoding.UTF8.GetBytes($"{timestamp}.{body}"))).ToLowerInvariant();
+        var hash = Convert.ToHexString(HMACSHA256.HashData(Encoding.UTF8.GetBytes(Secret), Encoding.UTF8.GetBytes($"{timestamp}.{body}"))).ToLowerInvariant();
 
         return $"t={timestamp},v1={hash}";
     }

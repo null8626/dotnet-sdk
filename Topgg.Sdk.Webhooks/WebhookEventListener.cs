@@ -12,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.Features;
+using System.Threading;
 
 namespace Topgg.Sdk.Webhooks;
 
@@ -19,6 +20,7 @@ namespace Topgg.Sdk.Webhooks;
 public abstract class WebhookEventListener
 {
     private byte[] Secret;
+    private readonly TimeSpan Timeout;
     private ILogger Logger;
     private readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -26,13 +28,16 @@ public abstract class WebhookEventListener
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
     };
 
-    public WebhookEventListener(string secret)
+    public WebhookEventListener(string secret, TimeSpan timeout)
     {
         SetSecret(secret);
+        Timeout = timeout;
 
         using var factory = LoggerFactory.Create(builder => builder.AddConsole());
         Logger = factory.CreateLogger("Top.gg WebhookEventListener");
     }
+
+    public WebhookEventListener(string secret) : this(secret, TimeSpan.FromSeconds(1)) { }
 
     /// <summary>Sets the webhook secret to use to authorize external requests.</summary>
     /// <param name="newSecret">The new webhook secret to use to authorize external requests.</param>
@@ -85,6 +90,7 @@ public abstract class WebhookEventListener
             return;
         }
 
+        using var cancellationTokenSource = new CancellationTokenSource(Timeout);
         byte[] body = [];
 
         try
@@ -100,7 +106,7 @@ public abstract class WebhookEventListener
 
             using var bodyStream = new MemoryStream();
 
-            await context.Request.Body.CopyToAsync(bodyStream);
+            await context.Request.Body.CopyToAsync(bodyStream, cancellationTokenSource.Token);
             body = bodyStream.ToArray();
             var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
 
@@ -110,7 +116,7 @@ public abstract class WebhookEventListener
             {
                 context.Response.StatusCode = 401;
 
-                await context.Response.WriteAsync("Invalid Secret");
+                await context.Response.WriteAsync("Unauthorized");
 
                 return;
             }
@@ -129,6 +135,17 @@ public abstract class WebhookEventListener
 
                 return;
             }
+        }
+        catch (OperationCanceledException)
+        {
+            if (cancellationTokenSource.IsCancellationRequested && !context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 400;
+
+                await context.Response.WriteAsync("Bad Request");
+            }
+
+            return;
         }
         catch (JsonException err)
         {
