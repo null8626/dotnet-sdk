@@ -140,9 +140,9 @@ public abstract class WebhookEventListener
         {
             if (cancellationTokenSource.IsCancellationRequested && !context.Response.HasStarted)
             {
-                context.Response.StatusCode = 400;
+                context.Response.StatusCode = 408;
 
-                await context.Response.WriteAsync("Bad Request");
+                await context.Response.WriteAsync("Request timed out");
             }
 
             return;
