@@ -37,7 +37,7 @@ public abstract class WebhookEventListener
         Logger = factory.CreateLogger("Top.gg WebhookEventListener");
     }
 
-    public WebhookEventListener(string secret) : this(secret, TimeSpan.FromSeconds(1)) { }
+    public WebhookEventListener(string secret) : this(secret, TimeSpan.FromSeconds(5)) { }
 
     /// <summary>Sets the webhook secret to use to authorize external requests.</summary>
     /// <param name="newSecret">The new webhook secret to use to authorize external requests.</param>
