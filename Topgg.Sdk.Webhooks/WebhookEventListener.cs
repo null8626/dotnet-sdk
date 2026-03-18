@@ -39,8 +39,8 @@ public abstract class WebhookEventListener
 
     public WebhookEventListener(string secret) : this(secret, TimeSpan.FromSeconds(5)) { }
 
-    /// <summary>Sets the webhook secret to use to authorize external requests.</summary>
-    /// <param name="newSecret">The new webhook secret to use to authorize external requests.</param>
+    /// <summary>Sets the secret to use to authorize external requests.</summary>
+    /// <param name="newSecret">The new secret to use to authorize external requests.</param>
     public void SetSecret(string newSecret) => Secret = Encoding.UTF8.GetBytes(newSecret);
 
     private async Task Dispatch<T>(Func<HttpContext, T, string, Task> callback, HttpContext context, Payload payload, StringValues trace)
