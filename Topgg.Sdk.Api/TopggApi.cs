@@ -24,6 +24,8 @@ public class TopggApi(HttpClient httpClient)
     };
     private readonly HttpClient Http = httpClient;
 
+    /// <summary>Creates a new client instance.</summary>
+    /// <param name="token">The API token to use.</param>
     public TopggApi(string token) : this(new HttpClient()
     {
         DefaultRequestHeaders = { { "Authorization", $"Bearer {token}" } }
@@ -36,7 +38,7 @@ public class TopggApi(HttpClient httpClient)
 
     /// <summary>Tries to update the application commands list in your Discord bot's Top.gg page.</summary>
     /// <typeparam name="T">Serializable list of Discord application commands.</typeparam>
-    /// <param name="commands"> A list of your Discord bot's application commands in the form of Discord API's raw JSON format.</param>
+    /// <param name="commands">A list of your Discord bot's application commands in the form of Discord API's raw JSON format.</param>
     public async Task PostCommandsAsync<T>(T commands) => await PostAsync<T, string>("/projects/@me/commands", commands);
 
     /// <summary>Tries to get the latest vote information of a user on your project. Returns null if the user has not voted.</summary>
