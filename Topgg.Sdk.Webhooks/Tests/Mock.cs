@@ -8,7 +8,7 @@ namespace Topgg.Sdk.Webhooks.Tests;
 
 internal class Mock
 {
-    public static readonly string Secret = "testsecret1234";
+    internal static readonly string Secret = "testsecret1234";
 
     internal static readonly string Prefix = "Topgg.Sdk.Webhooks.Tests.Mocks.";
 
