@@ -28,6 +28,9 @@ public abstract class WebhookEventListener
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
     };
 
+    /// <summary>Creates a new webhook event listener.</summary>
+    /// <param name="secret">The secret to use to authorize external requests.</param>
+    /// <param name="timeout">The timeout for reading payloads. Defaults to five seconds.</param>
     public WebhookEventListener(string secret, TimeSpan timeout)
     {
         SetSecret(secret);
@@ -37,6 +40,8 @@ public abstract class WebhookEventListener
         Logger = factory.CreateLogger("Top.gg WebhookEventListener");
     }
 
+    /// <summary>Creates a new webhook event listener.</summary>
+    /// <param name="secret">The secret to use to authorize external requests.</param>
     public WebhookEventListener(string secret) : this(secret, TimeSpan.FromSeconds(5)) { }
 
     /// <summary>Sets the secret to use to authorize external requests.</summary>
