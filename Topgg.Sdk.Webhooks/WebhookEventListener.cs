@@ -21,6 +21,7 @@ public abstract class WebhookEventListener
 {
     private byte[] Secret;
     private readonly TimeSpan Timeout;
+    private readonly TimeSpan TimestampWindow;
     private ILogger Logger;
     private readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -31,14 +32,21 @@ public abstract class WebhookEventListener
     /// <summary>Creates a new webhook event listener.</summary>
     /// <param name="secret">The secret to use to authorize external requests.</param>
     /// <param name="timeout">The timeout for reading payloads. Defaults to five seconds.</param>
-    public WebhookEventListener(string secret, TimeSpan timeout)
+    /// <param name="timestampWindow">The accepted time window for timestamps before they get rejected to help mitigate replay attacks. Defaults to 30 seconds.</param>
+    public WebhookEventListener(string secret, TimeSpan timeout, TimeSpan timestampWindow)
     {
         SetSecret(secret);
         Timeout = timeout;
+        TimestampWindow = timestampWindow;
 
         using var factory = LoggerFactory.Create(builder => builder.AddConsole());
         Logger = factory.CreateLogger("Top.gg WebhookEventListener");
     }
+
+    /// <summary>Creates a new webhook event listener.</summary>
+    /// <param name="secret">The secret to use to authorize external requests.</param>
+    /// <param name="timeout">The timeout for reading payloads. Defaults to five seconds.</param>
+    public WebhookEventListener(string secret, TimeSpan timeout) : this(secret, timeout, TimeSpan.FromSeconds(30)) { }
 
     /// <summary>Creates a new webhook event listener.</summary>
     /// <param name="secret">The secret to use to authorize external requests.</param>
@@ -83,6 +91,8 @@ public abstract class WebhookEventListener
     /// <param name="context">The HTTP request context from ASP.NET Core.</param>
     public async void Handler(HttpContext context)
     {
+        var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
         if (!context.Request.Headers.TryGetValue("x-topgg-signature", out var signatureHeader) || !context.Request.Headers.TryGetValue("x-topgg-trace", out var trace))
         {
             if (!context.Response.HasStarted)
@@ -102,6 +112,29 @@ public abstract class WebhookEventListener
         {
             var parsedSignature = signatureHeader.First().Split(',').Select(part => part.Split('=')).ToDictionary(part => part[0], part => part[1]);
 
+            if (!long.TryParse(parsedSignature["t"], out var timestamp))
+            {
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = 422;
+
+                    await context.Response.WriteAsync("Invalid signature format");
+                }
+
+                return;
+            }
+            else if (Math.Abs(currentTimestamp - (timestamp * 1000)) > TimestampWindow.Milliseconds)
+            {
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = 403;
+
+                    await context.Response.WriteAsync("Timestamp outside of accepted time window");
+                }
+
+                return;
+            }
+
             var maxBodyFeature = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
 
             if (maxBodyFeature != null && !maxBodyFeature.IsReadOnly)
@@ -115,13 +148,17 @@ public abstract class WebhookEventListener
             body = bodyStream.ToArray();
             var transformBuffer = Encoding.UTF8.GetBytes($"{parsedSignature["t"]}.").Concat(body).ToArray();
 
-            var hash = Convert.ToHexString(HMACSHA256.HashData(Secret, transformBuffer)).ToLowerInvariant();
+            var signature = Convert.FromHexString(parsedSignature["v1"]);
+            var hash = HMACSHA256.HashData(Secret, transformBuffer);
 
-            if (!parsedSignature["v1"].Equals(hash) && !context.Response.HasStarted)
+            if (!CryptographicOperations.FixedTimeEquals(signature, hash))
             {
-                context.Response.StatusCode = 401;
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = 401;
 
-                await context.Response.WriteAsync("Unauthorized");
+                    await context.Response.WriteAsync("Unauthorized");
+                }
 
                 return;
             }
